@@ -21,7 +21,10 @@ export function Nav({ businessName, phone, telLink }: Props) {
         aria-label="Main"
         className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4"
       >
-        <a href="#top" className="text-lg font-semibold tracking-tight text-slate-900">
+        <a
+          href="#top"
+          className="rounded-md text-lg font-semibold tracking-tight text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-800"
+        >
           {businessName}
         </a>
 
@@ -31,7 +34,7 @@ export function Nav({ businessName, phone, telLink }: Props) {
               <li key={link.href}>
                 <a
                   href={link.href}
-                  className="text-sm font-medium text-slate-600 transition-colors hover:text-slate-900"
+                  className="rounded-md text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-800"
                 >
                   {link.label}
                 </a>
@@ -41,7 +44,7 @@ export function Nav({ businessName, phone, telLink }: Props) {
           {telLink && (
             <a
               href={`tel:${telLink}`}
-              className="inline-flex h-10 items-center gap-2 rounded-md bg-blue-800 px-4 text-sm font-semibold text-white transition-colors hover:bg-blue-900"
+              className="inline-flex h-10 items-center gap-2 rounded-md bg-blue-800 px-4 text-sm font-semibold text-white transition-colors hover:bg-blue-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-800"
             >
               <Phone aria-hidden="true" className="h-4 w-4" />
               {phone}
@@ -55,7 +58,7 @@ export function Nav({ businessName, phone, telLink }: Props) {
           aria-expanded={open}
           aria-controls="mobile-menu"
           aria-label={open ? "Close menu" : "Open menu"}
-          className="sm:hidden"
+          className="-mr-2 flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-800 sm:hidden"
         >
           {open ? (
             <X aria-hidden="true" className="h-6 w-6 text-slate-900" />
@@ -72,7 +75,7 @@ export function Nav({ businessName, phone, telLink }: Props) {
               <a
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="block py-2 text-sm font-medium text-slate-700"
+                className="flex min-h-11 items-center text-sm font-medium text-slate-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-800"
               >
                 {link.label}
               </a>

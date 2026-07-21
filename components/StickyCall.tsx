@@ -10,7 +10,7 @@ export function StickyCall({ phone, telLink }: Props) {
     <div className="fixed inset-x-0 bottom-0 z-50 border-t border-slate-200 bg-white/95 p-3 backdrop-blur sm:hidden">
       <a
         href={`tel:${telLink}`}
-        className="flex h-12 items-center justify-center gap-2 rounded-md bg-blue-800 px-6 text-base font-semibold text-white"
+        className="flex h-12 cursor-pointer items-center justify-center gap-2 rounded-md bg-blue-800 px-6 text-base font-semibold text-white transition-colors hover:bg-blue-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-800"
       >
         <Phone aria-hidden="true" className="h-5 w-5" />
         Call {phone}

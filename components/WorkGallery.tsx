@@ -105,19 +105,28 @@ export function WorkGallery({ photos = [] }: Props) {
           </div>
         </div>
 
-        <div className="mt-6 flex justify-center gap-2" role="tablist" aria-label="Slides">
+        {/*
+          Plain buttons, not tabs: there is no tabpanel here, and announcing a
+          tab interface that doesn't exist misleads screen-reader users. The
+          dot stays 8px visually while the button itself carries a 44px hit
+          area, so the target is thumb-sized without redesigning the control.
+        */}
+        <div className="mt-6 flex justify-center">
           {Array.from({ length: slideCount }).map((_, i) => (
             <button
               key={i}
               type="button"
-              role="tab"
-              aria-selected={i === selected}
               aria-label={`Go to slide ${i + 1}`}
+              aria-current={i === selected ? "true" : undefined}
               onClick={() => emblaApi?.scrollTo(i)}
-              className={`h-2 w-2 rounded-full transition-colors ${
-                i === selected ? "bg-blue-800" : "bg-slate-300"
-              }`}
-            />
+              className="flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-800"
+            >
+              <span
+                className={`block h-2 w-2 rounded-full transition-colors ${
+                  i === selected ? "bg-blue-800" : "bg-slate-300"
+                }`}
+              />
+            </button>
           ))}
         </div>
       </div>

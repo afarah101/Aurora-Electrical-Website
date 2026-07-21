@@ -5,15 +5,23 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-/** Mirrors the server schema in app/api/contact/route.ts. */
+/**
+ * Field rules match the server schema in app/api/contact/route.ts; only the
+ * messages are client-side. Keep the two in sync — they are checked
+ * independently, and the server is the one that decides.
+ */
 const schema = z.object({
   name: z.string().min(2, "Please enter your name"),
   email: z.email("Please enter a valid email address"),
   phone: z.string().optional(),
   propertyType: z.enum(["domestic", "commercial"]),
   message: z.string().min(10, "Please tell us a little about the job"),
-  /** Honeypot — must stay empty. */
-  company: z.string().max(0).optional(),
+  /**
+   * Honeypot. Deliberately permissive, exactly as on the server: rejecting a
+   * filled value here would surface a validation error and tell a bot it was
+   * caught. The server accepts and silently discards instead.
+   */
+  company: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -129,12 +137,12 @@ export function ContactForm({ email, phone, telLink }: Props) {
             <fieldset>
               <legend className="text-sm font-medium text-slate-900">Property type</legend>
               <div className="mt-2 flex gap-4">
-                <label className="flex items-center gap-2 text-sm text-slate-700">
-                  <input type="radio" value="domestic" {...register("propertyType")} />
+                <label className="flex min-h-11 cursor-pointer items-center gap-2 text-sm text-slate-700">
+                  <input className="cursor-pointer" type="radio" value="domestic" {...register("propertyType")} />
                   Home
                 </label>
-                <label className="flex items-center gap-2 text-sm text-slate-700">
-                  <input type="radio" value="commercial" {...register("propertyType")} />
+                <label className="flex min-h-11 cursor-pointer items-center gap-2 text-sm text-slate-700">
+                  <input className="cursor-pointer" type="radio" value="commercial" {...register("propertyType")} />
                   Business
                 </label>
               </div>
@@ -161,7 +169,7 @@ export function ContactForm({ email, phone, telLink }: Props) {
             <button
               type="submit"
               disabled={status.kind === "sending"}
-              className="inline-flex h-12 items-center justify-center rounded-md bg-blue-800 px-6 text-base font-semibold text-white transition-colors hover:bg-blue-900 disabled:opacity-60"
+              className="inline-flex h-12 cursor-pointer items-center justify-center rounded-md bg-blue-800 px-6 text-base font-semibold text-white transition-colors hover:bg-blue-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-800 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {status.kind === "sending" ? "Sending…" : "Send request"}
             </button>

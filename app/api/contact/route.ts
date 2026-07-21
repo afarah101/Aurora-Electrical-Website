@@ -3,7 +3,11 @@ import { z } from "zod";
 import { Resend } from "resend";
 import { business, contact } from "@/app/content";
 
-/** Mirrors the client schema in components/ContactForm.tsx. */
+/**
+ * Field rules match the client schema in components/ContactForm.tsx, which
+ * carries the user-facing messages. This is the authoritative check — the
+ * client copy is a convenience and can be bypassed entirely.
+ */
 const schema = z.object({
   name: z.string().min(2),
   email: z.email(),

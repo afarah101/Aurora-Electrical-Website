@@ -128,6 +128,13 @@
   * {
     @apply border-border outline-ring/50;
   }
+  /* outline-ring/50 above sets only a colour; with no width the ring never
+     paints and keyboard users fall back to the browser default. This gives
+     every focusable a real 2px ring, which per-component focus-visible
+     utilities can still override. */
+  :focus-visible {
+    @apply outline-2 outline-offset-2;
+  }
   body {
     @apply bg-background text-foreground;
   }
