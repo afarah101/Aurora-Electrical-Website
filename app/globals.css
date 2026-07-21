@@ -48,7 +48,14 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* Trust & Authority palette (ui-ux-pro-max): professional blue/grey,
+   high contrast, restrained. Used by the marketing sections. */
 :root {
+  --trust-blue: #1e40af;
+  --trust-blue-deep: #1e3a8a;
+  --trust-verified: #059669;
+  --trust-slate: #0f172a;
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
