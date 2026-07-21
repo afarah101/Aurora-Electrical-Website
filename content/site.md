@@ -42,6 +42,6 @@
 - Serves BOTH domestic (homeowners) and commercial (businesses) clients across London — show range, not just one client type.
 
 ## Trusted By / Past Clients (logo strip)
-- [PLACEHOLDER logos — source actual logo files with client permission, drop into /public/clients/]
-1. Malieu Cafe — commercial (https://malieucafe.com) — logo slot: /public/clients/malieu.png
-2. Daar Us Sunnah — community/commercial (https://dusunnah.com) — logo slot: /public/clients/dusunnah.png
+- [PLACEHOLDER logos — source actual logo files with client permission, drop into /clients/]
+1. Malieu Cafe — commercial (https://malieucafe.com) — logo slot: /clients/malieu.png
+2. Daar Us Sunnah — community/commercial (https://dusunnah.com) — logo slot: /clients/dusunnah.png
