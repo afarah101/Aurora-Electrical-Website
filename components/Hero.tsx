@@ -1,5 +1,5 @@
 import { Phone, ShieldCheck, Clock, FileText } from "lucide-react";
-import type { Review } from "@/app/content";
+import { claims as siteClaims, type Review } from "@/app/content";
 
 type Props = {
   businessName: string;
@@ -7,16 +7,31 @@ type Props = {
   serviceArea: string | null;
   phone: string | null;
   telLink: string | null;
+  /** Defaults to the Claims section of site.md; injectable for tests. */
+  claims?: string[];
   accreditations: string[];
   aggregateRating: string | null;
   reviews: Review[];
 };
 
 /**
- * Trust signals in the first screen. Every claim here is either structural
- * (24/7, free quote) or sourced from site.md. Accreditation and rating blocks
- * render only when site.md confirms them — never as placeholders, because an
- * unearned NICEIC/NAPIT mark is a regulated claim, not a styling detail.
+ * Claims are authored in site.md, not here, so removing one there removes it
+ * from the page. Icon is chosen from the claim's wording; anything unrecognised
+ * gets the neutral mark rather than inventing a meaning for it.
+ */
+function claimIcon(claim: string) {
+  const c = claim.toLowerCase();
+  if (/emergency|24\/7|24-7|out of hours/.test(c)) return Clock;
+  if (/quote|estimate|pricing/.test(c)) return FileText;
+  return ShieldCheck;
+}
+
+/**
+ * Trust signals in the first screen. No claim is authored here — every one is
+ * read from the Claims section of site.md, so a promise the client has not made
+ * cannot appear on the page. Accreditation and rating blocks likewise render
+ * only when site.md confirms them, because an unearned NICEIC/NAPIT mark is a
+ * regulated claim, not a styling detail.
  */
 export function Hero({
   businessName,
@@ -24,6 +39,7 @@ export function Hero({
   serviceArea,
   phone,
   telLink,
+  claims = siteClaims,
   accreditations,
   aggregateRating,
   reviews,
@@ -41,8 +57,7 @@ export function Hero({
 
         <p className="mt-5 max-w-2xl text-lg leading-relaxed text-slate-600">
           Rewiring, fuse boards, fault-finding and installations — carried out for
-          homeowners and commercial premises alike, with a clear quote before any
-          work begins.
+          homeowners and commercial premises alike.
         </p>
 
         {/* Primary actions */}
@@ -64,27 +79,20 @@ export function Hero({
           </a>
         </div>
 
-        {/* Structural guarantees — true regardless of pending confirmations */}
-        <ul className="mt-10 grid gap-4 sm:grid-cols-3">
-          <li className="flex items-start gap-3">
-            <FileText aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-blue-800" />
-            <span className="text-sm font-medium text-slate-700">
-              Free, no-obligation quote
-            </span>
-          </li>
-          <li className="flex items-start gap-3">
-            <Clock aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-blue-800" />
-            <span className="text-sm font-medium text-slate-700">
-              24/7 emergency call-out
-            </span>
-          </li>
-          <li className="flex items-start gap-3">
-            <ShieldCheck aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-blue-800" />
-            <span className="text-sm font-medium text-slate-700">
-              Domestic &amp; commercial work
-            </span>
-          </li>
-        </ul>
+        {/* Claims come from site.md — none are authored in this component. */}
+        {claims.length > 0 && (
+          <ul className="mt-10 grid gap-4 sm:grid-cols-3">
+            {claims.map((claim) => {
+              const Icon = claimIcon(claim);
+              return (
+                <li key={claim} className="flex items-start gap-3">
+                  <Icon aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-blue-800" />
+                  <span className="text-sm font-medium text-slate-700">{claim}</span>
+                </li>
+              );
+            })}
+          </ul>
+        )}
 
         {/* Rendered only when confirmed in site.md */}
         {accreditations.length > 0 && (

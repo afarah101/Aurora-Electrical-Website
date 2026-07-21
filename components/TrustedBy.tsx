@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Building2 } from "lucide-react";
 import type { Client } from "@/app/content";
 
@@ -28,9 +29,26 @@ export function TrustedBy({ clients }: Props) {
               key={client.name}
               className="flex flex-col items-center justify-center gap-3 rounded-lg border border-slate-200 bg-white p-6"
             >
-              {/* Logo files are supplied later; until then show a named slot. */}
-              <div className="flex h-12 items-center justify-center">
-                <Building2 aria-hidden="true" className="h-8 w-8 text-slate-400" />
+              {/*
+                content.ts only supplies `logo` when the file exists under
+                public/, so the icon below is a true fallback rather than a
+                guess. Logos vary wildly in aspect ratio — a 6.7:1 wordmark
+                next to a 1:1 badge — so both are contained in a fixed-height
+                box on white, which the supplied dark/gold marks need.
+              */}
+              <div className="flex h-14 w-full items-center justify-center">
+                {client.logo ? (
+                  <Image
+                    src={client.logo}
+                    alt={`${client.name} logo`}
+                    width={200}
+                    height={56}
+                    unoptimized
+                    className="max-h-14 w-auto max-w-[150px] object-contain"
+                  />
+                ) : (
+                  <Building2 aria-hidden="true" className="h-8 w-8 text-slate-400" />
+                )}
               </div>
               <span className="text-center text-sm font-semibold text-slate-900">
                 {client.name}
