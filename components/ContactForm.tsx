@@ -70,7 +70,7 @@ export function ContactForm({ email, phone, telLink }: Props) {
   };
 
   const fieldClass =
-    "mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-blue-800 focus:outline-2 focus:outline-offset-0 focus:outline-blue-800";
+    "mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-blue-700 focus:outline-2 focus:outline-offset-0 focus:outline-blue-700";
 
   return (
     <section id="contact" className="border-b border-slate-200 bg-white">
@@ -87,7 +87,7 @@ export function ContactForm({ email, phone, telLink }: Props) {
             <div className="mt-6 space-y-2 text-sm">
               {telLink && (
                 <p>
-                  <a href={`tel:${telLink}`} className="font-semibold text-blue-800">
+                  <a href={`tel:${telLink}`} className="font-semibold text-blue-700">
                     {phone}
                   </a>
                 </p>
@@ -169,7 +169,7 @@ export function ContactForm({ email, phone, telLink }: Props) {
             <button
               type="submit"
               disabled={status.kind === "sending"}
-              className="inline-flex h-12 cursor-pointer items-center justify-center rounded-md bg-blue-800 px-6 text-base font-semibold text-white transition-colors hover:bg-blue-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-800 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex h-12 cursor-pointer items-center justify-center rounded-md bg-blue-700 px-6 text-base font-semibold text-white transition-colors hover:bg-blue-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {status.kind === "sending" ? "Sending…" : "Send request"}
             </button>
