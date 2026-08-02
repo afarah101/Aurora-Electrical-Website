@@ -41,6 +41,10 @@
 ## Positioning
 - Serves BOTH domestic (homeowners) and commercial (businesses) clients across London — show range, not just one client type.
 
+## Service area (display)
+- London
+- [NOTE — display-only, shown in the TrustBar. The canonical "Service area" under Contact stays unconfirmed until boroughs/postcodes are agreed; confirming THAT line also changes the hero eyebrow, footer and SEO metadata. When it's confirmed, fold this in and delete this section.]
+
 ## Claims
 - Same-day callouts
 - 24/7 emergency call-out

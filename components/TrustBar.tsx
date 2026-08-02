@@ -1,7 +1,38 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { MapPin, Users, Wrench } from "lucide-react";
 import { claims } from "@/app/content";
 
 type Props = { serviceArea: string | null; positioning: string[] };
+
+/**
+ * Display-only service area from "## Service area (display)" in site.md.
+ * Deliberately NOT contact.serviceArea: that canonical field is still
+ * unconfirmed (boroughs/postcodes pending), and confirming it would also
+ * change the hero eyebrow, the footer, and the SEO/JSON-LD metadata. This
+ * lookup lets the TrustBar name the area alone, and retires itself: the
+ * serviceArea prop wins the moment Contact is confirmed.
+ */
+function displayArea(): string | null {
+  try {
+    const lines = readFileSync(
+      join(process.cwd(), "content", "site.md"),
+      "utf8",
+    ).split("\n");
+    const start = lines.findIndex((l) =>
+      l.trim().toLowerCase().startsWith("## service area"),
+    );
+    if (start === -1) return null;
+    for (const line of lines.slice(start + 1)) {
+      if (line.startsWith("## ")) break;
+      const m = line.trim().match(/^- (.+)$/);
+      if (m && !/\[(PLACEHOLDER|TBC|NOTE)/i.test(m[1])) return m[1].trim();
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
 
 /**
  * Reinforces range (domestic + commercial) directly beneath the hero.
@@ -16,11 +47,12 @@ type Props = { serviceArea: string | null; positioning: string[] };
 export function TrustBar({ serviceArea, positioning }: Props) {
   const quoteClaim =
     claims.find((c) => /quoted before/i.test(c)) ?? null;
+  const area = serviceArea ?? displayArea();
 
   const items = [
     { icon: Users, label: "Homeowners & businesses" },
     quoteClaim ? { icon: Wrench, label: quoteClaim } : null,
-    serviceArea ? { icon: MapPin, label: serviceArea } : null,
+    area ? { icon: MapPin, label: area } : null,
   ].filter((i): i is { icon: typeof Users; label: string } => i !== null);
 
   return (
