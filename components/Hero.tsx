@@ -1,4 +1,4 @@
-import { Phone, ShieldCheck, Clock, FileText } from "lucide-react";
+import { Phone, ShieldCheck, Clock, FileText, Star } from "lucide-react";
 import { claims as siteClaims, type Review } from "@/app/content";
 import { HeroBackground } from "@/components/HeroBackground";
 
@@ -46,18 +46,19 @@ export function Hero({
   reviews,
 }: Props) {
   return (
-    <section className="relative overflow-hidden border-b border-slate-800 bg-slate-900">
+    <section className="relative overflow-hidden bg-slate-900">
       {/* Footage sits at the back; if it fails to load, bg-slate-900 above is
           the floor and the text treatment below still holds. */}
       <HeroBackground />
       {/* Contrast guarantee. The clip's peak pixels measure 253/255 — pure
           white work lights — so the overlay is sized for a white worst case:
           slate-900 at 70% over #fff composites to ~#575A69, giving white
-          text 6.6:1 and slate-200 5.4:1. The gradient only ever ADDS opacity
-          (80% at the top), so 70% is the guaranteed minimum everywhere. */}
+          text 6.6:1 and slate-200 5.4:1. The lightest stop is the /70 middle;
+          the bottom runs to SOLID slate-900 so the footage fades out into the
+          TrustBar's surface with no opacity jump and no border seam. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-b from-slate-950/80 to-slate-900/70"
+        className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-900/70 to-slate-900"
       />
 
       <div className="relative z-10 mx-auto max-w-6xl px-5 py-16 sm:py-24">
@@ -93,9 +94,12 @@ export function Hero({
           </a>
         </div>
 
-        {/* Claims come from site.md — none are authored in this component. */}
+        {/* Claims come from site.md — none are authored in this component.
+            The review proof sits inline with them: same row, same trust
+            voice, but it links to the evidence. Stars are justified by
+            site.md's own "All are 5 stars" line. */}
         {claims.length > 0 && (
-          <ul className="mt-10 grid gap-4 sm:grid-cols-3">
+          <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {claims.map((claim) => {
               const Icon = claimIcon(claim);
               return (
@@ -105,6 +109,32 @@ export function Hero({
                 </li>
               );
             })}
+            {(aggregateRating || reviews.length > 0) && (
+              <li>
+                <a
+                  href="#reviews"
+                  className="flex items-start gap-3 rounded-md hover:underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft"
+                >
+                  <span
+                    role="img"
+                    aria-label="5 out of 5 stars"
+                    className="mt-0.5 flex shrink-0 items-center gap-0.5"
+                  >
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star
+                        key={i}
+                        aria-hidden="true"
+                        className="h-3.5 w-3.5 fill-trust-bright text-trust-bright"
+                      />
+                    ))}
+                  </span>
+                  <span className="text-sm font-medium text-trust-bright">
+                    {aggregateRating ??
+                      `${reviews.length} customer ${reviews.length === 1 ? "review" : "reviews"}`}
+                  </span>
+                </a>
+              </li>
+            )}
           </ul>
         )}
 
@@ -122,13 +152,6 @@ export function Hero({
           </ul>
         )}
 
-        {/* Rating line is proof — it takes the trust gold, not the neutral. */}
-        {(aggregateRating || reviews.length > 0) && (
-          <p className="mt-8 text-sm font-medium text-trust-bright">
-            {aggregateRating ??
-              `${reviews.length} customer ${reviews.length === 1 ? "review" : "reviews"}`}
-          </p>
-        )}
       </div>
     </section>
   );

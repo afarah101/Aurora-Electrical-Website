@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, Phone, X } from "lucide-react";
 
 type Props = { businessName: string; phone: string | null; telLink: string | null };
@@ -14,9 +14,35 @@ const LINKS = [
 
 export function Nav({ businessName, phone, telLink }: Props) {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  /*
+   * At the top of the page the bar is transparent — the nav sits IN the hero
+   * rather than on it. Past 24px it takes the translucent dark treatment.
+   * The border is transparent rather than absent so the swap never shifts
+   * layout. Easing is per-direction (emil-design-eng): ease-out entering the
+   * dark state, ease-in returning to transparent; only one class is ever
+   * present, so the two utilities never conflict. The open mobile drawer
+   * forces the dark treatment — transparent glass over the video would be
+   * unreadable.
+   */
+  const dark = scrolled || open;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-800 bg-slate-950/80 backdrop-blur">
+    <header
+      className={`sticky top-0 z-40 border-b transition-colors duration-200 motion-reduce:transition-none ${
+        dark
+          ? "border-slate-800 bg-slate-950/80 ease-out backdrop-blur"
+          : "border-transparent bg-transparent ease-in"
+      }`}
+    >
       <nav
         aria-label="Main"
         className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3"

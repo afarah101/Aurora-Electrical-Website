@@ -20,7 +20,9 @@ export function Services({ services, certificates }: Props) {
     // rule, not by surface change.
     <section id="services" className="border-t border-slate-800 bg-slate-950">
       <div className="mx-auto grid max-w-6xl gap-12 px-5 py-16 sm:py-24 lg:grid-cols-[2fr_3fr] lg:gap-20">
-        <div>
+        {/* Sticky through the list so the tall right column never leaves a
+            dead lower-left quadrant; top offset clears the fixed nav. */}
+        <div className="lg:sticky lg:top-24 lg:self-start">
           <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
             What we do
           </h2>
@@ -31,18 +33,14 @@ export function Services({ services, certificates }: Props) {
         </div>
 
         <div>
+          {/* Rows carry no hover states: they are not interactive, and motion
+              on them would invite a click that goes nowhere. */}
           <ul>
             {services.map((service) => (
-              <li
-                key={service}
-                className="group border-b border-slate-800 first:border-t"
-              >
+              <li key={service} className="border-b border-slate-800 first:border-t">
                 <div className="flex items-center gap-4 py-5">
-                  <span
-                    aria-hidden="true"
-                    className="h-2 w-2 shrink-0 bg-slate-500 transition-colors group-hover:bg-white"
-                  />
-                  <h3 className="font-mono text-sm font-medium uppercase leading-relaxed tracking-widest text-slate-300 transition-colors group-hover:text-white">
+                  <span aria-hidden="true" className="h-2 w-2 shrink-0 bg-slate-500" />
+                  <h3 className="font-mono text-sm font-medium uppercase leading-relaxed tracking-widest text-slate-300">
                     {service}
                   </h3>
                 </div>
