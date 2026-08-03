@@ -9,7 +9,7 @@
 - Phone: 07495 555872
 - Tel link: +447495555872
 - WhatsApp: [PLACEHOLDER — confirm if same as phone]
-- Email: mohamedatwork@outlook.com
+- Email: aurora.electricals@outlook.com
 - Service area: [PLACEHOLDER — London + which boroughs/postcodes]
 
 ## Services (CONFIRMED — build only these)
