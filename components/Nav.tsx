@@ -19,7 +19,7 @@ export function Nav({ businessName, phone, telLink }: Props) {
     <header className="sticky top-0 z-40 border-b border-slate-800 bg-slate-950/80 backdrop-blur">
       <nav
         aria-label="Main"
-        className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4"
+        className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3"
       >
         <a
           href="#top"
@@ -29,7 +29,7 @@ export function Nav({ businessName, phone, telLink }: Props) {
         </a>
 
         <div className="hidden items-center gap-8 sm:flex">
-          <ul className="flex items-center gap-6">
+          <ul className="flex items-center gap-8">
             {LINKS.map((link) => (
               <li key={link.href}>
                 <a

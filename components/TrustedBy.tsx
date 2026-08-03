@@ -14,20 +14,20 @@ export function TrustedBy({ clients }: Props) {
   if (clients.length === 0) return null;
 
   return (
-    <section id="clients" className="border-b border-slate-200 bg-slate-50">
+    <section id="clients" className="border-b border-slate-800 bg-slate-950">
       <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
-        <h2 className="text-3xl font-semibold tracking-tight text-slate-900">
+        <h2 className="text-3xl font-semibold tracking-tight text-white">
           Trusted by
         </h2>
-        <p className="mt-3 max-w-2xl text-slate-600">
+        <p className="mt-3 max-w-2xl text-slate-300">
           Commercial and community premises we&apos;ve carried out work for.
         </p>
 
-        <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {clients.map((client) => (
             <li
               key={client.name}
-              className="flex flex-col items-center justify-center gap-3 rounded-lg border border-slate-200 bg-white p-6"
+              className="flex flex-col items-center justify-center gap-3 rounded-xl bg-white p-8"
             >
               {/*
                 content.ts only supplies `logo` when the file exists under
