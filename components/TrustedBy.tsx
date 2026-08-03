@@ -32,19 +32,29 @@ export function TrustedBy({ clients }: Props) {
               {/*
                 content.ts only supplies `logo` when the file exists under
                 public/, so the icon below is a true fallback rather than a
-                guess. Logos vary wildly in aspect ratio — a 6.7:1 wordmark
-                next to a 1:1 badge — so both are contained in a fixed-height
-                box on white, which the supplied dark/gold marks need.
+                guess. Both marks are dark-on-transparent (Malieu measures
+                pure black), so the tiles stay white on the dark section.
+
+                Sizing is by format, not one shared cap. The DUS mark is a
+                real SVG served raw (`unoptimized` bypasses the optimizer),
+                so the browser renders it as vector — height-driven at h-8 it
+                draws crisp at ~213px wide. The Malieu PNG is a 270px
+                temporary placeholder: held to 64px so it only ever
+                downscales, where its low resolution shows least.
               */}
-              <div className="flex h-14 w-full items-center justify-center">
+              <div className="flex h-16 w-full items-center justify-center">
                 {client.logo ? (
                   <Image
                     src={client.logo}
                     alt={`${client.name} logo`}
-                    width={200}
-                    height={56}
+                    width={230}
+                    height={64}
                     unoptimized
-                    className="max-h-14 w-auto max-w-[150px] object-contain"
+                    className={
+                      client.logo.endsWith(".svg")
+                        ? "h-8 w-auto max-w-full object-contain"
+                        : "h-16 w-16 object-contain"
+                    }
                   />
                 ) : (
                   <Building2 aria-hidden="true" className="h-8 w-8 text-slate-400" />
