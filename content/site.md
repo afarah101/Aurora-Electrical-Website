@@ -29,10 +29,13 @@
 ## Certifications / Accreditations
 - [TBC — confirm body: NICEIC / NAPIT / Part P. Do NOT display any badge until confirmed. Never invent one.]
 
-## Reviews (PLACEHOLDER — replace with real ones)
-1. Name: [PLACEHOLDER] — Area: [e.g. Ealing] — "[PLACEHOLDER review text]"
-2. Name: [PLACEHOLDER] — Area: [e.g. Acton] — "[PLACEHOLDER review text]"
-3. Name: [PLACEHOLDER] — Area: [e.g. Wembley] — "[PLACEHOLDER review text]"
+## Reviews
+1. Name: MyBuilder customer — Area: Clapham, London — Job: New pendant light installation — "Great job, on time, very professional and competent. Would definitely recommend!"
+2. Name: Steve — Area: Stockwell, London — Job: Electrical socket installed — "Professional electrician and done the job quickly, reliable, will definitely use him again for other jobs, recommended if you want a good efficient electrician."
+3. Name: Jake Holberry — Area: Southfields, London — Job: Lighting job in Earlsfield — "Came the same day and completed the job with no issue. Highly recommend."
+4. Name: MyBuilder customer — Area: Notting Hill, London — Job: Installing dimmers and fixing outside front door light — "Super quick to respond, diligent, timely, hard-working — had a bit of a tricky task and he did a great job tackling it. And then very quick with other routine tasks. And when I gave feedback, he was happy to adjust. Would highly recommend."
+5. Name: Tom — Area: Pimlico, London — Job: Fit new extractor fan — "Great job. On time. Fair price. Thanks again."
+- All are 5 stars.
 - Aggregate: [PLACEHOLDER — e.g. ★★★★★ from 40+ homeowners]
 
 ## Work photos
