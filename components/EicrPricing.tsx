@@ -20,19 +20,28 @@ export function EicrPricing() {
           EICR pricing
         </h2>
 
-        <dl className="mt-10 max-w-md">
+        {/*
+          Full-width two-column ledger, reference-style (the stats grid in
+          reference/21.49.53 translated to hairlines): column-flow so the
+          five tiers split 3/2 and both columns read top-to-bottom. One
+          top rule spans the whole width; each row closes with its own
+          hairline — separation by rule, never boxes.
+        */}
+        <dl className="mt-10 grid gap-x-16 border-t border-slate-800 sm:grid-flow-col sm:grid-rows-3">
           {PRICES.map(({ label, price }) => (
             <div
               key={label}
-              className="flex items-baseline justify-between gap-4 border-b border-slate-800 py-4 first:border-t"
+              className="flex items-baseline justify-between gap-4 border-b border-slate-800 py-5"
             >
-              <dt className="text-sm text-slate-200">{label}</dt>
-              <dd className="font-mono text-sm text-white">{price}</dd>
+              <dt className="text-base text-slate-200">{label}</dt>
+              <dd className="font-mono text-base tabular-nums text-white">
+                {price}
+              </dd>
             </div>
           ))}
         </dl>
 
-        <p className="mt-4 text-xs text-slate-400">
+        <p className="mt-5 text-xs text-slate-400">
           All prices are subject to VAT.
         </p>
       </div>
