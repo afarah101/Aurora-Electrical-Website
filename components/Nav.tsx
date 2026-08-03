@@ -24,20 +24,23 @@ export function Nav({ businessName, phone, telLink }: Props) {
   }, []);
 
   /*
-   * At the top of the page the bar is transparent — the nav sits IN the hero
-   * rather than on it. Past 24px it takes the translucent dark treatment.
-   * The border is transparent rather than absent so the swap never shifts
-   * layout. Easing is per-direction (emil-design-eng): ease-out entering the
-   * dark state, ease-in returning to transparent; only one class is ever
-   * present, so the two utilities never conflict. The open mobile drawer
-   * forces the dark treatment — transparent glass over the video would be
-   * unreadable.
+   * FIXED, not sticky: sticky keeps the bar in normal flow, so at the top of
+   * the page it sat in its own strip ABOVE the hero with the white body
+   * showing through the transparent background — a white bar with an
+   * invisible white wordmark. Fixed takes it out of flow so it genuinely
+   * overlays the hero video (whose own overlay is slate-950/80 up here).
+   * Past 24px it takes the translucent dark treatment. The border is
+   * transparent rather than absent so the swap never shifts layout. Easing
+   * is per-direction (emil-design-eng): ease-out entering the dark state,
+   * ease-in returning to transparent; only one class is ever present. The
+   * open mobile drawer forces the dark treatment — transparent glass over
+   * the video would be unreadable.
    */
   const dark = scrolled || open;
 
   return (
     <header
-      className={`sticky top-0 z-40 border-b transition-colors duration-200 motion-reduce:transition-none ${
+      className={`fixed inset-x-0 top-0 z-40 border-b transition-colors duration-200 motion-reduce:transition-none ${
         dark
           ? "border-slate-800 bg-slate-950/80 ease-out backdrop-blur"
           : "border-transparent bg-transparent ease-in"
