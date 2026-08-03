@@ -24,10 +24,12 @@
 - EV chargers (client does not offer)
 
 ## Certificates / EICR
-- [TBC — client unsure. Do NOT display any certificate service until confirmed.]
+- Status: CONFIRMED — EICRs are live, listed in "What we do" and priced in the #eicr-pricing section.
+- Prices: 1-2 Bedroom — £160; 3 Bedroom — £220; 4 Bedroom — £260; 5 Bedroom — £300; 6+ Bedroom — call for quote. All prices are subject to VAT.
+- Note: the EICRs row is authored in components/Services.tsx rather than parsed from this file (the parser has no link-aware row format). Changing the prices means editing components/EicrPricing.tsx, not this file.
 
 ## Certifications / Accreditations
-- [TBC — confirm body: NICEIC / NAPIT / Part P. Do NOT display any badge until confirmed. Never invent one.]
+- [PLACEHOLDER — confirm body: NICEIC / NAPIT / Part P. Badges stay hidden until the client confirms one. Never invent one.]
 
 ## Reviews
 1. Name: MyBuilder customer — Area: Clapham, London — Job: New pendant light installation — "Great job, on time, very professional and competent. Would definitely recommend!"
