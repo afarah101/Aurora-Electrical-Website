@@ -120,7 +120,7 @@ export function WorkGallery({ photos = PHOTOS }: { photos?: string[] }) {
                   <span
                     key={p}
                     className={`h-1.5 w-1.5 rounded-full transition-colors ${
-                      i === index ? "bg-blue-400" : "bg-slate-600"
+                      i === index ? "bg-white" : "bg-slate-600"
                     }`}
                   />
                 ))}
@@ -131,7 +131,7 @@ export function WorkGallery({ photos = PHOTOS }: { photos?: string[] }) {
                   type="button"
                   onClick={() => go(-1)}
                   aria-label="Previous photo"
-                  className="flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-md border border-slate-700 text-slate-200 transition-colors hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+                  className="flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-md border border-slate-700 text-slate-200 transition-colors hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft"
                 >
                   <ChevronLeft aria-hidden="true" className="h-5 w-5" />
                 </button>
@@ -139,7 +139,7 @@ export function WorkGallery({ photos = PHOTOS }: { photos?: string[] }) {
                   type="button"
                   onClick={() => go(1)}
                   aria-label="Next photo"
-                  className="flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-md border border-slate-700 text-slate-200 transition-colors hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+                  className="flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-md border border-slate-700 text-slate-200 transition-colors hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft"
                 >
                   <ChevronRight aria-hidden="true" className="h-5 w-5" />
                 </button>

@@ -61,11 +61,11 @@ export function Hero({
       />
 
       <div className="relative z-10 mx-auto max-w-6xl px-5 py-16 sm:py-24">
-        <p className="text-sm font-semibold uppercase tracking-widest text-blue-200">
+        <p className="font-mono text-sm font-medium uppercase tracking-widest text-slate-300">
           {serviceArea ? serviceArea : "Domestic & commercial electricians"}
         </p>
 
-        <h1 className="mt-4 max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-white sm:text-5xl">
+        <h1 className="mt-4 max-w-3xl text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl">
           {tagline ?? `${businessName} — electrical work for homes and businesses`}
         </h1>
 
@@ -79,7 +79,7 @@ export function Hero({
           {telLink && (
             <a
               href={`tel:${telLink}`}
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-blue-700 px-6 text-base font-semibold text-white transition-colors hover:bg-blue-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-300"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-action px-6 text-base font-semibold text-white transition-colors hover:bg-action-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft"
             >
               <Phone aria-hidden="true" className="h-5 w-5" />
               Call {phone}
@@ -87,7 +87,7 @@ export function Hero({
           )}
           <a
             href="#contact"
-            className="inline-flex h-12 items-center justify-center rounded-md bg-white px-6 text-base font-semibold text-slate-900 transition-colors hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-300"
+            className="inline-flex h-12 items-center justify-center rounded-md bg-white px-6 text-base font-semibold text-slate-900 transition-colors hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft"
           >
             Request a free quote
           </a>
@@ -100,7 +100,7 @@ export function Hero({
               const Icon = claimIcon(claim);
               return (
                 <li key={claim} className="flex items-start gap-3">
-                  <Icon aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-blue-300" />
+                  <Icon aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-trust-bright" />
                   <span className="text-sm font-medium text-slate-100">{claim}</span>
                 </li>
               );
@@ -114,7 +114,7 @@ export function Hero({
             {accreditations.map((a) => (
               <li
                 key={a}
-                className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-sm font-semibold text-emerald-800"
+                className="rounded-md border border-trust-line bg-trust-soft px-3 py-1.5 text-sm font-semibold text-trust-deep"
               >
                 {a}
               </li>
@@ -122,8 +122,9 @@ export function Hero({
           </ul>
         )}
 
+        {/* Rating line is proof — it takes the trust gold, not the neutral. */}
         {(aggregateRating || reviews.length > 0) && (
-          <p className="mt-8 text-sm font-medium text-slate-200">
+          <p className="mt-8 text-sm font-medium text-trust-bright">
             {aggregateRating ??
               `${reviews.length} customer ${reviews.length === 1 ? "review" : "reviews"}`}
           </p>

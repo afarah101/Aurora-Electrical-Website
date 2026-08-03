@@ -18,8 +18,9 @@ export function Reviews({ reviews, aggregateRating }: Props) {
         <h2 className="text-3xl font-semibold tracking-tight text-slate-900">
           What customers say
         </h2>
+        {/* Aggregate rating is proof — trust gold, dark enough for white. */}
         {aggregateRating && (
-          <p className="mt-3 text-sm font-medium text-slate-700">{aggregateRating}</p>
+          <p className="mt-3 text-sm font-medium text-trust">{aggregateRating}</p>
         )}
 
         <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -28,7 +29,7 @@ export function Reviews({ reviews, aggregateRating }: Props) {
               key={`${review.name}-${review.area}`}
               className="rounded-lg border border-slate-200 bg-slate-50 p-6"
             >
-              <Quote aria-hidden="true" className="h-6 w-6 text-blue-800" />
+              <Quote aria-hidden="true" className="h-6 w-6 text-trust" />
               <blockquote className="mt-3 text-slate-700">
                 &ldquo;{review.quote}&rdquo;
               </blockquote>

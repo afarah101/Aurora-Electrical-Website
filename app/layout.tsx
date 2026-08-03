@@ -1,19 +1,30 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import { IBM_Plex_Sans, IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { business, contact, services } from "./content";
 
-// IBM Plex — measured, engineered, non-default. Deliberately not Inter.
+/**
+ * Three faces, three roles — deliberately not Inter:
+ * Space Grotesk carries the headings (the page's boldness is spent there),
+ * IBM Plex Sans carries body copy, and IBM Plex Mono marks technical
+ * accents: eyebrow labels and the work-gallery counter.
+ */
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+});
+
 const plexSans = IBM_Plex_Sans({
-  variable: "--font-sans",
+  variable: "--font-plex-sans",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
 });
 
 const plexMono = IBM_Plex_Mono({
-  variable: "--font-geist-mono",
+  variable: "--font-plex-mono",
   subsets: ["latin"],
-  weight: ["400"],
+  weight: ["400", "500"],
 });
 
 const description = `${business.name} — electrical work for homes and businesses${
@@ -58,7 +69,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-GB" className={`${plexSans.variable} ${plexMono.variable} h-full antialiased`}>
+    <html
+      lang="en-GB"
+      className={`${spaceGrotesk.variable} ${plexSans.variable} ${plexMono.variable} h-full antialiased`}
+    >
       <body className="flex min-h-full flex-col">
         <script
           type="application/ld+json"

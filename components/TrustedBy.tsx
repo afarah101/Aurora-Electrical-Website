@@ -53,8 +53,10 @@ export function TrustedBy({ clients }: Props) {
               <span className="text-center text-sm font-semibold text-slate-900">
                 {client.name}
               </span>
+              {/* Category label in the mono face; trust gold marks this
+                  section as proof territory. amber-700 holds 4.5:1 on white. */}
               {client.descriptor && (
-                <span className="text-center text-xs uppercase tracking-wide text-slate-500">
+                <span className="text-center font-mono text-xs uppercase tracking-wide text-trust">
                   {client.descriptor}
                 </span>
               )}

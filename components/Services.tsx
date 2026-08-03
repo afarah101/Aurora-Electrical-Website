@@ -32,12 +32,13 @@ export function Services({ services, certificates }: Props) {
   if (services.length === 0) return null;
 
   return (
-    // The seam out of the dark hero/TrustBar block: a thin rule in the CTA
-    // blue marks the boundary on purpose, and the section lands on slate-50
-    // before settling to white instead of snapping straight from slate-900.
+    // The seam out of the dark hero/TrustBar block: a thin neutral rule marks
+    // the boundary on purpose (blue is reserved for actions), and the section
+    // lands on slate-50 before settling to white instead of snapping straight
+    // from slate-900.
     <section
       id="services"
-      className="border-t-2 border-blue-700 bg-gradient-to-b from-slate-50 to-white"
+      className="border-t-2 border-slate-800 bg-gradient-to-b from-slate-50 to-white"
     >
       <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
         <h2 className="text-3xl font-semibold tracking-tight text-slate-900">
@@ -56,7 +57,7 @@ export function Services({ services, certificates }: Props) {
                 key={service}
                 className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
               >
-                <Icon aria-hidden="true" className="h-6 w-6 text-blue-700" />
+                <Icon aria-hidden="true" className="h-6 w-6 text-slate-500" />
                 <h3 className="mt-3 text-base font-semibold text-slate-900">
                   {service}
                 </h3>

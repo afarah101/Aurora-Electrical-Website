@@ -60,7 +60,7 @@ export function TrustBar({ serviceArea, positioning }: Props) {
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-8 sm:flex-row sm:items-center sm:gap-12">
         {items.map(({ icon: Icon, label }) => (
           <div key={label} className="flex items-center gap-3">
-            <Icon aria-hidden="true" className="h-5 w-5 shrink-0 text-blue-300" />
+            <Icon aria-hidden="true" className="h-5 w-5 shrink-0 text-trust-bright" />
             <span className="text-sm font-medium text-slate-100">{label}</span>
           </div>
         ))}
