@@ -6,6 +6,7 @@ import { WorkGallery } from "@/components/WorkGallery";
 import { Reviews } from "@/components/Reviews";
 import { TrustedBy } from "@/components/TrustedBy";
 import { ContactForm } from "@/components/ContactForm";
+import { EicrPricing } from "@/components/EicrPricing";
 import { StickyCall } from "@/components/StickyCall";
 import { Footer } from "@/components/Footer";
 
@@ -52,6 +53,7 @@ export default function Home() {
           phone={contact.phone}
           telLink={contact.telLink}
         />
+        <EicrPricing />
       </main>
 
       <Footer

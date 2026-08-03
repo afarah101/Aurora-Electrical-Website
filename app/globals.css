@@ -127,4 +127,9 @@
   h3 {
     @apply font-heading;
   }
+  /* The nav is fixed (~64px tall), so anchor jumps would land targets under
+     it; every id'd element gets landing room instead. */
+  [id] {
+    @apply scroll-mt-20;
+  }
 }

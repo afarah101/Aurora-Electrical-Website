@@ -46,6 +46,24 @@ export function Services({ services, certificates }: Props) {
                 </div>
               </li>
             ))}
+            {/* The one interactive row — it links to the pricing section, so
+                it alone carries hover and focus states. Authored here rather
+                than in site.md because it needs an anchor the parser's plain
+                service strings can't express. */}
+            <li className="border-b border-slate-800 first:border-t">
+              <a
+                href="#eicr-pricing"
+                className="group flex items-center gap-4 py-5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft"
+              >
+                <span
+                  aria-hidden="true"
+                  className="h-2 w-2 shrink-0 bg-slate-500 transition-colors group-hover:bg-white"
+                />
+                <h3 className="font-mono text-sm font-medium uppercase leading-relaxed tracking-widest text-slate-300 transition-colors group-hover:text-white">
+                  EICRs (Electrical Installation Condition Reports)
+                </h3>
+              </a>
+            </li>
           </ul>
 
           {certificates.length > 0 && (
