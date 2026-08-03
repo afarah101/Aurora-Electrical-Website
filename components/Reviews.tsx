@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import type { Review } from "@/app/content";
 
-const AUTOPLAY_MS = 5500;
+const AUTOPLAY_MS = 3000;
 
 type Props = { reviews: Review[]; aggregateRating: string | null };
 

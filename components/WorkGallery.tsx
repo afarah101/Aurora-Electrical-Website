@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
 
-const AUTOPLAY_MS = 4500;
+const AUTOPLAY_MS = 3000;
 
 /**
  * The real job photos in /public/work, copied and numbered at build time.
