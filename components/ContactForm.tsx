@@ -70,31 +70,31 @@ export function ContactForm({ email, phone, telLink }: Props) {
   };
 
   const fieldClass =
-    "mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-action focus:outline-2 focus:outline-offset-0 focus:outline-action";
+    "mt-1 block w-full rounded-md border border-slate-500 bg-slate-900 px-3 py-2 text-white focus:border-action-soft focus:outline-2 focus:outline-offset-0 focus:outline-action-soft";
 
   return (
-    <section id="contact" className="border-b border-slate-200 bg-white">
+    <section id="contact" className="border-b border-slate-800 bg-slate-950">
       <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
         <div className="grid gap-10 lg:grid-cols-2">
           <div>
-            <h2 className="text-3xl font-semibold tracking-tight text-slate-900">
+            <h2 className="text-3xl font-semibold tracking-tight text-white">
               Request a free quote
             </h2>
-            <p className="mt-3 text-slate-600">
+            <p className="mt-3 text-slate-300">
               Tell us about the job and we&apos;ll come back with a
               no-obligation quote. For emergencies, calling is fastest.
             </p>
             <div className="mt-6 space-y-2 text-sm">
               {telLink && (
                 <p>
-                  <a href={`tel:${telLink}`} className="font-semibold text-action">
+                  <a href={`tel:${telLink}`} className="font-semibold text-action-soft">
                     {phone}
                   </a>
                 </p>
               )}
               {email && (
                 <p>
-                  <a href={`mailto:${email}`} className="text-slate-700">
+                  <a href={`mailto:${email}`} className="text-slate-300 transition-colors hover:text-white">
                     {email}
                   </a>
                 </p>
@@ -104,44 +104,44 @@ export function ContactForm({ email, phone, telLink }: Props) {
 
           <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
             <div>
-              <label htmlFor="name" className="text-sm font-medium text-slate-900">
+              <label htmlFor="name" className="text-sm font-medium text-slate-200">
                 Name
               </label>
               <input id="name" {...register("name")} className={fieldClass} />
               {errors.name && (
-                <p role="alert" className="mt-1 text-sm text-red-700">
+                <p role="alert" className="mt-1 text-sm text-red-400">
                   {errors.name.message}
                 </p>
               )}
             </div>
 
             <div>
-              <label htmlFor="email" className="text-sm font-medium text-slate-900">
+              <label htmlFor="email" className="text-sm font-medium text-slate-200">
                 Email
               </label>
               <input id="email" type="email" {...register("email")} className={fieldClass} />
               {errors.email && (
-                <p role="alert" className="mt-1 text-sm text-red-700">
+                <p role="alert" className="mt-1 text-sm text-red-400">
                   {errors.email.message}
                 </p>
               )}
             </div>
 
             <div>
-              <label htmlFor="phone" className="text-sm font-medium text-slate-900">
-                Phone <span className="text-slate-500">(optional)</span>
+              <label htmlFor="phone" className="text-sm font-medium text-slate-200">
+                Phone <span className="text-slate-400">(optional)</span>
               </label>
               <input id="phone" type="tel" {...register("phone")} className={fieldClass} />
             </div>
 
             <fieldset>
-              <legend className="text-sm font-medium text-slate-900">Property type</legend>
+              <legend className="text-sm font-medium text-slate-200">Property type</legend>
               <div className="mt-2 flex gap-4">
-                <label className="flex min-h-11 cursor-pointer items-center gap-2 text-sm text-slate-700">
+                <label className="flex min-h-11 cursor-pointer items-center gap-2 text-sm text-slate-300">
                   <input className="cursor-pointer" type="radio" value="domestic" {...register("propertyType")} />
                   Home
                 </label>
-                <label className="flex min-h-11 cursor-pointer items-center gap-2 text-sm text-slate-700">
+                <label className="flex min-h-11 cursor-pointer items-center gap-2 text-sm text-slate-300">
                   <input className="cursor-pointer" type="radio" value="commercial" {...register("propertyType")} />
                   Business
                 </label>
@@ -149,12 +149,12 @@ export function ContactForm({ email, phone, telLink }: Props) {
             </fieldset>
 
             <div>
-              <label htmlFor="message" className="text-sm font-medium text-slate-900">
+              <label htmlFor="message" className="text-sm font-medium text-slate-200">
                 About the job
               </label>
               <textarea id="message" rows={4} {...register("message")} className={fieldClass} />
               {errors.message && (
-                <p role="alert" className="mt-1 text-sm text-red-700">
+                <p role="alert" className="mt-1 text-sm text-red-400">
                   {errors.message.message}
                 </p>
               )}
@@ -169,17 +169,17 @@ export function ContactForm({ email, phone, telLink }: Props) {
             <button
               type="submit"
               disabled={status.kind === "sending"}
-              className="inline-flex h-12 cursor-pointer items-center justify-center rounded-md bg-action px-6 text-base font-semibold text-white transition-colors hover:bg-action-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex h-12 cursor-pointer items-center justify-center rounded-md bg-action px-6 text-base font-semibold text-white transition-colors hover:bg-action-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft disabled:cursor-not-allowed disabled:opacity-60"
             >
               {status.kind === "sending" ? "Sending…" : "Send request"}
             </button>
 
             <div aria-live="polite">
               {status.kind === "ok" && (
-                <p className="text-sm font-medium text-emerald-700">{status.message}</p>
+                <p className="text-sm font-medium text-emerald-400">{status.message}</p>
               )}
               {status.kind === "error" && (
-                <p className="text-sm font-medium text-red-700">{status.message}</p>
+                <p className="text-sm font-medium text-red-400">{status.message}</p>
               )}
             </div>
           </form>

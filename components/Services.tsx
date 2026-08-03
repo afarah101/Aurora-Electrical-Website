@@ -3,9 +3,10 @@ type Props = { services: string[]; certificates: string[] };
 /**
  * Services come only from the CONFIRMED list in site.md.
  *
- * Reference treatment (reference/21.49.44): a light panel between two dark
- * bands, with the services as a typographic list — mono uppercase, square
- * markers, hairline rules, generous air — instead of an icon-card grid.
+ * Reference treatment (reference/21.49.44 for the list, 21.49.22 for the
+ * dark canvas): services as a typographic list — mono uppercase, square
+ * markers, hairline rules, generous air — on the site's dark band, not an
+ * icon-card grid.
  * No per-service imagery: the reference pairs each item with a featured
  * photo, but none of our photos are verified per-service, and a fuse-board
  * photo captioned "Lighting" would be a misrepresentation, not a design.
@@ -14,17 +15,16 @@ export function Services({ services, certificates }: Props) {
   if (services.length === 0) return null;
 
   return (
-    // The seam out of the dark hero/TrustBar block: a thin neutral rule marks
-    // the boundary on purpose (blue is reserved for actions), and the light
-    // panel sits between the dark bands above and below — the same
-    // dark-light-dark rhythm the reference uses around its services section.
-    <section id="services" className="border-t-2 border-slate-800 bg-slate-50">
+    // Dark canvas continuous with the hero/TrustBar block above; a neutral
+    // hairline marks the section boundary, reference-style — separation by
+    // rule, not by surface change.
+    <section id="services" className="border-t border-slate-800 bg-slate-950">
       <div className="mx-auto grid max-w-6xl gap-12 px-5 py-16 sm:py-24 lg:grid-cols-[2fr_3fr] lg:gap-20">
         <div>
-          <h2 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+          <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
             What we do
           </h2>
-          <p className="mt-5 max-w-md text-slate-600">
+          <p className="mt-5 max-w-md text-slate-300">
             The same standard of work whether it&apos;s a single socket or a full
             commercial installation.
           </p>
@@ -35,14 +35,14 @@ export function Services({ services, certificates }: Props) {
             {services.map((service) => (
               <li
                 key={service}
-                className="group border-b border-slate-200 first:border-t"
+                className="group border-b border-slate-800 first:border-t"
               >
                 <div className="flex items-center gap-4 py-5">
                   <span
                     aria-hidden="true"
-                    className="h-2 w-2 shrink-0 bg-slate-300 transition-colors group-hover:bg-slate-900"
+                    className="h-2 w-2 shrink-0 bg-slate-500 transition-colors group-hover:bg-white"
                   />
-                  <h3 className="font-mono text-sm font-medium uppercase leading-relaxed tracking-widest text-slate-600 transition-colors group-hover:text-slate-900">
+                  <h3 className="font-mono text-sm font-medium uppercase leading-relaxed tracking-widest text-slate-300 transition-colors group-hover:text-white">
                     {service}
                   </h3>
                 </div>
@@ -55,7 +55,7 @@ export function Services({ services, certificates }: Props) {
               {certificates.map((c) => (
                 <li
                   key={c}
-                  className="rounded-md bg-slate-100 px-3 py-1.5 text-sm text-slate-700"
+                  className="rounded-md bg-slate-800 px-3 py-1.5 text-sm text-slate-200"
                 >
                   {c}
                 </li>
