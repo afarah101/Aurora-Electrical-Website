@@ -57,5 +57,5 @@
 
 ## Trusted By / Past Clients (logo strip)
 - [PLACEHOLDER logos — source actual logo files with client permission, drop into /clients/]
-1. Malieu Cafe — restaurant (https://malieucafe.com) — logo slot: /clients/malieu.png
+1. Maliéu Cafe — restaurant (https://malieucafe.com) — logo slot: /clients/malieu.jpg
 2. Daar Us Sunnah — community (https://dusunnah.com) — logo slot: /clients/dusunnah.svg

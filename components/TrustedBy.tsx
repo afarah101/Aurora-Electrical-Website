@@ -38,22 +38,26 @@ export function TrustedBy({ clients }: Props) {
                 Sizing is by format, not one shared cap. The DUS mark is a
                 real SVG served raw (`unoptimized` bypasses the optimizer),
                 so the browser renders it as vector — height-driven at h-8 it
-                draws crisp at ~213px wide. The Malieu PNG is a 270px
-                temporary placeholder: held to 64px so it only ever
-                downscales, where its low resolution shows least.
+                draws crisp at ~213px wide. The Maliéu mark is a 1600px
+                square JPG whose measured artwork band is 81% wide x 24%
+                tall, dead-centred on its own white canvas: rendered at up
+                to 240px wide inside this centred 80px overflow window, the
+                visible wordmark lands ~194x58 — optically level with the
+                DUS wordmark — and the crop edge is invisible because the
+                JPG's white meets the tile's white.
               */}
-              <div className="flex h-16 w-full items-center justify-center">
+              <div className="flex h-20 w-full items-center justify-center overflow-hidden">
                 {client.logo ? (
                   <Image
                     src={client.logo}
                     alt={`${client.name} logo`}
-                    width={230}
-                    height={64}
+                    width={240}
+                    height={80}
                     unoptimized
                     className={
                       client.logo.endsWith(".svg")
                         ? "h-8 w-auto max-w-full object-contain"
-                        : "h-16 w-16 object-contain"
+                        : "h-auto w-full max-w-60"
                     }
                   />
                 ) : (
