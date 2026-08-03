@@ -61,22 +61,26 @@ export function Hero({
         className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-900/70 to-slate-900"
       />
 
-      <div className="relative z-10 mx-auto max-w-6xl px-5 py-16 sm:py-24">
-        <p className="font-mono text-sm font-medium uppercase tracking-widest text-slate-300">
+      {/*
+        Reference layout (Electrio, reference/21.49.57): the footage IS the
+        hero — near-viewport height, text confined to the lower third, one
+        big title, nothing else competing. The entrance is a single slow
+        rise in three beats (eyebrow, title, actions), 900ms on the strong
+        ease-out — cinematic, not busy. Each animated node carries
+        motion-reduce:animate-none, so reduced-motion users get the static
+        composition (the poster frame stands in for the video too).
+      */}
+      <div className="relative z-10 mx-auto flex min-h-svh max-w-6xl flex-col justify-end px-5 pb-16 pt-28 sm:pb-20">
+        <p className="animate-hero-rise font-mono text-sm font-medium uppercase tracking-widest text-slate-300 motion-reduce:animate-none">
           {serviceArea ? serviceArea : "Domestic & commercial electricians"}
         </p>
 
-        <h1 className="mt-4 max-w-3xl text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl">
+        <h1 className="animate-hero-rise mt-5 max-w-4xl text-5xl font-bold leading-[1.05] tracking-tight text-white [animation-delay:150ms] sm:text-6xl lg:text-7xl motion-reduce:animate-none">
           {tagline ?? `${businessName} — electrical work for homes and businesses`}
         </h1>
 
-        <p className="mt-5 max-w-2xl text-lg leading-relaxed text-slate-200">
-          Rewiring, fuse boards, fault-finding and installations — carried out for
-          homeowners and commercial premises alike.
-        </p>
-
         {/* Primary actions */}
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+        <div className="animate-hero-rise mt-8 flex flex-col gap-3 [animation-delay:300ms] sm:flex-row motion-reduce:animate-none">
           {telLink && (
             <a
               href={`tel:${telLink}`}
@@ -99,7 +103,7 @@ export function Hero({
             voice, but it links to the evidence. Stars are justified by
             site.md's own "All are 5 stars" line. */}
         {claims.length > 0 && (
-          <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="animate-hero-rise mt-10 grid gap-4 [animation-delay:300ms] sm:grid-cols-2 lg:grid-cols-4 motion-reduce:animate-none">
             {claims.map((claim) => {
               const Icon = claimIcon(claim);
               return (
