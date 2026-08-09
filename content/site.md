@@ -6,8 +6,8 @@
 - Logo: [PLACEHOLDER — /public/logo.png incoming]
 
 ## Contact
-- Phone: 07495 555872
-- Tel link: +447495555872
+- Phone: 07304 150154
+- Tel link: +447304150154
 - WhatsApp: [PLACEHOLDER — confirm if same as phone]
 - Email: aurora.electricals@outlook.com
 - Service area: [PLACEHOLDER — London + which boroughs/postcodes]
