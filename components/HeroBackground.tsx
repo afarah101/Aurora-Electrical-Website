@@ -62,7 +62,14 @@ export function HeroBackground() {
       poster="/aurora-poster.jpg"
       aria-hidden="true"
       tabIndex={-1}
-      className="absolute inset-0 h-full w-full object-cover"
+      /*
+       * 55% horizontal bias: at phone aspect (375x812) cover shows only a
+       * ~26%-wide slice of the 16:9 frame. The electrician stands
+       * right-of-centre (~55-70%) in the wide shots and left-of-centre in
+       * the close-up; 55% keeps his head inside the visible band in every
+       * shot of the loop (measured from frames at 1s, 5s and 8.5s).
+       */
+      className="absolute inset-0 h-full w-full object-cover object-[55%_50%]"
     >
       <source src="/aurora-video.mp4" type="video/mp4" />
     </video>

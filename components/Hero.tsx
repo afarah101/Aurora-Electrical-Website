@@ -75,7 +75,7 @@ export function Hero({
           {serviceArea ? serviceArea : "Domestic & commercial electricians"}
         </p>
 
-        <h1 className="animate-hero-rise mt-5 max-w-4xl text-5xl font-bold leading-[1.05] tracking-tight text-white [animation-delay:150ms] sm:text-6xl lg:text-7xl motion-reduce:animate-none">
+        <h1 className="animate-hero-rise mt-5 max-w-4xl text-4xl font-bold leading-[1.05] tracking-tight text-white [animation-delay:150ms] sm:text-6xl lg:text-7xl motion-reduce:animate-none">
           {tagline ?? `${businessName} — electrical work for homes and businesses`}
         </h1>
 
@@ -103,7 +103,7 @@ export function Hero({
             voice, but it links to the evidence. Stars are justified by
             site.md's own "All are 5 stars" line. */}
         {claims.length > 0 && (
-          <ul className="animate-hero-rise mt-10 grid gap-4 [animation-delay:300ms] sm:grid-cols-2 lg:grid-cols-4 motion-reduce:animate-none">
+          <ul className="animate-hero-rise mt-10 grid grid-cols-2 gap-4 [animation-delay:300ms] lg:grid-cols-4 motion-reduce:animate-none">
             {claims.map((claim) => {
               const Icon = claimIcon(claim);
               return (
