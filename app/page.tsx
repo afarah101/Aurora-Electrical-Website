@@ -6,6 +6,7 @@ import { WorkGallery } from "@/components/WorkGallery";
 import { Reviews } from "@/components/Reviews";
 import { TrustedBy } from "@/components/TrustedBy";
 import { ContactForm } from "@/components/ContactForm";
+import { MyBuilderBadge } from "@/components/MyBuilderBadge";
 import { EicrPricing } from "@/components/EicrPricing";
 import { StickyCall } from "@/components/StickyCall";
 import { Footer } from "@/components/Footer";
@@ -46,6 +47,7 @@ export default function Home() {
         <Services services={services} certificates={certificates} />
         {/* photos omitted until /public/work/ is populated — tiles render instead */}
         <WorkGallery />
+        <MyBuilderBadge />
         <Reviews reviews={reviews} aggregateRating={aggregateRating} />
         <TrustedBy clients={clients} />
         <ContactForm

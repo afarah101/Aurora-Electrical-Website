@@ -55,6 +55,14 @@
 - 24/7 emergency call-out
 - Free, no-obligation quote
 
+## MyBuilder
+- Rating: 4.9
+- Rating out of: 5
+- Reviews: 82
+- Verified by MyBuilder: yes
+- Offers warranty: yes
+- Profile: https://www.mybuilder.com/profile/ae-electrical-1
+
 ## Trusted By / Past Clients (logo strip)
 - [PLACEHOLDER logos — source actual logo files with client permission, drop into /clients/]
 1. Maliéu Cafe — restaurant (https://malieucafe.com) — logo slot: /clients/malieu.jpg
