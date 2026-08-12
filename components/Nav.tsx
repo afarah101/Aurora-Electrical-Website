@@ -50,11 +50,24 @@ export function Nav({ businessName, phone, telLink }: Props) {
         aria-label="Main"
         className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3"
       >
+        {/*
+          The wordmark crop of the client's logo (the word is IN the logo, so
+          no duplicate text beside it — the mark itself went to the favicon).
+          Served at 2x its display height so it stays sharp on retina; its
+          navy ground sits on the dark nav closely enough to read as plate,
+          and the accessible name keeps the brand for screen readers.
+        */}
         <a
           href="#top"
-          className="rounded-md text-lg font-semibold tracking-tight text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft"
+          aria-label={`${businessName} — home`}
+          className="rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft"
         >
-          {businessName}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/aurora-logo-nav.png"
+            alt={businessName}
+            className="h-7 w-auto rounded-sm sm:h-8"
+          />
         </a>
 
         <div className="hidden items-center gap-8 sm:flex">
