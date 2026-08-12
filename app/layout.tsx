@@ -32,6 +32,8 @@ const description = `${business.name} — electrical work for homes and business
 }. Rewiring, fuse boards, fault-finding, lighting and installations. Free no-obligation quotes.`;
 
 export const metadata: Metadata = {
+  /* Absolute base for social images — WhatsApp/Facebook require full URLs. */
+  metadataBase: new URL("https://aurora-electricals.com"),
   title: {
     default: `${business.name} — Domestic & Commercial Electricians`,
     template: `%s | ${business.name}`,
@@ -42,6 +44,21 @@ export const metadata: Metadata = {
     description,
     type: "website",
     locale: "en_GB",
+    url: "https://aurora-electricals.com",
+    images: [
+      {
+        url: "/aurora-share.png",
+        width: 1200,
+        height: 630,
+        alt: `${business.name} logo`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${business.name} — Domestic & Commercial Electricians`,
+    description,
+    images: ["/aurora-share.png"],
   },
   robots: { index: true, follow: true },
 };
