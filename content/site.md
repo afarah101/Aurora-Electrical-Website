@@ -8,7 +8,7 @@
 ## Contact
 - Phone: 07304 150154
 - Tel link: +447304150154
-- WhatsApp: [PLACEHOLDER — confirm if same as phone]
+- WhatsApp: +447304150154
 - Email: aurora.electrical@outlook.com
 - Service area: [PLACEHOLDER — London + which boroughs/postcodes]
 

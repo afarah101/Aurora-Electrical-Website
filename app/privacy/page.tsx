@@ -79,7 +79,7 @@ export default function PrivacyPage() {
           </p>
         </article>
       </main>
-      <Footer businessName={business.name} phone={contact.phone} telLink={contact.telLink} email={contact.email} serviceArea={contact.serviceArea} accreditations={accreditations} />
+      <Footer businessName={business.name} phone={contact.phone} telLink={contact.telLink} email={contact.email} serviceArea={contact.serviceArea} accreditations={accreditations} whatsapp={contact.whatsapp} />
       <StickyCall phone={contact.phone} telLink={contact.telLink} />
     </div>
   );

@@ -30,9 +30,14 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 type Status = { kind: "idle" | "sending" } | { kind: "ok" | "error"; message: string };
 
-type Props = { email: string | null; phone: string | null; telLink: string | null };
+type Props = {
+  email: string | null;
+  phone: string | null;
+  telLink: string | null;
+  whatsapp: string | null;
+};
 
-export function ContactForm({ email, phone, telLink }: Props) {
+export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
   const [status, setStatus] = useState<Status>({ kind: "idle" });
 
   const {
@@ -102,7 +107,7 @@ export function ContactForm({ email, phone, telLink }: Props) {
                 </p>
               )}
             </div>
-            <WhatsAppButton className="mt-6" />
+            <WhatsAppButton whatsapp={whatsapp} className="mt-6" />
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">

@@ -54,6 +54,7 @@ export default function Home() {
           email={contact.email}
           phone={contact.phone}
           telLink={contact.telLink}
+          whatsapp={contact.whatsapp}
         />
         <EicrPricing />
       </main>
@@ -65,6 +66,7 @@ export default function Home() {
         email={contact.email}
         serviceArea={contact.serviceArea}
         accreditations={accreditations}
+        whatsapp={contact.whatsapp}
       />
 
       <StickyCall phone={contact.phone} telLink={contact.telLink} />

@@ -1,19 +1,17 @@
 import { MessageCircle } from "lucide-react";
 
-/*
- * shortcut: the number is a literal here, not read from content/site.md, because
- * this button is rendered inside the client-side ContactForm. Move it into
- * site.md and pass it through the pages if the WhatsApp number ever differs
- * from the phone line.
- */
-const WHATSAPP_URL = "https://wa.me/447304150154";
+type Props = { whatsapp: string | null; className?: string };
 
-type Props = { className?: string };
+/** Click-to-chat button. Renders nothing without a confirmed WhatsApp number. */
+export function WhatsAppButton({ whatsapp, className = "" }: Props) {
+  if (!whatsapp) return null;
 
-export function WhatsAppButton({ className = "" }: Props) {
+  // wa.me wants the number in international form with digits only.
+  const href = `https://wa.me/${whatsapp.replace(/\D/g, "")}`;
+
   return (
     <a
-      href={WHATSAPP_URL}
+      href={href}
       target="_blank"
       rel="noopener noreferrer"
       className={`inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-md bg-[#25D366] px-6 text-base font-semibold text-slate-950 transition-colors hover:bg-[#1ebe5b] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft ${className}`}

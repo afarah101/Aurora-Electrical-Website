@@ -8,6 +8,7 @@ type Props = {
   email: string | null;
   serviceArea: string | null;
   accreditations: string[];
+  whatsapp: string | null;
 };
 
 export function Footer({
@@ -17,6 +18,7 @@ export function Footer({
   email,
   serviceArea,
   accreditations,
+  whatsapp,
 }: Props) {
   const year = new Date().getFullYear();
 
@@ -47,7 +49,7 @@ export function Footer({
                 </a>
               </p>
             )}
-            <WhatsAppButton className="mt-2" />
+            <WhatsAppButton whatsapp={whatsapp} className="mt-2" />
           </div>
         </div>
 
