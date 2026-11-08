@@ -23,84 +23,43 @@ export default function PrivacyPage() {
         <article className="mx-auto max-w-3xl space-y-6 px-5 py-16 text-slate-300 sm:py-20 [&_h2]:mt-10 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-white">
           <h1 className="text-3xl font-semibold tracking-tight text-white">Privacy notice</h1>
 
-          <h2>Who holds your details</h2>
           <p>
-            Your details are held by Mohamed, a sole trader trading as {business.name}. He decides how
-            they are used and is responsible for keeping them safe.
+            {business.name} holds the details you give us: your name, phone number, address, email and
+            job details.
           </p>
 
-          <h2>What we collect</h2>
           <p>
-            When you contact us or we work for you, we collect your name, phone number, address, email
-            address (if you give it) and details of the job.
+            We use them to quote, carry out the job, invoice you and keep our business records, and to
+            remind you when your EICR is due. We do this to carry out our work for you, to meet our legal
+            record-keeping duties, and, for EICR reminders, because it is in our legitimate interest.
+            Reply STOP to any message to opt out.
           </p>
 
-          <h2>Why we use them, and our legal basis</h2>
-          <ul className="list-disc space-y-1 pl-5">
-            <li>
-              To give you a quote, carry out the job and send you an invoice. Legal basis: contract
-              (we need your details to agree and do the work you asked for).
-            </li>
-            <li>
-              To keep our business and tax records. Legal basis: legal obligation (the law requires us
-              to keep them).
-            </li>
-            <li>
-              To remind you when your EICR (electrical safety certificate) is due. Legal basis:
-              legitimate interests (keeping your property safe and compliant). You can stop these at any
-              time by replying STOP.
-            </li>
-          </ul>
-
-          <h2>Who else receives your details</h2>
-          <p>We use these services to run the business. They handle your details only for us:</p>
-          <ul className="list-disc space-y-1 pl-5">
-            <li>Vercel, which hosts this website.</li>
-            <li>Resend, which delivers the emails sent from our contact form.</li>
-            <li>Google, where we keep our client records.</li>
-            <li>Zoho, which we use to send invoices.</li>
-            <li>WhatsApp, which we use to message you.</li>
-          </ul>
           <p>
-            Some of these services may store your details outside the UK. When they do, they use
-            safeguards approved under UK data protection law.
+            Our website host, email service, Google (client records) and WhatsApp handle your details for
+            us. Some may store them outside the UK, with legal safeguards in place.
           </p>
 
-          <h2>Stopping messages</h2>
           <p>
-            We may message you when your EICR is due. Reply STOP to any message, any time, and we will
-            not message you again.
+            We delete enquiries that do not become a job after 1 year. We keep job and invoice records for
+            as long as tax law requires.
           </p>
 
-          <h2>How long we keep them</h2>
           <p>
-            We keep your details only as long as we need them for the job, and for as long as the law
-            requires us to keep business and tax records.
-          </p>
-
-          <h2>Your rights</h2>
-          <p>
-            You can ask to see the details we hold about you, ask us to correct them, or ask us to delete
-            them.
+            You can ask to see, correct or delete your details, or complain to the ICO at{" "}
+            <a href="https://ico.org.uk" className="text-action-soft underline underline-offset-2 hover:text-white">
+              ico.org.uk
+            </a>
+            .
             {email && (
               <>
-                {" "}To do any of these, email{" "}
+                {" "}Contact us at{" "}
                 <a href={`mailto:${email}`} className="text-action-soft underline underline-offset-2 hover:text-white">
                   {email}
                 </a>
                 .
               </>
             )}
-          </p>
-
-          <h2>Complaints</h2>
-          <p>
-            If you are unhappy with how we use your details, you can complain to the Information
-            Commissioner&apos;s Office (ICO) at{" "}
-            <a href="https://ico.org.uk" className="text-action-soft underline underline-offset-2 hover:text-white">
-              ico.org.uk
-            </a>
-            .
           </p>
         </article>
       </main>
