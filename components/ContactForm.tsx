@@ -14,7 +14,15 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
  */
 const schema = z.object({
   name: z.string().trim().min(2, "Please enter your name"),
-  phone: z.string().trim().min(10, "Please enter a phone number we can call"),
+  // Digits and spaces with an optional leading +, 10 to 15 digits in total.
+  phone: z
+    .string()
+    .trim()
+    .regex(/^\+?[\d ]+$/, "Please enter a phone number we can call")
+    .refine((v) => {
+      const digits = v.replace(/\D/g, "").length;
+      return digits >= 10 && digits <= 15;
+    }, "Please enter a phone number we can call"),
   address: z.string().trim().min(5, "Please enter the address of the job"),
   fault: z.string().trim().min(10, "Please tell us a little about the fault"),
   // Optional: an empty input arrives as "", which must pass.
@@ -115,7 +123,7 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
               <label htmlFor="name" className="text-sm font-medium text-slate-200">
                 Name
               </label>
-              <input id="name" {...register("name")} className={fieldClass} />
+              <input id="name" aria-required="true" {...register("name")} className={fieldClass} />
               {errors.name && (
                 <p role="alert" className="mt-1 text-sm text-red-400">
                   {errors.name.message}
@@ -127,7 +135,7 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
               <label htmlFor="phone" className="text-sm font-medium text-slate-200">
                 Phone
               </label>
-              <input id="phone" type="tel" autoComplete="tel" {...register("phone")} className={fieldClass} />
+              <input id="phone" type="tel" aria-required="true" autoComplete="tel" {...register("phone")} className={fieldClass} />
               {errors.phone && (
                 <p role="alert" className="mt-1 text-sm text-red-400">
                   {errors.phone.message}
@@ -139,7 +147,7 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
               <label htmlFor="address" className="text-sm font-medium text-slate-200">
                 Address
               </label>
-              <input id="address" autoComplete="street-address" {...register("address")} className={fieldClass} />
+              <input id="address" aria-required="true" autoComplete="street-address" {...register("address")} className={fieldClass} />
               {errors.address && (
                 <p role="alert" className="mt-1 text-sm text-red-400">
                   {errors.address.message}
@@ -151,7 +159,7 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
               <label htmlFor="fault" className="text-sm font-medium text-slate-200">
                 About the fault
               </label>
-              <textarea id="fault" rows={4} {...register("fault")} className={fieldClass} />
+              <textarea id="fault" aria-required="true" rows={4} {...register("fault")} className={fieldClass} />
               {errors.fault && (
                 <p role="alert" className="mt-1 text-sm text-red-400">
                   {errors.fault.message}

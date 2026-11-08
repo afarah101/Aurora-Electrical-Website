@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   title: "Privacy notice",
   description: `How ${business.name} uses the details you give us.`,
   alternates: { canonical: "/privacy" },
+  // TODO: remove this noindex once Mohamed approves the wording (and the Draft comment above).
+  robots: { index: false, follow: true },
 };
 
 export default function PrivacyPage() {
@@ -33,12 +35,31 @@ export default function PrivacyPage() {
             address (if you give it) and details of the job.
           </p>
 
-          <h2>Why we use them</h2>
+          <h2>Why we use them, and our legal basis</h2>
           <ul className="list-disc space-y-1 pl-5">
-            <li>To reply to your enquiry and give you a quote.</li>
-            <li>To arrange and carry out the job.</li>
-            <li>To send you an invoice and keep our business records.</li>
-            <li>To remind you when your EICR (electrical safety certificate) is due.</li>
+            <li>
+              To give you a quote, carry out the job and send you an invoice. Legal basis: contract
+              (we need your details to agree and do the work you asked for).
+            </li>
+            <li>
+              To keep our business and tax records. Legal basis: legal obligation (the law requires us
+              to keep them).
+            </li>
+            <li>
+              To remind you when your EICR (electrical safety certificate) is due. Legal basis:
+              legitimate interests (keeping your property safe and compliant). You can stop these at any
+              time by replying STOP.
+            </li>
+          </ul>
+
+          <h2>Who else receives your details</h2>
+          <p>We use these services to run the business. They handle your details only for us:</p>
+          <ul className="list-disc space-y-1 pl-5">
+            <li>Vercel, which hosts this website.</li>
+            <li>Resend, which delivers the emails sent from our contact form.</li>
+            <li>Google, where we keep our client records.</li>
+            <li>Zoho, which we use to send invoices.</li>
+            <li>WhatsApp, which we use to message you.</li>
           </ul>
 
           <h2>Stopping messages</h2>

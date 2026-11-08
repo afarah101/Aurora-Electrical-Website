@@ -10,7 +10,15 @@ import { business, contact } from "@/app/content";
  */
 const schema = z.object({
   name: z.string().trim().min(2),
-  phone: z.string().trim().min(10),
+  // Digits and spaces with an optional leading +, 10 to 15 digits in total.
+  phone: z
+    .string()
+    .trim()
+    .regex(/^\+?[\d ]+$/)
+    .refine((v) => {
+      const digits = v.replace(/\D/g, "").length;
+      return digits >= 10 && digits <= 15;
+    }),
   address: z.string().trim().min(5),
   fault: z.string().trim().min(10),
   // Optional: the form sends "" when the field is left empty.
@@ -77,8 +85,9 @@ export async function POST(request: Request) {
     const { error } = await resend.emails.send({
       from: process.env.FROM_EMAIL ?? "onboarding@resend.dev",
       to,
+      // No email means Reply can't reach the customer, so the phone goes in the subject.
       ...(email ? { replyTo: email } : {}),
-      subject: `${business.name} — enquiry from ${name}`,
+      subject: email ? `${business.name} — enquiry from ${name}` : `New enquiry — ${name} — ${phone}`,
       text: [
         `Name: ${name}`,
         `Phone: ${phone}`,
