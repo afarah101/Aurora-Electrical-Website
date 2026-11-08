@@ -61,6 +61,10 @@ export default function PrivacyPage() {
             <li>Zoho, which we use to send invoices.</li>
             <li>WhatsApp, which we use to message you.</li>
           </ul>
+          <p>
+            Some of these services may store your details outside the UK. When they do, they use
+            safeguards approved under UK data protection law.
+          </p>
 
           <h2>Stopping messages</h2>
           <p>
