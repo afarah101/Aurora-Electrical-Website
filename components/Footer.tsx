@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
+
 type Props = {
   businessName: string;
   phone: string | null;
@@ -44,12 +47,16 @@ export function Footer({
                 </a>
               </p>
             )}
+            <WhatsAppButton className="mt-2" />
           </div>
         </div>
 
-        <p className="mt-10 border-t border-slate-800 pt-6 text-xs text-slate-400">
-          © {year} {businessName}. All rights reserved.
-        </p>
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-slate-800 pt-6 text-xs text-slate-400">
+          <p>© {year} {businessName}. All rights reserved.</p>
+          <Link href="/privacy" className="hover:text-white">
+            Privacy notice
+          </Link>
+        </div>
       </div>
     </footer>
   );

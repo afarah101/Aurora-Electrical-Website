@@ -1,7 +1,7 @@
-# Aurora Electricals — Site Content
+# Aurora Electrical — Site Content
 
 ## Business
-- Name: Aurora Electricals
+- Name: Aurora Electrical
 - Tagline: [PLACEHOLDER — one line, e.g. "Trusted domestic electricians across London"]
 - Logo: [PLACEHOLDER — /public/logo.png incoming]
 

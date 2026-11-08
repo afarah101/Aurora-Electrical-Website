@@ -9,11 +9,12 @@ import { business, contact } from "@/app/content";
  * client copy is a convenience and can be bypassed entirely.
  */
 const schema = z.object({
-  name: z.string().min(2),
-  email: z.email(),
-  phone: z.string().optional(),
-  propertyType: z.enum(["domestic", "commercial"]),
-  message: z.string().min(10),
+  name: z.string().trim().min(2),
+  phone: z.string().trim().min(10),
+  address: z.string().trim().min(5),
+  fault: z.string().trim().min(10),
+  // Optional: the form sends "" when the field is left empty.
+  email: z.union([z.email(), z.literal("")]).optional(),
   // Honeypot: accepted by the schema so a filled value reaches the silent-accept
   // branch below. Rejecting it here would 400 and tell the bot it was caught.
   company: z.string().optional(),
@@ -69,22 +70,22 @@ export async function POST(request: Request) {
     );
   }
 
-  const { name, email, phone, propertyType, message } = parsed.data;
+  const { name, email, phone, address, fault } = parsed.data;
 
   try {
     const resend = new Resend(apiKey);
     const { error } = await resend.emails.send({
       from: process.env.FROM_EMAIL ?? "onboarding@resend.dev",
       to,
-      replyTo: email,
-      subject: `${business.name} — ${propertyType} enquiry from ${name}`,
+      ...(email ? { replyTo: email } : {}),
+      subject: `${business.name} — enquiry from ${name}`,
       text: [
         `Name: ${name}`,
-        `Email: ${email}`,
-        `Phone: ${phone || "not supplied"}`,
-        `Property type: ${propertyType}`,
+        `Phone: ${phone}`,
+        `Address: ${address}`,
+        `Email: ${email || "not supplied"}`,
         "",
-        message,
+        fault,
       ].join("\n"),
     });
 

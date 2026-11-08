@@ -86,7 +86,7 @@ export type Client = { name: string; descriptor: string; url: string | null; log
 export type Review = { name: string; area: string; quote: string };
 
 export const business = {
-  name: field("Business", "Name") ?? "Aurora Electricals",
+  name: field("Business", "Name") ?? "Aurora Electrical",
   tagline: field("Business", "Tagline"),
   logo: field("Business", "Logo"),
 } as const;

@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import Link from "next/link";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 /**
  * Field rules match the server schema in app/api/contact/route.ts; only the
@@ -11,11 +13,12 @@ import { z } from "zod";
  * independently, and the server is the one that decides.
  */
 const schema = z.object({
-  name: z.string().min(2, "Please enter your name"),
-  email: z.email("Please enter a valid email address"),
-  phone: z.string().optional(),
-  propertyType: z.enum(["domestic", "commercial"]),
-  message: z.string().min(10, "Please tell us a little about the job"),
+  name: z.string().trim().min(2, "Please enter your name"),
+  phone: z.string().trim().min(10, "Please enter a phone number we can call"),
+  address: z.string().trim().min(5, "Please enter the address of the job"),
+  fault: z.string().trim().min(10, "Please tell us a little about the fault"),
+  // Optional: an empty input arrives as "", which must pass.
+  email: z.union([z.email("Please enter a valid email address"), z.literal("")]).optional(),
   /**
    * Honeypot. Deliberately permissive, exactly as on the server: rejecting a
    * filled value here would surface a validation error and tell a bot it was
@@ -39,7 +42,6 @@ export function ContactForm({ email, phone, telLink }: Props) {
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { propertyType: "domestic" },
   });
 
   const onSubmit = async (values: FormValues) => {
@@ -100,6 +102,7 @@ export function ContactForm({ email, phone, telLink }: Props) {
                 </p>
               )}
             </div>
+            <WhatsAppButton className="mt-6" />
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
@@ -116,46 +119,49 @@ export function ContactForm({ email, phone, telLink }: Props) {
             </div>
 
             <div>
-              <label htmlFor="email" className="text-sm font-medium text-slate-200">
-                Email
+              <label htmlFor="phone" className="text-sm font-medium text-slate-200">
+                Phone
               </label>
-              <input id="email" type="email" {...register("email")} className={fieldClass} />
-              {errors.email && (
+              <input id="phone" type="tel" autoComplete="tel" {...register("phone")} className={fieldClass} />
+              {errors.phone && (
                 <p role="alert" className="mt-1 text-sm text-red-400">
-                  {errors.email.message}
+                  {errors.phone.message}
                 </p>
               )}
             </div>
 
             <div>
-              <label htmlFor="phone" className="text-sm font-medium text-slate-200">
-                Phone <span className="text-slate-400">(optional)</span>
+              <label htmlFor="address" className="text-sm font-medium text-slate-200">
+                Address
               </label>
-              <input id="phone" type="tel" {...register("phone")} className={fieldClass} />
+              <input id="address" autoComplete="street-address" {...register("address")} className={fieldClass} />
+              {errors.address && (
+                <p role="alert" className="mt-1 text-sm text-red-400">
+                  {errors.address.message}
+                </p>
+              )}
             </div>
 
-            <fieldset>
-              <legend className="text-sm font-medium text-slate-200">Property type</legend>
-              <div className="mt-2 flex gap-4">
-                <label className="flex min-h-11 cursor-pointer items-center gap-2 text-sm text-slate-300">
-                  <input className="cursor-pointer" type="radio" value="domestic" {...register("propertyType")} />
-                  Home
-                </label>
-                <label className="flex min-h-11 cursor-pointer items-center gap-2 text-sm text-slate-300">
-                  <input className="cursor-pointer" type="radio" value="commercial" {...register("propertyType")} />
-                  Business
-                </label>
-              </div>
-            </fieldset>
+            <div>
+              <label htmlFor="fault" className="text-sm font-medium text-slate-200">
+                About the fault
+              </label>
+              <textarea id="fault" rows={4} {...register("fault")} className={fieldClass} />
+              {errors.fault && (
+                <p role="alert" className="mt-1 text-sm text-red-400">
+                  {errors.fault.message}
+                </p>
+              )}
+            </div>
 
             <div>
-              <label htmlFor="message" className="text-sm font-medium text-slate-200">
-                About the job
+              <label htmlFor="email" className="text-sm font-medium text-slate-200">
+                Email <span className="text-slate-400">(optional)</span>
               </label>
-              <textarea id="message" rows={4} {...register("message")} className={fieldClass} />
-              {errors.message && (
+              <input id="email" type="email" autoComplete="email" {...register("email")} className={fieldClass} />
+              {errors.email && (
                 <p role="alert" className="mt-1 text-sm text-red-400">
-                  {errors.message.message}
+                  {errors.email.message}
                 </p>
               )}
             </div>
@@ -173,6 +179,13 @@ export function ContactForm({ email, phone, telLink }: Props) {
             >
               {status.kind === "sending" ? "Sending…" : "Send request"}
             </button>
+
+            <p className="text-sm text-slate-400">
+              We may message you when your EICR is due. Reply STOP any time to opt out.{" "}
+              <Link href="/privacy" className="text-action-soft underline underline-offset-2 hover:text-white">
+                How we use your details
+              </Link>
+            </p>
 
             <div aria-live="polite">
               {status.kind === "ok" && (
