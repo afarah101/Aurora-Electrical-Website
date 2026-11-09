@@ -59,7 +59,7 @@
 - Normal hours: 7am–6pm
 - Emergency hours: 10pm–5am
 - Areas: Wandsworth, Battersea, Chelsea, Fulham, Putney
-- Registration: NICEIC registered
+- Registration: [PLACEHOLDER — NOT on the NICEIC register (niceic.com search, 9 Nov 2026: postcode SW11 4QW, "Aurora Electrical", "AE Electrical"). Do not claim NICEIC until a register entry is confirmed.]
 - Common emergencies: Power loss, Tripping fuse board, Burning smell, Sparking sockets
 - Safety: If you smell burning or see sparks, switch off at the fuse board if it is safe to do so, then call.
 - EICR meaning: An EICR (Electrical Installation Condition Report) is a report on the condition of the electrics in a property, made after they have been inspected and tested.
