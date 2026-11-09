@@ -54,20 +54,12 @@ export default function EmergencyElectricianPage() {
           {(normalHours || emergencyHours) && (
             <>
               <h2>Hours</h2>
-              <dl className="space-y-2">
-                {normalHours && (
-                  <div className="flex gap-2">
-                    <dt className="font-semibold text-white">Normal hours:</dt>
-                    <dd>{normalHours}</dd>
-                  </div>
-                )}
-                {emergencyHours && (
-                  <div className="flex gap-2">
-                    <dt className="font-semibold text-white">Emergency hours:</dt>
-                    <dd>{emergencyHours}</dd>
-                  </div>
-                )}
-              </dl>
+              {/* Fallback 8: state both windows plainly; nothing implies cover outside them. */}
+              <p className="text-white">
+                {normalHours && <>Normal hours {normalHours}.</>}
+                {normalHours && emergencyHours && " "}
+                {emergencyHours && <>Emergency call-outs {emergencyHours}.</>}
+              </p>
             </>
           )}
 
