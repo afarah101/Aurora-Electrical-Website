@@ -52,8 +52,18 @@
 
 ## Claims
 - Same-day callouts
-- 24/7 emergency call-out
 - Free, no-obligation quote
+
+## Service pages
+- Note: facts for /emergency-electrician and /eicr-landlords only. They are NOT the site-wide Service area or Certifications fields, so the home page does not change. Mohamed approves them before launch.
+- Normal hours: 7am–6pm
+- Emergency hours: 10pm–5am
+- Areas: Wandsworth, Battersea, Chelsea, Fulham, Putney
+- Registration: NICEIC registered
+- Common emergencies: Power loss, Tripping fuse board, Burning smell, Sparking sockets
+- Safety: If you smell burning or see sparks, switch off at the fuse board if it is safe to do so, then call.
+- EICR meaning: An EICR (Electrical Installation Condition Report) is a report on the condition of the electrics in a property, made after they have been inspected and tested.
+- Landlord rule: Landlords in England must have the electrics in rented homes inspected at least every 5 years, and give tenants a copy of the report.
 
 ## MyBuilder
 - Rating: 4.9

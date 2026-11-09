@@ -55,9 +55,23 @@ export function Footer({
 
         <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-slate-800 pt-6 text-xs text-slate-400">
           <p>© {year} {businessName}. All rights reserved.</p>
-          <Link href="/privacy" className="hover:text-white">
-            Privacy notice
-          </Link>
+          <ul className="flex flex-wrap gap-x-6 gap-y-2">
+            <li>
+              <Link href="/emergency-electrician" className="hover:text-white">
+                Emergency electrician
+              </Link>
+            </li>
+            <li>
+              <Link href="/eicr-landlords" className="hover:text-white">
+                EICR for landlords
+              </Link>
+            </li>
+            <li>
+              <Link href="/privacy" className="hover:text-white">
+                Privacy notice
+              </Link>
+            </li>
+          </ul>
         </div>
       </div>
     </footer>

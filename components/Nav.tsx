@@ -6,10 +6,13 @@ import { Menu, Phone, X } from "lucide-react";
 type Props = { businessName: string; phone: string | null; telLink: string | null };
 
 const LINKS = [
-  { href: "#services", label: "Services" },
-  { href: "#work", label: "Work" },
-  { href: "#clients", label: "Clients" },
-  { href: "#contact", label: "Contact" },
+  // "/#…" so the home-page anchors also work from the other pages.
+  { href: "/#services", label: "Services" },
+  { href: "/emergency-electrician", label: "Emergency" },
+  { href: "/eicr-landlords", label: "Landlord EICR" },
+  { href: "/#work", label: "Work" },
+  { href: "/#clients", label: "Clients" },
+  { href: "/#contact", label: "Contact" },
 ];
 
 export function Nav({ businessName, phone, telLink }: Props) {
@@ -70,7 +73,7 @@ export function Nav({ businessName, phone, telLink }: Props) {
           />
         </a>
 
-        <div className="hidden items-center gap-8 sm:flex">
+        <div className="hidden items-center gap-8 lg:flex">
           <ul className="flex items-center gap-8">
             {LINKS.map((link) => (
               <li key={link.href}>
@@ -100,7 +103,7 @@ export function Nav({ businessName, phone, telLink }: Props) {
           aria-expanded={open}
           aria-controls="mobile-menu"
           aria-label={open ? "Close menu" : "Open menu"}
-          className="-mr-2 flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft sm:hidden"
+          className="-mr-2 flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft lg:hidden"
         >
           {open ? (
             <X aria-hidden="true" className="h-6 w-6 text-white" />
@@ -111,7 +114,7 @@ export function Nav({ businessName, phone, telLink }: Props) {
       </nav>
 
       {open && (
-        <ul id="mobile-menu" className="border-t border-slate-800 px-5 py-3 sm:hidden">
+        <ul id="mobile-menu" className="border-t border-slate-800 px-5 py-3 lg:hidden">
           {LINKS.map((link) => (
             <li key={link.href}>
               <a

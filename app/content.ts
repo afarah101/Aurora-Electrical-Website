@@ -116,6 +116,33 @@ export const positioning: string[] = bullets("Positioning");
  */
 export const claims: string[] = bullets("Claims");
 
+function list(value: string | null): string[] {
+  return value ? value.split(",").map((v) => v.trim()).filter(Boolean) : [];
+}
+
+const pageAreas = list(field("Service pages", "Areas"));
+
+/**
+ * Facts for the emergency and landlord EICR pages only. Kept apart from the
+ * site-wide Service area / Certifications fields so confirming them here does
+ * not change the home page.
+ */
+export const servicePages = {
+  normalHours: field("Service pages", "Normal hours"),
+  emergencyHours: field("Service pages", "Emergency hours"),
+  areas: pageAreas,
+  /** "A, B and C" for running text. */
+  areasText:
+    pageAreas.length > 1
+      ? `${pageAreas.slice(0, -1).join(", ")} and ${pageAreas[pageAreas.length - 1]}`
+      : (pageAreas[0] ?? null),
+  registration: field("Service pages", "Registration"),
+  emergencies: list(field("Service pages", "Common emergencies")),
+  safety: field("Service pages", "Safety"),
+  eicrMeaning: field("Service pages", "EICR meaning"),
+  landlordRule: field("Service pages", "Landlord rule"),
+} as const;
+
 /** Only real, confirmed reviews. Placeholder rows resolve to []. */
 export const reviews: Review[] = section("Reviews")
   .filter((l) => /^\d+\./.test(l))
