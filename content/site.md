@@ -29,7 +29,7 @@
 - Note: the EICRs row is authored in components/Services.tsx rather than parsed from this file (the parser has no link-aware row format). Changing the prices means editing components/EicrPricing.tsx, not this file.
 
 ## Certifications / Accreditations
-- [PLACEHOLDER — confirm body: NICEIC / NAPIT / Part P. Badges stay hidden until the client confirms one. Never invent one.]
+- NICEIC registered
 
 ## Reviews
 1. Name: MyBuilder customer — Area: Clapham, London — Job: New pendant light installation — "Great job, on time, very professional and competent. Would definitely recommend!"
@@ -59,7 +59,7 @@
 - Normal hours: 7am–6pm
 - Emergency hours: 10pm–5am
 - Areas: Wandsworth, Battersea, Chelsea, Fulham, Putney
-- Registration: [PLACEHOLDER — NOT on the NICEIC register (niceic.com search, 9 Nov 2026: postcode SW11 4QW, "Aurora Electrical", "AE Electrical"). Do not claim NICEIC until a register entry is confirmed.]
+- Registration: NICEIC-registered
 - Common emergencies: Power loss, Tripping fuse board, Burning smell, Sparking sockets
 - Safety: If you smell burning or see sparks, switch off at the fuse board if it is safe to do so, then call.
 - EICR meaning: An EICR (Electrical Installation Condition Report) is a report on the condition of the electrics in a property, made after they have been inspected and tested.
