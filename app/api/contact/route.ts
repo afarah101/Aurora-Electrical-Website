@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { Resend } from "resend";
 import { business, contact } from "@/app/content";
+import { autoReplyEnabled, buildAutoReply } from "@/lib/auto-reply";
 
 /**
  * Field rules match the client schema in components/ContactForm.tsx, which
@@ -59,7 +60,10 @@ export async function POST(request: Request) {
 
   const parsed = schema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) {
-    return NextResponse.json({ error: "Please check the form and try again." }, { status: 400 });
+    return NextResponse.json(
+      { error: "Please check the form and try again." },
+      { status: 400 },
+    );
   }
 
   // Honeypot tripped — accept silently so bots get no signal.
@@ -73,7 +77,9 @@ export async function POST(request: Request) {
   if (!apiKey || !to) {
     console.error("contact: RESEND_API_KEY or TO_EMAIL not configured");
     return NextResponse.json(
-      { error: "Enquiries aren't available right now. Please call us instead." },
+      {
+        error: "Enquiries aren't available right now. Please call us instead.",
+      },
       { status: 503 },
     );
   }
@@ -87,7 +93,9 @@ export async function POST(request: Request) {
       to,
       // No email means Reply can't reach the customer, so the phone goes in the subject.
       ...(email ? { replyTo: email } : {}),
-      subject: email ? `${business.name} — enquiry from ${name}` : `New enquiry — ${name} — ${phone}`,
+      subject: email
+        ? `${business.name} — enquiry from ${name}`
+        : `New enquiry — ${name} — ${phone}`,
       text: [
         `Name: ${name}`,
         `Phone: ${phone}`,
@@ -104,6 +112,30 @@ export async function POST(request: Request) {
         { error: "Couldn't send your message. Please call us instead." },
         { status: 502 },
       );
+    }
+
+    // Customer confirmation. A failure here is logged only: the enquiry itself
+    // has already reached the business, so the customer still sees success.
+    if (email && autoReplyEnabled()) {
+      try {
+        const reply = buildAutoReply({
+          name,
+          fault,
+          businessName: business.name,
+          phone: contact.phone,
+          whatsapp: contact.whatsapp,
+        });
+        const { error: replyError } = await resend.emails.send({
+          from: process.env.FROM_EMAIL!,
+          to: email,
+          replyTo: to,
+          subject: reply.subject,
+          text: reply.text,
+        });
+        if (replyError) console.error("contact: auto-reply error", replyError);
+      } catch (replyErr) {
+        console.error("contact: auto-reply failed", replyErr);
+      }
     }
 
     return NextResponse.json({ ok: true });
