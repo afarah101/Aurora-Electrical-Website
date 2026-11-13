@@ -10,6 +10,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+      issues: read
       id-token: write
     steps:
       - name: Checkout repository
@@ -17,8 +18,19 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Check whether this PR changes the review workflow
+        id: selfchange
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh api "repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files" --paginate --jq '.[].filename' | grep -qx '.github/workflows/claude-code-review.yml'; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Claude review
-        uses: anthropics/claude-code-action@v1
+        uses: anthropics/claude-code-action@f3b070c88125d33dbae5653df5f143101d4ea9dc # v1.0.276, vetted 13 Nov 2026
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           track_progress: true
@@ -36,8 +48,32 @@ jobs:
             4. Accessibility: missing alt text, missing labels, low contrast.
 
             Use inline comments for specific issues. Mark each issue Critical, Warning or Info.
-            End with one top-level comment: a short summary and a verdict, either "OK to merge" or "Needs changes".
+            End with one top-level comment: a short summary, then a last line that is exactly one of:
+            VERDICT: OK
+            VERDICT: NEEDS_CHANGES
+            Use NEEDS_CHANGES only when you found at least one Critical issue.
             Do not comment on style preferences.
 
           claude_args: |
             --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
+
+      - name: Block merge on a NEEDS_CHANGES verdict
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SELF_CHANGE: ${{ steps.selfchange.outputs.changed }}
+        run: |
+          if [ "$SELF_CHANGE" = "true" ]; then
+            echo "::notice::This PR changes the review workflow. GitHub skips the Claude review on such PRs, so this gate passes. A person must review this PR."
+            exit 0
+          fi
+          body=$(gh api "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" --paginate \
+            --jq '[.[] | select(.user.login == "claude[bot]") | select(.body | test("VERDICT: (OK|NEEDS_CHANGES)"))] | last | .body // ""')
+          if [ -z "$body" ]; then
+            echo "::error::No Claude verdict found on this PR. The review did not finish, so the merge stays blocked."
+            exit 1
+          fi
+          if echo "$body" | grep -q "VERDICT: NEEDS_CHANGES"; then
+            echo "::error::Claude review found a Critical issue. See the review comments on this PR."
+            exit 1
+          fi
+          echo "Claude review verdict: OK"
