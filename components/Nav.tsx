@@ -1,18 +1,26 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, Phone, X } from "lucide-react";
 
 type Props = { businessName: string; phone: string | null; telLink: string | null };
 
-const LINKS = [
-  { href: "#services", label: "Services" },
-  { href: "#work", label: "Work" },
-  { href: "#clients", label: "Clients" },
-  { href: "#contact", label: "Contact" },
+// "/#…" so the home-page anchors also work from the other pages. `page` is the
+// route this link counts as current on; on that route it points at `pageHref`.
+const LINKS: Array<{ href: string; label: string; page?: string; pageHref?: string }> = [
+  { href: "/#services", label: "Services" },
+  { href: "/emergency-electrician", label: "Emergency", page: "/emergency-electrician" },
+  { href: "/eicr-landlords", label: "Landlord EICR", page: "/eicr-landlords" },
+  { href: "/#work", label: "Work" },
+  { href: "/#clients", label: "Clients" },
+  // /contact has its own form, so stay on the page there.
+  { href: "/#contact", label: "Contact", page: "/contact", pageHref: "#contact" },
 ];
 
 export function Nav({ businessName, phone, telLink }: Props) {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -37,6 +45,12 @@ export function Nav({ businessName, phone, telLink }: Props) {
    * the video would be unreadable.
    */
   const dark = scrolled || open;
+
+  const links = LINKS.map((link) => {
+    const current = link.page === pathname;
+    return { ...link, href: current && link.pageHref ? link.pageHref : link.href, current };
+  });
+  const currentClass = "text-white underline decoration-action-soft decoration-2 underline-offset-8";
 
   return (
     <header
@@ -70,57 +84,63 @@ export function Nav({ businessName, phone, telLink }: Props) {
           />
         </a>
 
-        <div className="hidden items-center gap-8 sm:flex">
-          <ul className="flex items-center gap-8">
-            {LINKS.map((link) => (
-              <li key={link.href}>
-                <a
+        <div className="flex items-center gap-4 lg:gap-8">
+          <ul className="hidden items-center gap-8 lg:flex">
+            {links.map((link) => (
+              <li key={link.label}>
+                <Link
                   href={link.href}
-                  className="rounded-md text-sm font-medium text-slate-300 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft"
+                  aria-current={link.current ? "page" : undefined}
+                  className={`rounded-md text-sm font-medium transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft ${
+                    link.current ? currentClass : "text-slate-300"
+                  }`}
                 >
                   {link.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
+          {/* From sm up: StickyCall is sm:hidden, so this is the only call button there. */}
           {telLink && (
             <a
               href={`tel:${telLink}`}
-              className="inline-flex h-10 items-center gap-2 rounded-md bg-action px-4 text-sm font-semibold text-white transition-colors hover:bg-action-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft"
+              className="hidden h-10 items-center gap-2 rounded-md bg-action px-4 text-sm font-semibold text-white transition-colors hover:bg-action-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft sm:inline-flex"
             >
               <Phone aria-hidden="true" className="h-4 w-4" />
               {phone}
             </a>
           )}
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            aria-label={open ? "Close menu" : "Open menu"}
+            className="-mr-2 flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft lg:hidden"
+          >
+            {open ? (
+              <X aria-hidden="true" className="h-6 w-6 text-white" />
+            ) : (
+              <Menu aria-hidden="true" className="h-6 w-6 text-white" />
+            )}
+          </button>
         </div>
-
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          aria-controls="mobile-menu"
-          aria-label={open ? "Close menu" : "Open menu"}
-          className="-mr-2 flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft sm:hidden"
-        >
-          {open ? (
-            <X aria-hidden="true" className="h-6 w-6 text-white" />
-          ) : (
-            <Menu aria-hidden="true" className="h-6 w-6 text-white" />
-          )}
-        </button>
       </nav>
 
       {open && (
-        <ul id="mobile-menu" className="border-t border-slate-800 px-5 py-3 sm:hidden">
-          {LINKS.map((link) => (
-            <li key={link.href}>
-              <a
+        <ul id="mobile-menu" className="border-t border-slate-800 px-5 py-3 lg:hidden">
+          {links.map((link) => (
+            <li key={link.label}>
+              <Link
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="flex min-h-11 items-center text-sm font-medium text-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft"
+                aria-current={link.current ? "page" : undefined}
+                className={`flex min-h-11 items-center text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft ${
+                  link.current ? currentClass : "text-slate-200"
+                }`}
               >
                 {link.label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>

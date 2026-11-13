@@ -15,7 +15,8 @@ export default function ContactPage() {
   return (
     <div id="top">
       <Nav businessName={business.name} phone={contact.phone} telLink={contact.telLink} />
-      <main>
+      {/* Clears the fixed Nav: 69px with the menu button, 65px from lg. */}
+      <main className="bg-slate-950 pt-[69px] lg:pt-[65px]">
         <ContactForm email={contact.email} phone={contact.phone} telLink={contact.telLink} whatsapp={contact.whatsapp} />
       </main>
       <Footer businessName={business.name} phone={contact.phone} telLink={contact.telLink} email={contact.email} serviceArea={contact.serviceArea} accreditations={accreditations} whatsapp={contact.whatsapp} />

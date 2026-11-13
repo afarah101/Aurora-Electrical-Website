@@ -87,8 +87,9 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
   const fieldClass =
     "mt-1 block w-full rounded-md border border-slate-500 bg-slate-900 px-3 py-2 text-white focus:border-action-soft focus:outline-2 focus:outline-offset-0 focus:outline-action-soft";
 
+  // scroll-mt clears the fixed Nav after a #contact jump: 69px with the menu button, 65px from lg.
   return (
-    <section id="contact" className="border-b border-slate-800 bg-slate-950">
+    <section id="contact" className="scroll-mt-[69px] border-b border-slate-800 bg-slate-950 lg:scroll-mt-[65px]">
       <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
         <div className="grid gap-10 lg:grid-cols-2">
           <div>
