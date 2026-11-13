@@ -7,7 +7,7 @@ import { accreditations, business, contact } from "../content";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Request a quote from Aurora Electrical, a NICEIC-registered electrician in South-West London.",
+  description: "Request a quote from Aurora Electrical, a local electrician in South-West London.",
   alternates: { canonical: "/contact" },
 };
 
