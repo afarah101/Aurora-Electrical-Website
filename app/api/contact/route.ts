@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { Resend } from "resend";
 import { business, contact } from "@/app/content";
+import { describeLeadSource } from "@/lib/lead-source";
 
 /**
  * Field rules match the client schema in components/ContactForm.tsx, which
@@ -26,6 +27,17 @@ const schema = z.object({
   // Honeypot: accepted by the schema so a filled value reaches the silent-accept
   // branch below. Rejecting it here would 400 and tell the bot it was caught.
   company: z.string().optional(),
+  // Where the enquiry came from (see lib/lead-source.ts). Optional and capped.
+  source: z
+    .object({
+      page: z.string().max(300).optional(),
+      referrer: z.string().max(300).optional(),
+      utm_source: z.string().max(200).optional(),
+      utm_medium: z.string().max(200).optional(),
+      utm_campaign: z.string().max(200).optional(),
+      gclid: z.string().max(200).optional(),
+    })
+    .optional(),
 });
 
 /**
@@ -78,7 +90,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { name, email, phone, address, fault } = parsed.data;
+  const { name, email, phone, address, fault, source } = parsed.data;
 
   try {
     const resend = new Resend(apiKey);
@@ -93,6 +105,8 @@ export async function POST(request: Request) {
         `Phone: ${phone}`,
         `Address: ${address}`,
         `Email: ${email || "not supplied"}`,
+        `Source: ${describeLeadSource(source)}`,
+        `Page: ${source?.page ?? "unknown"}`,
         "",
         fault,
       ].join("\n"),
