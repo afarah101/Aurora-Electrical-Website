@@ -10,6 +10,7 @@
 - Tel link: +447304150154
 - WhatsApp: +447304150154
 - Email: aurora.electrical@outlook.com
+- VAT: not VAT registered (sole trader, confirmed 13 Nov 2026). Do not add a VAT line to prices.
 - Service area: [PLACEHOLDER — London + which boroughs/postcodes]
 
 ## Services (CONFIRMED — build only these)
