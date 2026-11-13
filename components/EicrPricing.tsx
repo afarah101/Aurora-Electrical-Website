@@ -1,6 +1,6 @@
 /**
  * EICR pricing, linked from the EICRs row in Services. Copy is limited to
- * the prices and VAT line the client supplied — nothing invented. Neutral
+ * the prices the client supplied — nothing invented. Neutral
  * palette throughout: pricing is information, not proof, so the gold stays
  * unused here; labels take the body face and figures take the mono face.
  */
@@ -40,10 +40,6 @@ export function EicrPricing() {
             </div>
           ))}
         </dl>
-
-        <p className="mt-5 text-xs text-slate-400">
-          All prices are subject to VAT.
-        </p>
       </div>
     </section>
   );
