@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import type { Review } from "@/app/content";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 const AUTOPLAY_MS = 3000;
 
@@ -20,16 +21,8 @@ type Props = { reviews: Review[]; aggregateRating: string | null };
  */
 export function Reviews({ reviews, aggregateRating }: Props) {
   const [index, setIndex] = useState(0);
-  const [reduced, setReduced] = useState(false);
+  const reduced = useReducedMotion();
   const paused = useRef(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(mq.matches);
-    const onChange = () => setReduced(mq.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
 
   useEffect(() => {
     if (reduced || reviews.length < 2) return;

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 const AUTOPLAY_MS = 3000;
 
@@ -30,16 +31,8 @@ const PHOTOS = Array.from(
 export function WorkGallery({ photos = PHOTOS }: { photos?: string[] }) {
   const [deck, setDeck] = useState(photos);
   const [index, setIndex] = useState(0);
-  const [reduced, setReduced] = useState(false);
+  const reduced = useReducedMotion();
   const paused = useRef(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(mq.matches);
-    const onChange = () => setReduced(mq.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
 
   // Auto-advance. No timer at all under reduced motion or with one photo.
   useEffect(() => {
