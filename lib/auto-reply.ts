@@ -8,38 +8,31 @@
  */
 export type AutoReplyInput = {
   name: string;
-  fault: string;
   businessName: string;
   phone: string | null;
   whatsapp: string | null;
 };
 
 export function autoReplyEnabled(): boolean {
-  return (
-    process.env.AUTO_REPLY_ENABLED === "true" && Boolean(process.env.FROM_EMAIL)
-  );
+  return process.env.AUTO_REPLY_ENABLED === "true" && Boolean(process.env.FROM_EMAIL);
 }
 
-function firstName(name: string): string {
-  return name.trim().split(/\s+/)[0] ?? name.trim();
+/**
+ * Anyone can type any email address into the form, so this email must not
+ * carry free text from the submitter: it could be used to send messages that
+ * appear to come from the business. Only a short, letters-only first name is
+ * echoed; anything else falls back to "there". The fault text is never echoed.
+ */
+function safeFirstName(name: string): string {
+  const first = name.trim().split(/\s+/)[0] ?? "";
+  return /^[\p{L}][\p{L}'-]{0,24}$/u.test(first) ? first : "there";
 }
 
-function shorten(text: string, max = 200): string {
-  const oneLine = text.replace(/\s+/g, " ").trim();
-  return oneLine.length > max ? `${oneLine.slice(0, max - 1)}…` : oneLine;
-}
-
-export function buildAutoReply(input: AutoReplyInput): {
-  subject: string;
-  text: string;
-} {
+export function buildAutoReply(input: AutoReplyInput): { subject: string; text: string } {
   const lines = [
-    `Hi ${firstName(input.name)},`,
+    `Hi ${safeFirstName(input.name)},`,
     "",
     `Thank you for contacting ${input.businessName}. We have your message and will get back to you soon.`,
-    "",
-    "You told us:",
-    `"${shorten(input.fault)}"`,
     "",
   ];
 
@@ -54,7 +47,7 @@ export function buildAutoReply(input: AutoReplyInput): {
     "",
     "If you smell burning or see sparks, switch off at the fuse board if it is safe to do so, then call us.",
     "",
-    `${input.businessName}`,
+    input.businessName,
   );
 
   return {
