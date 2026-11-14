@@ -124,7 +124,7 @@ export function Reviews({ reviews, aggregateRating }: Props) {
 
             <p className="mt-5 text-sm font-semibold text-ink">
               {review.name}
-              <span className="font-normal text-ink-subtle"> — {area}</span>
+              <span className="font-normal text-ink-subtle"> - {area}</span>
             </p>
           </div>
 

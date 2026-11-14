@@ -29,7 +29,7 @@ const plexMono = IBM_Plex_Mono({
   weight: ["400", "500"],
 });
 
-const description = `${business.name} — electrical work for homes and businesses${
+const description = `${business.name} - electrical work for homes and businesses${
   contact.serviceArea ? ` in ${contact.serviceArea}` : ""
 }. Rewiring, fuse boards, fault-finding, lighting and installations. Free no-obligation quotes.`;
 
@@ -38,12 +38,12 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: "/" },
   title: {
-    default: `${business.name} — Domestic & Commercial Electricians`,
+    default: `${business.name} - Domestic & Commercial Electricians`,
     template: `%s | ${business.name}`,
   },
   description,
   openGraph: {
-    title: `${business.name} — Domestic & Commercial Electricians`,
+    title: `${business.name} - Domestic & Commercial Electricians`,
     description,
     type: "website",
     locale: "en_GB",
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${business.name} — Domestic & Commercial Electricians`,
+    title: `${business.name} - Domestic & Commercial Electricians`,
     description,
     images: ["/aurora-share.png"],
   },

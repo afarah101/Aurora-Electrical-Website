@@ -76,7 +76,7 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
         return;
       }
       reset();
-      setStatus({ kind: "ok", message: "Thanks — we'll be in touch shortly." });
+      setStatus({ kind: "ok", message: "Thanks - we'll be in touch shortly." });
     } catch {
       setStatus({
         kind: "error",
