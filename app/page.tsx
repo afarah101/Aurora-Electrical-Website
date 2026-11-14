@@ -47,12 +47,11 @@ export default function Home() {
           reviewCount={mybuilderField("Reviews")}
         />
         <TrustBar serviceArea={contact.serviceArea} positioning={positioning} />
-        <Services services={services} certificates={certificates} />
-        {/* photos omitted until /public/work/ is populated — tiles render instead */}
-        <WorkGallery />
         <MyBuilderBadge />
         <Reviews reviews={reviews} aggregateRating={aggregateRating} />
         <TrustedBy clients={clients} />
+        <Services services={services} certificates={certificates} />
+        <WorkGallery />
         <ContactForm
           email={contact.email}
           phone={contact.phone}

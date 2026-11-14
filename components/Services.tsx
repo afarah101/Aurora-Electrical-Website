@@ -1,84 +1,97 @@
+import Image from "next/image";
+import { ArrowRight } from "lucide-react";
+
 type Props = { services: string[]; certificates: string[] };
 
 /**
- * Services come only from the CONFIRMED list in site.md.
- *
- * Reference treatment (reference/21.49.44 for the list, 21.49.22 for the
- * dark canvas): services as a typographic list — mono uppercase, square
- * markers, hairline rules, generous air — on the site's dark band, not an
- * icon-card grid.
- * No per-service imagery: the reference pairs each item with a featured
- * photo, but none of our photos are verified per-service, and a fuse-board
- * photo captioned "Lighting" would be a misrepresentation, not a design.
+ * The one service with a verified photo: work-01 shows a fuse board / consumer
+ * unit installation. No other service gets an image, because a photo captioned
+ * with the wrong service would be a misrepresentation, not a design.
+ */
+const FEATURE = { match: /fuse board|consumer unit/i, src: "/work/work-01.jpg" };
+
+/**
+ * Bento grid. Names and order come only from the CONFIRMED list in site.md;
+ * the fuse board card is the large one. Cards are single-layer and carry no
+ * hover state: they are not links, so motion would invite a click that goes
+ * nowhere. The EICR row is the one link and the only element that moves.
  */
 export function Services({ services, certificates }: Props) {
   if (services.length === 0) return null;
 
   return (
-    // Dark canvas continuous with the hero/TrustBar block above; a neutral
-    // hairline marks the section boundary, reference-style — separation by
-    // rule, not by surface change.
-    <section id="services" className="border-t border-slate-800 bg-slate-950">
-      <div className="mx-auto grid max-w-6xl gap-12 px-5 py-16 sm:py-24 lg:grid-cols-[2fr_3fr] lg:gap-20">
-        {/* Sticky through the list so the tall right column never leaves a
-            dead lower-left quadrant; top offset clears the fixed nav. */}
-        <div className="lg:sticky lg:top-24 lg:self-start">
-          <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-            What we do
-          </h2>
-          <p className="mt-5 max-w-md text-slate-300">
-            The same standard of work whether it&apos;s a single socket or a full
-            commercial installation.
-          </p>
-        </div>
+    <section id="services" className="border-t border-hairline bg-surface">
+      <div className="mx-auto max-w-6xl px-5 py-16 sm:py-24">
+        <h2 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">What we do</h2>
+        <p className="mt-5 max-w-md text-ink-muted">
+          The same standard of work whether it&apos;s a single socket or a full
+          commercial installation.
+        </p>
 
-        <div>
-          {/* Rows carry no hover states: they are not interactive, and motion
-              on them would invite a click that goes nowhere. */}
-          <ul>
-            {services.map((service) => (
-              <li key={service} className="border-b border-slate-800 first:border-t">
-                <div className="flex items-center gap-4 py-5">
-                  <span aria-hidden="true" className="h-2 w-2 shrink-0 bg-slate-500" />
-                  <h3 className="font-mono text-sm font-medium uppercase leading-relaxed tracking-widest text-slate-300">
-                    {service}
-                  </h3>
-                </div>
+        {/* 1 column below 768px; 2 at md with the photo card on its own row
+            first; 3 at lg with the photo card spanning 2x2. */}
+        <ul className="mt-12 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+          {services.map((service) => {
+            const featured = FEATURE.match.test(service);
+            return (
+              <li
+                key={service}
+                className={`flex flex-col overflow-hidden rounded-[16px] bg-surface-raised ring-1 ring-hairline ${
+                  featured
+                    ? "md:col-span-2 md:row-start-1 lg:row-span-2 lg:row-start-auto"
+                    : "min-h-36 justify-end"
+                }`}
+              >
+                {featured && (
+                  <div className="relative min-h-64 flex-1">
+                    <Image
+                      src={FEATURE.src}
+                      alt="Completed fuse board installation"
+                      fill
+                      sizes="(min-width: 1024px) 740px, (min-width: 768px) 100vw, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <h3
+                  className={`p-6 font-heading font-semibold tracking-tight text-ink ${
+                    featured ? "text-2xl sm:text-3xl" : "text-xl"
+                  }`}
+                >
+                  {service}
+                </h3>
+              </li>
+            );
+          })}
+
+          {/* Authored here, not in site.md: it needs an anchor the parser's
+              plain service strings can't express. */}
+          <li className="md:col-span-1 lg:col-span-3">
+            <a
+              href="#eicr-pricing"
+              className="group flex h-full min-h-20 items-center justify-between gap-6 rounded-[16px] bg-surface-raised p-6 ring-1 ring-hairline transition-colors duration-[160ms] ease-out hover-fine:bg-surface-high focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft motion-reduce:transition-none"
+            >
+              <h3 className="font-heading text-xl font-semibold tracking-tight text-ink">
+                EICRs (Electrical Installation Condition Reports)
+              </h3>
+              <ArrowRight
+                aria-hidden="true"
+                strokeWidth={1.5}
+                className="size-5 shrink-0 text-ink-muted transition-transform duration-[160ms] ease-out [@media(pointer:fine)]:group-hover:[transform:translateX(2px)] motion-reduce:transition-none"
+              />
+            </a>
+          </li>
+        </ul>
+
+        {certificates.length > 0 && (
+          <ul className="mt-8 flex flex-wrap gap-2">
+            {certificates.map((c) => (
+              <li key={c} className="rounded-full bg-surface-high px-3 py-1.5 text-sm text-ink-body">
+                {c}
               </li>
             ))}
-            {/* The one interactive row — it links to the pricing section, so
-                it alone carries hover and focus states. Authored here rather
-                than in site.md because it needs an anchor the parser's plain
-                service strings can't express. */}
-            <li className="border-b border-slate-800 first:border-t">
-              <a
-                href="#eicr-pricing"
-                className="group flex items-center gap-4 py-5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft"
-              >
-                <span
-                  aria-hidden="true"
-                  className="h-2 w-2 shrink-0 bg-slate-500 transition-colors group-hover:bg-white"
-                />
-                <h3 className="font-mono text-sm font-medium uppercase leading-relaxed tracking-widest text-slate-300 transition-colors group-hover:text-white">
-                  EICRs (Electrical Installation Condition Reports)
-                </h3>
-              </a>
-            </li>
           </ul>
-
-          {certificates.length > 0 && (
-            <ul className="mt-8 flex flex-wrap gap-2">
-              {certificates.map((c) => (
-                <li
-                  key={c}
-                  className="rounded-md bg-slate-800 px-3 py-1.5 text-sm text-slate-200"
-                >
-                  {c}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        )}
       </div>
     </section>
   );
