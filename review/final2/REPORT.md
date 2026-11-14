@@ -65,8 +65,23 @@ Performance / Accessibility / Best practices / SEO.
 
 **Why `/` mobile is below 90.** Lighthouse's simulated LCP has two paths. A text LCP that paints at first paint uses the fast first-paint estimate (the other pages get 0.8s). An image LCP uses a pessimistic estimate: it includes every request that started before first paint, so all page JavaScript, including the 77 KB (gzip) zod chunk the contact form loads. The hero poster is the largest thing in the first screen, so the image path applies. Neither poster size nor priority moves it. Fixes, for Ahmed to choose:
 
-1. Load the contact form's validation code later (change in `app/page.tsx` or the form's imports). Out of this run's scope: it touches form code.
-2. Make the hero media smaller than the headline on phones, or move it below the first screen. This is a visual design change.
+1. **Recommended:** on phones, keep the hero media out of the first screen (hide it below 640px, or move it below the fold). At 412×823 the headline text is about 40,000 px² and the visible media frame about 90,000 px². The frame must show less than about 107px in the first screen for the headline to become the LCP, as it already is on the other four pages (all 100). This is a visual design change.
+2. Load the contact form later (`next/dynamic` in `app/page.tsx`). Tested in a scratch copy only: 89, 90, 88. Not enough alone.
+
+**Tries for checks 1 and 10 (limit 8):**
+
+| Try | Change | `/` mobile perf |
+| --- | --- | --- |
+| 1 | WebP poster (Part D) | 87 |
+| 2 | Poster as `<img>` + preload | 92, 89, 86 |
+| 3 | Same, without `fetchpriority` | 86, 90, 90 |
+| 4 | `fetchpriority=high` restored (shipped) | 85, 86, 86, 86, 87 |
+| 5 | Final build after audit fixes | 81, 85, 86, 86, 87 |
+| 6 | No entrance animation on the frame, `decoding=sync` (reverted) | 85, 85, 86 |
+| 7 | Measured LCP candidates at 412×823 (no code change) | text 40k px² vs image 90k px² |
+| 8 | Contact form deferred, scratch copy only (not committed) | 89, 90, 88 |
+
+Tag push: 5 tries over the session, each `HTTP 403` from the session git proxy. Branch pushes succeed, so this is a policy block, not a network fault.
 
 ## Audit
 
