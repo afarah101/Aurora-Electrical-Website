@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { Resend } from "resend";
 import { business, contact } from "@/app/content";
+import { describeLeadSource } from "@/lib/lead-source";
 import { autoReplyEnabled, buildAutoReply } from "@/lib/auto-reply";
 
 /**
@@ -9,6 +10,15 @@ import { autoReplyEnabled, buildAutoReply } from "@/lib/auto-reply";
  * carries the user-facing messages. This is the authoritative check — the
  * client copy is a convenience and can be bypassed entirely.
  */
+// Lead-source fields go into the plain-text email, so control characters
+// (such as newlines that could fake a "Phone:" line) are turned into spaces.
+const oneLine = (max: number) =>
+  z
+    .string()
+    .max(max)
+    .transform((value) => value.replace(/[\u0000-\u001f\u007f]+/g, " ").trim())
+    .optional();
+
 const schema = z.object({
   name: z.string().trim().min(2),
   // Digits and spaces with an optional leading +, 10 to 15 digits in total.
@@ -27,6 +37,17 @@ const schema = z.object({
   // Honeypot: accepted by the schema so a filled value reaches the silent-accept
   // branch below. Rejecting it here would 400 and tell the bot it was caught.
   company: z.string().optional(),
+  // Where the enquiry came from (see lib/lead-source.ts). Optional and capped.
+  source: z
+    .object({
+      page: oneLine(300),
+      referrer: oneLine(300),
+      utm_source: oneLine(200),
+      utm_medium: oneLine(200),
+      utm_campaign: oneLine(200),
+      gclid: oneLine(200),
+    })
+    .optional(),
 });
 
 /**
@@ -79,7 +100,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { name, email, phone, address, fault } = parsed.data;
+  const { name, email, phone, address, fault, source } = parsed.data;
 
   try {
     const resend = new Resend(apiKey);
@@ -94,6 +115,8 @@ export async function POST(request: Request) {
         `Phone: ${phone}`,
         `Address: ${address}`,
         `Email: ${email || "not supplied"}`,
+        `Source: ${describeLeadSource(source)}`,
+        `Page: ${source?.page ?? "unknown"}`,
         "",
         fault,
       ].join("\n"),

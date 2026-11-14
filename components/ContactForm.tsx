@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Link from "next/link";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { readLeadSource } from "@/lib/lead-source";
 
 /**
  * Field rules match the server schema in app/api/contact/route.ts; only the
@@ -63,7 +64,7 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+        body: JSON.stringify({ ...values, source: readLeadSource() }),
       });
       const body = (await res.json().catch(() => ({}))) as { error?: string };
 
