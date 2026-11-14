@@ -10,12 +10,14 @@ import { MyBuilderBadge } from "@/components/MyBuilderBadge";
 import { EicrPricing } from "@/components/EicrPricing";
 import { StickyCall } from "@/components/StickyCall";
 import { Footer } from "@/components/Footer";
+import { mybuilderField } from "@/lib/mybuilder";
 
 import {
   accreditations,
   aggregateRating,
   business,
   certificates,
+  claims,
   clients,
   contact,
   positioning,
@@ -36,12 +38,13 @@ export default function Home() {
         <Hero
           businessName={business.name}
           tagline={business.tagline}
-          serviceArea={contact.serviceArea}
           phone={contact.phone}
           telLink={contact.telLink}
+          claims={claims}
           accreditations={accreditations}
-          aggregateRating={aggregateRating}
-          reviews={reviews}
+          rating={mybuilderField("Rating")}
+          ratingOutOf={mybuilderField("Rating out of")}
+          reviewCount={mybuilderField("Reviews")}
         />
         <TrustBar serviceArea={contact.serviceArea} positioning={positioning} />
         <Services services={services} certificates={certificates} />

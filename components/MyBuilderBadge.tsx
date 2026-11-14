@@ -1,44 +1,18 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { Star } from "lucide-react";
+import { mybuilderField } from "@/lib/mybuilder";
 
 /**
  * MyBuilder verified-rating block, shown directly above the review
  * slideshow: the aggregate number first, then the individual quotes.
  *
  * Every value is read from the "## MyBuilder" section of site.md — nothing
- * is hardcoded here. content.ts doesn't export its field helpers, so this
- * server component carries its own minimal reader (the TrustBar precedent);
- * if the section or its values are missing the block renders nothing rather
- * than inventing a rating.
+ * is hardcoded here (reader: lib/mybuilder.ts). If the section or its
+ * values are missing the block renders nothing rather than inventing a
+ * rating.
  *
  * Two-colour discipline: gold marks the proof (eyebrow, stars, chips);
  * blue appears only on the action button that leads to the profile.
  */
-function mybuilderField(key: string): string | null {
-  try {
-    const lines = readFileSync(
-      join(process.cwd(), "content", "site.md"),
-      "utf8",
-    ).split("\n");
-    const start = lines.findIndex(
-      (l) => l.trim().toLowerCase() === "## mybuilder",
-    );
-    if (start === -1) return null;
-    for (const line of lines.slice(start + 1)) {
-      if (line.startsWith("## ")) break;
-      const t = line.trim();
-      if (t.toLowerCase().startsWith(`- ${key.toLowerCase()}:`)) {
-        const value = t.slice(t.indexOf(":") + 1).trim();
-        return value && !/\[(PLACEHOLDER|TBC)/i.test(value) ? value : null;
-      }
-    }
-    return null;
-  } catch {
-    return null;
-  }
-}
-
 export function MyBuilderBadge() {
   const rating = mybuilderField("Rating");
   const outOf = mybuilderField("Rating out of");

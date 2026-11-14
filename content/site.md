@@ -2,7 +2,7 @@
 
 ## Business
 - Name: Aurora Electrical
-- Tagline: [PLACEHOLDER — one line, e.g. "Trusted domestic electricians across London"]
+- Tagline: Safe, certified electrics for London homes.
 - Logo: [PLACEHOLDER — /public/logo.png incoming]
 
 ## Contact

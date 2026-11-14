@@ -1,19 +1,20 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Sans, IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
+import { Archivo, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { accreditations, business, contact, services } from "./content";
 import { SITE_URL, myBuilderProfile } from "./site-url";
 
 /**
  * Three faces, three roles — deliberately not Inter:
- * Space Grotesk carries the headings (the page's boldness is spent there),
- * IBM Plex Sans carries body copy, and IBM Plex Mono marks technical
- * accents: eyebrow labels and the work-gallery counter.
+ * Archivo carries the headings (the page's boldness is spent there; the
+ * wdth axis lets the hero set it slightly wide), IBM Plex Sans carries body
+ * copy, and IBM Plex Mono marks technical accents such as the gallery
+ * counter. The wdth axis needs the variable weight range, so no weight list.
  */
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+const archivo = Archivo({
+  variable: "--font-archivo",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  axes: ["wdth"],
 });
 
 const plexSans = IBM_Plex_Sans({
@@ -102,7 +103,7 @@ export default function RootLayout({
   return (
     <html
       lang="en-GB"
-      className={`${spaceGrotesk.variable} ${plexSans.variable} ${plexMono.variable} h-full antialiased`}
+      className={`${archivo.variable} ${plexSans.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <script
