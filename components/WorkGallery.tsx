@@ -30,7 +30,8 @@ const ICON = { "aria-hidden": true, strokeWidth: 1.5, className: "size-5" } as c
 /**
  * One large panel, one photo at a time. Advances every 6s; stops while the
  * pointer is over it, while focus is inside it, or after the pause button.
- * Pressing play resumes at once, wherever the pointer and focus are.
+ * Pressing play resumes at once; hover and focus pause it again once the
+ * pointer leaves or focus moves to another control.
  * Reduced motion: no autoplay, the first photo holds, prev/next still work.
  * The dots are position indicators, not buttons: 19 dots at a 44px touch
  * target each cannot fit a phone width, so prev/next carry all interaction.
@@ -48,9 +49,12 @@ export function WorkGallery({ photos = PHOTOS }: { photos?: string[] }) {
   const [choice, setChoice] = useState<boolean | null>(null);
   const paused = choice ?? reduced;
   const count = deck.length;
-  // An explicit Play (choice === false) wins over hover and focus: the button
-  // sits inside the region, so pressing it always leaves pointer or focus there.
-  const rotating = !paused && (choice === false || (!hovered && !focused)) && count > 1;
+  // Pressing Play resumes at once, although pointer and focus are still on the
+  // button inside the region. That override lasts until the pointer leaves,
+  // focus leaves, or focus moves to another control; then hover and focus
+  // pause the slideshow again as usual.
+  const [resumed, setResumed] = useState(false);
+  const rotating = !paused && (resumed || (!hovered && !focused)) && count > 1;
 
   const go = (delta: number) =>
     setPos((p) => ({ prev: p.index, index: (p.index + delta + count) % count }));
@@ -96,10 +100,19 @@ export function WorkGallery({ photos = PHOTOS }: { photos?: string[] }) {
       <div
         className="mx-auto max-w-6xl px-5 py-16 sm:py-20"
         onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        onFocus={() => setFocused(true)}
+        onMouseLeave={() => {
+          setHovered(false);
+          setResumed(false);
+        }}
+        onFocus={(e) => {
+          setFocused(true);
+          if (!e.target.hasAttribute("aria-pressed")) setResumed(false);
+        }}
         onBlur={(e) => {
-          if (!e.currentTarget.contains(e.relatedTarget)) setFocused(false);
+          if (!e.currentTarget.contains(e.relatedTarget)) {
+            setFocused(false);
+            setResumed(false);
+          }
         }}
       >
         <h2 className="text-3xl font-semibold tracking-tight text-ink">Recent work</h2>
@@ -150,7 +163,10 @@ export function WorkGallery({ photos = PHOTOS }: { photos?: string[] }) {
                 {count > 1 && (
                   <button
                     type="button"
-                    onClick={() => setChoice(!paused)}
+                    onClick={() => {
+                    setResumed(paused);
+                    setChoice(!paused);
+                  }}
                     aria-label="Pause photo slideshow"
                     aria-pressed={paused}
                     className={CONTROL}

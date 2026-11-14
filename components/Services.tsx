@@ -29,9 +29,9 @@ export function Services({ services, certificates }: Props) {
           commercial installation.
         </p>
 
-        {/* Visual order = site.md order at every width: 1 column below 768px;
-            2 at md; 3 at lg with the photo card spanning 2x2 in its own slot. */}
-        <ul className="mt-12 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+        {/* Visual order = site.md order at every width: 1 column below
+            1024px; 3 at lg with the photo card spanning 2x2 in its own slot. */}
+        <ul className="mt-12 grid grid-cols-1 gap-3 lg:grid-cols-3">
           {services.map((service) => {
             const featured = FEATURE.match.test(service);
             return (
@@ -47,9 +47,9 @@ export function Services({ services, certificates }: Props) {
                   <div className="relative min-h-64 flex-1">
                     <Image
                       src={FEATURE.src}
-                      alt="Open distribution board with labelled circuit breakers, beside cable trays of bundled cables"
+                      alt="Open distribution board with labelled circuit breakers"
                       fill
-                      sizes="(min-width: 1024px) 740px, (min-width: 768px) 50vw, 100vw"
+                      sizes="(min-width: 1024px) 740px, calc(100vw - 40px)"
                       className="object-cover"
                     />
                   </div>
@@ -67,7 +67,7 @@ export function Services({ services, certificates }: Props) {
 
           {/* Authored here, not in site.md: it needs an anchor the parser's
               plain service strings can't express. */}
-          <li className="md:col-span-2 lg:col-span-3">
+          <li className="lg:col-span-3">
             <a
               href="#eicr-pricing"
               className="group flex h-full min-h-20 items-center justify-between gap-6 rounded-[16px] bg-surface-raised p-6 ring-1 ring-hairline transition-colors duration-[160ms] ease-out hover-fine:bg-surface-high focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft motion-reduce:transition-none"

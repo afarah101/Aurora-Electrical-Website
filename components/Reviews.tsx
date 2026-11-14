@@ -24,8 +24,10 @@ type Props = { reviews: Review[]; aggregateRating: string | null };
  *
  * One review at a time on the dark canvas. Advances every 6s; stops while
  * the pointer is over it, while focus is inside it, or after the pause
- * button; pressing play resumes at once. Reduced motion: no autoplay, the first review holds, prev/next
- * still work. A new quote fades and rises 4px into place (250ms).
+ * button. Pressing play resumes at once; hover and focus pause it again
+ * once the pointer leaves or focus moves to another control. Reduced
+ * motion: no autoplay, the first review holds, prev/next still work. A new
+ * quote fades and rises 4px into place (250ms).
  */
 export function Reviews({ reviews, aggregateRating }: Props) {
   const [index, setIndex] = useState(0);
@@ -35,9 +37,12 @@ export function Reviews({ reviews, aggregateRating }: Props) {
   // null = the visitor has not chosen; fall back to their motion preference.
   const [choice, setChoice] = useState<boolean | null>(null);
   const paused = choice ?? reduced;
-  // An explicit Play (choice === false) wins over hover and focus: the button
-  // sits inside the region, so pressing it always leaves pointer or focus there.
-  const rotating = !paused && (choice === false || (!hovered && !focused)) && reviews.length > 1;
+  // Pressing Play resumes at once, although pointer and focus are still on the
+  // button inside the region. That override lasts until the pointer leaves,
+  // focus leaves, or focus moves to another control; then hover and focus
+  // pause the slideshow again as usual.
+  const [resumed, setResumed] = useState(false);
+  const rotating = !paused && (resumed || (!hovered && !focused)) && reviews.length > 1;
 
   // One timeout per slide, so a manual move restarts the full 6s.
   useEffect(() => {
@@ -59,10 +64,19 @@ export function Reviews({ reviews, aggregateRating }: Props) {
       <div
         className="mx-auto max-w-6xl px-5 py-16 sm:py-20"
         onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        onFocus={() => setFocused(true)}
+        onMouseLeave={() => {
+          setHovered(false);
+          setResumed(false);
+        }}
+        onFocus={(e) => {
+          setFocused(true);
+          if (!e.target.hasAttribute("aria-pressed")) setResumed(false);
+        }}
         onBlur={(e) => {
-          if (!e.currentTarget.contains(e.relatedTarget)) setFocused(false);
+          if (!e.currentTarget.contains(e.relatedTarget)) {
+            setFocused(false);
+            setResumed(false);
+          }
         }}
       >
         <h2 className="text-3xl font-semibold tracking-tight text-ink">
@@ -141,7 +155,10 @@ export function Reviews({ reviews, aggregateRating }: Props) {
               {reviews.length > 1 && (
                 <button
                   type="button"
-                  onClick={() => setChoice(!paused)}
+                  onClick={() => {
+                    setResumed(paused);
+                    setChoice(!paused);
+                  }}
                   aria-label="Pause review slideshow"
                   aria-pressed={paused}
                   className={CONTROL}

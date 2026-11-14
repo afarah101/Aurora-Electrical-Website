@@ -40,13 +40,24 @@ export function Nav({ businessName, phone, telLink }: Props) {
   const headerRef = useRef<HTMLElement | null>(null);
   const toggleRef = useRef<HTMLButtonElement | null>(null);
 
-  // While the menu is open the page behind it is out of reach: main and
-  // footer go inert, so pointer, Tab and screen readers stay in the header.
+  // While the menu is open the page behind it is out of reach: everything
+  // beside the header (main, footer, the sticky call bar) goes inert, so
+  // pointer, Tab and screen readers stay in the header. The menu exists only
+  // below lg, so widening past lg closes it and lifts the lock.
   useEffect(() => {
     if (!open) return;
-    const behind = Array.from(document.querySelectorAll<HTMLElement>("main, footer"));
+    const header = headerRef.current;
+    const behind = Array.from(header?.parentElement?.children ?? []).filter(
+      (el): el is HTMLElement => el instanceof HTMLElement && el !== header,
+    );
     behind.forEach((el) => (el.inert = true));
-    return () => behind.forEach((el) => (el.inert = false));
+    const wide = window.matchMedia("(min-width: 1024px)");
+    const onWide = () => wide.matches && setOpen(false);
+    wide.addEventListener("change", onWide);
+    return () => {
+      wide.removeEventListener("change", onWide);
+      behind.forEach((el) => (el.inert = false));
+    };
   }, [open]);
 
   useEffect(() => {
