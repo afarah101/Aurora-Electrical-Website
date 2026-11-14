@@ -38,7 +38,7 @@ Every other check passes.
 | 10 | Lighthouse a11y 100; `/` mobile perf ≥ 90 | **FAIL (perf)** | Accessibility 100 on all 10 page/preset runs. `/` mobile perf on the final build: 81, 85, 86, 86, 87 (median 86); LCP element = hero poster img. Baseline `ec4ac4e`: 86–87. Devtools throttling: 97 and 95, LCP 1.9s. Table below. |
 | 11 | review-animations site-wide | PASS: **APPROVE** | No `ease-in`, `scale(0)`, `transition-all` or layout-property animation. Every hover uses `hover-fine` `(hover:hover) and (pointer:fine)`. Presses 160ms down / 100ms up. UI motion ≤ 300ms; hero rise 900ms has a written reason. Reduced motion: fades kept, movement dropped. |
 | 12 | 0 console errors; no horizontal scroll | PASS | 20 page × width pairs (375/768/1024/1440): 0 console errors, `scrollWidth` = viewport each time. |
-| 13 | Independent audit | AUDIT_RESULT | AUDIT_DETAIL |
+| 13 | Independent audit | PASS (round 2) | Round 1 (fresh agent, own builds on other ports, at `8d0b1cc`): checks 3–9, 11, 12 PASS, check 10 FAIL (`/` mobile 85–90, median 87; baseline 87). It also found defects; the in-scope ones were fixed in `707cf5f`. Round 2 (new fresh agent, at `707cf5f`): all 9 checks PASS, no blocking defect. See Audit. |
 | 14 | Push; remote = local; main = `51e43b6` | PASS | See "Push" below. |
 
 Direct checks of the fixes (rendered DOM, 375px):
@@ -67,6 +67,28 @@ Performance / Accessibility / Best practices / SEO.
 
 1. Load the contact form's validation code later (change in `app/page.tsx` or the form's imports). Out of this run's scope: it touches form code.
 2. Make the hero media smaller than the headline on phones, or move it below the first screen. This is a visual design change.
+
+## Audit
+
+**Round 1** (at `8d0b1cc`) confirmed fixes 4–7 in the rendered DOM and agreed with every result above, check 10 included. Defects it raised:
+
+| # | Defect | Action |
+| --- | --- | --- |
+| 1 | `/contact` hard-coded `pt-[69px] lg:pt-[65px]`: `#contact` 3px under the nav at ≥1024px | Out of scope (`app/contact/`), logged below |
+| 2 | Menu opened below 1024px, then window widened: `main`/`footer` stay inert | Fixed: menu closes at ≥1024px |
+| 3 | After Play, hover and focus never paused again | Fixed: they pause again once the pointer leaves or focus moves on |
+| 4 | `/` mobile perf below 90 | Not fixable in scope (see Lighthouse) |
+| 5 | Near-empty "Full & partial rewiring" card beside the photo at 800px | Fixed: one column below 1024px |
+| 6 | Sticky call bar not inert while the menu is open | Fixed |
+| 7 | Alt mentions cable trays that the 1440 crop hides | Fixed: alt names only the board and breakers |
+| 8 | Visual and content changes need Ahmed's sign-off | Unchanged: label `needs-ahmed`, no auto-merge |
+
+**Round 2** (at `707cf5f`): slideshow play, re-pause on hover and focus, nav jumps, services order, inert (including after resize), copy, console, scroll, build/types/lint/grep, hero DOM, alt and review-animations: all PASS. Non-blocking notes:
+
+- Text-only service cards are wide, mostly empty bands at 768–1023px (design note for Ahmed).
+- `motion-reduce:transition-none` on the hero rating link and EICR row also drops their colour fade; the skill prefers to keep colour changes.
+- Gallery crossfade is 300ms; a double click within 300ms cuts the fading photo at about 12% opacity.
+- The rating link's accessible name repeats the rating ("4.9 out of 5 stars MyBuilder 4.9 from 82 reviews").
 
 ## Screenshots
 
@@ -99,7 +121,7 @@ Performance / Accessibility / Best practices / SEO.
 
 ## Push
 
-PUSH_EVIDENCE
+All commits are pushed to `origin/redesign/phase-1-prototypes`. After each push, `git ls-remote origin` returned the same hash as local `HEAD`. Remote `main` stayed at `51e43b637a9153780ffa3a98681f7659e99ddaa7`. Nothing was merged or deployed, and no PR was opened. The tag is not on the remote (check 1).
 
 ## Open items
 
