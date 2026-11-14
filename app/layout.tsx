@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans, IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import { business, contact, services } from "./content";
+import { accreditations, business, contact, services } from "./content";
+import { SITE_URL, myBuilderProfile } from "./site-url";
 
 /**
  * Three faces, three roles — deliberately not Inter:
@@ -33,7 +34,8 @@ const description = `${business.name} — electrical work for homes and business
 
 export const metadata: Metadata = {
   /* Absolute base for social images — WhatsApp/Facebook require full URLs. */
-  metadataBase: new URL("https://aurora-electricals.com"),
+  metadataBase: new URL(SITE_URL),
+  alternates: { canonical: "/" },
   title: {
     default: `${business.name} — Domestic & Commercial Electricians`,
     template: `%s | ${business.name}`,
@@ -44,7 +46,7 @@ export const metadata: Metadata = {
     description,
     type: "website",
     locale: "en_GB",
-    url: "https://aurora-electricals.com",
+    url: SITE_URL,
     images: [
       {
         url: "/aurora-share.png",
@@ -70,9 +72,21 @@ function localBusinessJsonLd() {
     "@type": "Electrician",
     name: business.name,
     description,
+    url: SITE_URL,
+    image: `${SITE_URL}/aurora-share.png`,
+    logo: `${SITE_URL}/aurora-logo.png`,
     ...(contact.telLink ? { telephone: contact.telLink } : {}),
     ...(contact.email ? { email: contact.email } : {}),
     ...(contact.serviceArea ? { areaServed: contact.serviceArea } : {}),
+    ...(myBuilderProfile ? { sameAs: [myBuilderProfile] } : {}),
+    ...(accreditations.length
+      ? {
+          hasCredential: accreditations.map((name) => ({
+            "@type": "EducationalOccupationalCredential",
+            name,
+          })),
+        }
+      : {}),
     makesOffer: services.map((service) => ({
       "@type": "Offer",
       itemOffered: { "@type": "Service", name: service },

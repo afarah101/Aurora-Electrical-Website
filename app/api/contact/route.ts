@@ -3,6 +3,7 @@ import { z } from "zod";
 import { Resend } from "resend";
 import { business, contact } from "@/app/content";
 import { describeLeadSource } from "@/lib/lead-source";
+import { autoReplyEnabled, buildAutoReply } from "@/lib/auto-reply";
 
 /**
  * Field rules match the client schema in components/ContactForm.tsx, which
@@ -127,6 +128,29 @@ export async function POST(request: Request) {
         { error: "Couldn't send your message. Please call us instead." },
         { status: 502 },
       );
+    }
+
+    // Customer confirmation. A failure here is logged only: the enquiry itself
+    // has already reached the business, so the customer still sees success.
+    if (email && autoReplyEnabled()) {
+      try {
+        const reply = buildAutoReply({
+          name,
+          businessName: business.name,
+          phone: contact.phone,
+          whatsapp: contact.whatsapp,
+        });
+        const { error: replyError } = await resend.emails.send({
+          from: process.env.FROM_EMAIL!,
+          to: email,
+          replyTo: to,
+          subject: reply.subject,
+          text: reply.text,
+        });
+        if (replyError) console.error("contact: auto-reply error", replyError);
+      } catch (replyErr) {
+        console.error("contact: auto-reply failed", replyErr);
+      }
     }
 
     return NextResponse.json({ ok: true });

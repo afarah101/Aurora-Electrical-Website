@@ -10,6 +10,7 @@
 - Tel link: +447304150154
 - WhatsApp: +447304150154
 - Email: aurora.electrical@outlook.com
+- VAT: not VAT registered (sole trader, confirmed 13 Nov 2026). Do not add a VAT line to prices.
 - Service area: [PLACEHOLDER — London + which boroughs/postcodes]
 
 ## Services (CONFIRMED — build only these)
@@ -25,7 +26,7 @@
 
 ## Certificates / EICR
 - Status: CONFIRMED — EICRs are live, listed in "What we do" and priced in the #eicr-pricing section.
-- Prices: 1-2 Bedroom — £160; 3 Bedroom — £220; 4 Bedroom — £260; 5 Bedroom — £300; 6+ Bedroom — call for quote. All prices are subject to VAT.
+- Prices: 1-2 Bedroom — £160; 3 Bedroom — £220; 4 Bedroom — £260; 5 Bedroom — £300; 6+ Bedroom — call for quote.
 - Note: the EICRs row is authored in components/Services.tsx rather than parsed from this file (the parser has no link-aware row format). Changing the prices means editing components/EicrPricing.tsx, not this file.
 
 ## Certifications / Accreditations
