@@ -47,7 +47,10 @@ export function Hero({
   return (
     <section className="bg-surface pt-nav">
       <div className="mx-auto grid min-h-[calc(100svh-var(--spacing-nav))] max-w-6xl items-center gap-10 px-5 py-12 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:py-16">
-        <div>
+        {/* Phones (below 768px): the copy fills the first screen and the
+            footage frame starts below it, so the headline is the first big
+            paint and the call to action has the screen to itself. */}
+        <div className="max-md:flex max-md:min-h-[calc(100svh-var(--spacing-nav)-3rem)] max-md:flex-col max-md:justify-center">
           <h1 className="animate-hero-rise font-heading text-[2.5rem] font-extrabold leading-[1.05] tracking-[-0.03em] text-balance text-ink [font-stretch:108%] sm:text-6xl lg:text-5xl xl:text-6xl">
             {tagline ?? businessName}
           </h1>
