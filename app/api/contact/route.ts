@@ -9,6 +9,15 @@ import { describeLeadSource } from "@/lib/lead-source";
  * carries the user-facing messages. This is the authoritative check — the
  * client copy is a convenience and can be bypassed entirely.
  */
+// Lead-source fields go into the plain-text email, so control characters
+// (such as newlines that could fake a "Phone:" line) are turned into spaces.
+const oneLine = (max: number) =>
+  z
+    .string()
+    .max(max)
+    .transform((value) => value.replace(/[\u0000-\u001f\u007f]+/g, " ").trim())
+    .optional();
+
 const schema = z.object({
   name: z.string().trim().min(2),
   // Digits and spaces with an optional leading +, 10 to 15 digits in total.
@@ -30,12 +39,12 @@ const schema = z.object({
   // Where the enquiry came from (see lib/lead-source.ts). Optional and capped.
   source: z
     .object({
-      page: z.string().max(300).optional(),
-      referrer: z.string().max(300).optional(),
-      utm_source: z.string().max(200).optional(),
-      utm_medium: z.string().max(200).optional(),
-      utm_campaign: z.string().max(200).optional(),
-      gclid: z.string().max(200).optional(),
+      page: oneLine(300),
+      referrer: oneLine(300),
+      utm_source: oneLine(200),
+      utm_medium: oneLine(200),
+      utm_campaign: oneLine(200),
+      gclid: oneLine(200),
     })
     .optional(),
 });

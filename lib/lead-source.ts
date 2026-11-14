@@ -13,13 +13,29 @@ export type LeadSource = {
   gclid?: string;
 };
 
+function sameOrigin(referrer: string, origin: string): boolean {
+  try {
+    return new URL(referrer).origin === origin;
+  } catch {
+    return false;
+  }
+}
+
+function hostOf(referrer: string): string {
+  try {
+    return new URL(referrer).hostname.toLowerCase();
+  } catch {
+    return "";
+  }
+}
+
 const PARAMS = ["utm_source", "utm_medium", "utm_campaign", "gclid"] as const;
 
 export function readLeadSource(): LeadSource {
   if (typeof window === "undefined") return {};
   const url = new URL(window.location.href);
   const source: LeadSource = { page: url.pathname };
-  if (document.referrer && !document.referrer.startsWith(url.origin)) {
+  if (document.referrer && sameOrigin(document.referrer, url.origin) === false) {
     source.referrer = document.referrer.slice(0, 300);
   }
   for (const key of PARAMS) {
@@ -37,9 +53,12 @@ export function describeLeadSource(source: LeadSource | undefined): string {
     return [source.utm_source, source.utm_medium, source.utm_campaign].filter(Boolean).join(" / ");
   }
   const ref = source.referrer ?? "";
-  if (/google\./i.test(ref)) return "Google search or Maps";
-  if (/mybuilder\./i.test(ref)) return "MyBuilder";
-  if (/(facebook|instagram|tiktok)\./i.test(ref)) return "Social media";
-  if (ref) return `Link from ${ref.replace(/^https?:\/\//, "").split("/")[0]}`;
+  const host = hostOf(ref);
+  const on = (name: string) => host.split(".").includes(name);
+  if (on("google")) return "Google search or Maps";
+  if (on("mybuilder")) return "MyBuilder";
+  if (on("facebook") || on("instagram") || on("tiktok")) return "Social media";
+  if (host) return `Link from ${host}`;
+  if (ref) return "Link from another site";
   return "Direct visit (typed the address, bookmark or app)";
 }
