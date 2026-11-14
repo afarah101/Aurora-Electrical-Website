@@ -8,6 +8,11 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { EicrPricing } from "@/components/EicrPricing";
 import { accreditations, business, contact, servicePages } from "../content";
 
+// Press is deliberate (160ms), release snaps (100ms), hover colour eases 160ms.
+const PRESS =
+  "[transition:transform_100ms_var(--ease-out),background-color_160ms_var(--ease-out)] active:scale-[0.97] active:[transition:transform_160ms_var(--ease-out),background-color_160ms_var(--ease-out)] motion-reduce:active:scale-100";
+const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft";
+
 const { areasText, registration } = servicePages;
 
 export const metadata: Metadata = {
@@ -24,9 +29,9 @@ export default function EicrLandlordsPage() {
   return (
     <div id="top">
       <Nav businessName={business.name} phone={contact.phone} telLink={contact.telLink} />
-      <main className="bg-slate-950">
-        <article className="mx-auto max-w-3xl space-y-6 px-5 pb-12 pt-28 text-slate-300 [&_h2]:mt-10 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-white">
-          <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+      <main className="bg-surface">
+        <article className="mx-auto max-w-3xl space-y-6 px-5 pb-12 pt-28 text-ink-muted [&_h2]:mt-10 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-ink">
+          <h1 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
             EICR for Landlords in South-West London
           </h1>
 
@@ -50,16 +55,16 @@ export default function EicrLandlordsPage() {
             {contact.telLink && (
               <a
                 href={`tel:${contact.telLink}`}
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-action px-6 text-base font-semibold text-white transition-colors hover:bg-action-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft"
+                className={`inline-flex h-12 items-center justify-center gap-2 rounded-full bg-action px-6 text-base font-semibold text-ink hover-fine:bg-action-hover ${PRESS} ${FOCUS}`}
               >
-                <Phone aria-hidden="true" className="h-5 w-5" />
+                <Phone aria-hidden="true" strokeWidth={1.5} className="size-5" />
                 Call {contact.phone}
               </a>
             )}
             <WhatsAppButton whatsapp={contact.whatsapp} />
             <Link
               href="/contact"
-              className="inline-flex h-12 items-center justify-center rounded-md bg-white px-6 text-base font-semibold text-slate-900 transition-colors hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft"
+              className={`inline-flex h-12 items-center justify-center rounded-full bg-ink px-6 text-base font-semibold text-surface hover-fine:bg-ink-soft ${PRESS} ${FOCUS}`}
             >
               Request a quote
             </Link>

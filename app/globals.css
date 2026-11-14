@@ -43,6 +43,9 @@
   --color-trust-soft: #fffbeb; /* amber-50 — credential badge fill */
   --color-trust-deep: #92400e; /* amber-800 — credential badge text */
   --color-trust-line: #fde68a; /* amber-200 — credential badge border */
+  /* WhatsApp's own brand green, only on the WhatsApp button. */
+  --color-whatsapp: #25d366;
+  --color-whatsapp-hover: #1ebe5b;
 
   /*
    * Neutral roles. Components use these names, never raw slate-*, so the

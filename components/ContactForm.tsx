@@ -86,7 +86,7 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
   };
 
   const fieldClass =
-    "mt-1 block w-full rounded-md border border-ink-faint bg-surface-raised px-3 py-2 text-ink transition-colors duration-[160ms] ease-out focus:border-action-soft focus:outline-2 focus:outline-offset-0 focus:outline-action-soft";
+    "mt-1 block w-full rounded-[12px] border border-ink-faint bg-surface-raised px-3 py-2 text-ink transition-colors duration-[160ms] ease-out focus:border-action-soft focus:outline-2 focus:outline-offset-0 focus:outline-action-soft";
 
   return (
     <section id="contact" className="border-b border-surface-high bg-surface">
@@ -110,7 +110,7 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
               )}
               {email && (
                 <p>
-                  <a href={`mailto:${email}`} className="text-ink-muted transition-colors hover:text-white">
+                  <a href={`mailto:${email}`} className="text-ink-muted transition-colors duration-[160ms] ease-out hover-fine:text-ink motion-reduce:transition-none">
                     {email}
                   </a>
                 </p>
@@ -196,7 +196,7 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
 
             <p className="text-sm text-ink-subtle">
               We may message you when your EICR is due. Reply STOP any time to opt out.{" "}
-              <Link href="/privacy" className="text-action-soft underline underline-offset-2 hover:text-white">
+              <Link href="/privacy" className="text-action-soft underline underline-offset-2 transition-colors duration-[160ms] ease-out hover-fine:text-ink motion-reduce:transition-none">
                 How we use your details
               </Link>
             </p>

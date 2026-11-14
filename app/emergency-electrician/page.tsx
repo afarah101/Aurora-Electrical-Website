@@ -7,6 +7,11 @@ import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { accreditations, business, contact, servicePages } from "../content";
 
+// Press is deliberate (160ms), release snaps (100ms), hover colour eases 160ms.
+const PRESS =
+  "[transition:transform_100ms_var(--ease-out),background-color_160ms_var(--ease-out)] active:scale-[0.97] active:[transition:transform_160ms_var(--ease-out),background-color_160ms_var(--ease-out)] motion-reduce:active:scale-100";
+const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft";
+
 const { areasText, registration } = servicePages;
 
 export const metadata: Metadata = {
@@ -24,9 +29,9 @@ export default function EmergencyElectricianPage() {
   return (
     <div id="top">
       <Nav businessName={business.name} phone={contact.phone} telLink={contact.telLink} />
-      <main className="bg-slate-950">
-        <article className="mx-auto max-w-3xl space-y-6 px-5 pb-16 pt-28 text-slate-300 sm:pb-20 [&_h2]:mt-10 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-white">
-          <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+      <main className="bg-surface">
+        <article className="mx-auto max-w-3xl space-y-6 px-5 pb-16 pt-28 text-ink-muted sm:pb-20 [&_h2]:mt-10 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-ink">
+          <h1 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
             Emergency Electrician in South-West London
           </h1>
 
@@ -42,9 +47,9 @@ export default function EmergencyElectricianPage() {
             {contact.telLink && (
               <a
                 href={`tel:${contact.telLink}`}
-                className="inline-flex h-14 items-center justify-center gap-2 rounded-md bg-action px-6 text-lg font-semibold text-white transition-colors hover:bg-action-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft"
+                className={`inline-flex h-14 items-center justify-center gap-2 rounded-full bg-action px-6 text-lg font-semibold text-ink hover-fine:bg-action-hover ${PRESS} ${FOCUS}`}
               >
-                <Phone aria-hidden="true" className="h-5 w-5" />
+                <Phone aria-hidden="true" strokeWidth={1.5} className="size-5" />
                 Call {contact.phone}
               </a>
             )}
@@ -55,7 +60,7 @@ export default function EmergencyElectricianPage() {
             <>
               <h2>Hours</h2>
               {/* Fallback 8: state both windows plainly; nothing implies cover outside them. */}
-              <p className="text-white">
+              <p className="text-ink">
                 {normalHours && <>Normal hours {normalHours}.</>}
                 {normalHours && emergencyHours && " "}
                 {emergencyHours && <>Emergency call-outs {emergencyHours}.</>}
@@ -75,14 +80,14 @@ export default function EmergencyElectricianPage() {
           )}
 
           {safety && (
-            <p className="rounded-md border border-slate-700 bg-slate-900 p-4 font-medium text-white">
+            <p className="rounded-[16px] bg-surface-raised p-4 font-medium text-ink ring-1 ring-hairline-strong">
               {safety}
             </p>
           )}
 
           <p>
             Not an emergency?{" "}
-            <Link href="/contact" className="text-action-soft underline underline-offset-2 hover:text-white">
+            <Link href="/contact" className="text-action-soft underline underline-offset-2 transition-colors duration-[160ms] ease-out hover-fine:text-ink motion-reduce:transition-none">
               Request a quote
             </Link>
             .

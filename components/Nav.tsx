@@ -99,7 +99,7 @@ export function Nav({ businessName, phone, telLink }: Props) {
           stays sharp on retina; the accessible name keeps the brand for
           screen readers.
         */}
-        <a href="#top" aria-label={`${businessName}, home`} className={`rounded-md ${FOCUS}`}>
+        <a href="#top" aria-label={`${businessName}, home`} className={`rounded-sm ${FOCUS}`}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/aurora-logo-nav.png" alt={businessName} className="h-7 w-auto rounded-sm sm:h-8" />
         </a>
@@ -111,7 +111,7 @@ export function Nav({ businessName, phone, telLink }: Props) {
                 <Link
                   href={link.href}
                   aria-current={link.current ? "page" : undefined}
-                  className={`rounded-md text-sm font-medium transition-colors duration-[160ms] ease-out hover-fine:text-ink ${FOCUS} ${
+                  className={`rounded-sm text-sm font-medium transition-colors duration-[160ms] ease-out hover-fine:text-ink ${FOCUS} ${
                     link.current ? currentClass : "text-ink-muted"
                   }`}
                 >
@@ -159,7 +159,7 @@ export function Nav({ businessName, phone, telLink }: Props) {
                 href={link.href}
                 onClick={() => setOpen(false)}
                 aria-current={link.current ? "page" : undefined}
-                className={`flex min-h-11 items-center rounded-md px-3 text-base font-medium ${FOCUS} ${
+                className={`flex min-h-11 items-center rounded-[10px] px-3 text-base font-medium ${FOCUS} ${
                   link.current ? currentClass : "text-ink-body"
                 }`}
               >
