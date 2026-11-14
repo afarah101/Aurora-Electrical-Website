@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { preload } from "react-dom";
 import { Pause, Play } from "lucide-react";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 
@@ -16,12 +15,11 @@ import { useReducedMotion } from "@/lib/use-reduced-motion";
  * visitor, and, for prefers-reduced-motion visitors, only after they press
  * play: they start paused on the poster frame.
  */
-// WebP poster (29 KB, was a 56 KB JPG; the JPG stays in public/). It is the
-// mobile LCP element, so it is preloaded at high priority.
+// WebP poster (29 KB, was a 56 KB JPG; the JPG stays in public/).
 const POSTER = "/aurora-poster.webp";
+const FRAME = "absolute inset-0 h-full w-full object-cover object-[55%_50%]";
 
 export function HeroBackground() {
-  preload(POSTER, { as: "image", fetchPriority: "high" });
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const reduced = useReducedMotion();
   const [visible, setVisible] = useState(false);
@@ -60,13 +58,20 @@ export function HeroBackground() {
 
   return (
     <>
+      {/*
+       * The poster is a real <img> under the video, not the video's poster
+       * attribute: it is the mobile LCP element, and an eager, high-priority
+       * image in the HTML paints before any script runs. The video has no
+       * poster of its own; until its first frame it is transparent over this.
+       */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={POSTER} alt="" aria-hidden="true" fetchPriority="high" className={FRAME} />
       <video
         ref={videoRef}
         muted
         loop
         playsInline
         preload="metadata"
-        poster={POSTER}
         aria-hidden="true"
         tabIndex={-1}
         /*
@@ -76,7 +81,7 @@ export function HeroBackground() {
          * head inside the visible band in every shot of the loop (measured
          * from frames at 1s, 5s and 8.5s).
          */
-        className="absolute inset-0 h-full w-full object-cover object-[55%_50%]"
+        className={FRAME}
       >
         <source src="/aurora-video.mp4" type="video/mp4" />
       </video>
