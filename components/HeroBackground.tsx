@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { preload } from "react-dom";
 import { Pause, Play } from "lucide-react";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 
@@ -15,7 +16,12 @@ import { useReducedMotion } from "@/lib/use-reduced-motion";
  * visitor, and, for prefers-reduced-motion visitors, only after they press
  * play: they start paused on the poster frame.
  */
+// WebP poster (29 KB, was a 56 KB JPG; the JPG stays in public/). It is the
+// mobile LCP element, so it is preloaded at high priority.
+const POSTER = "/aurora-poster.webp";
+
 export function HeroBackground() {
+  preload(POSTER, { as: "image", fetchPriority: "high" });
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const reduced = useReducedMotion();
   const [visible, setVisible] = useState(false);
@@ -60,7 +66,7 @@ export function HeroBackground() {
         loop
         playsInline
         preload="metadata"
-        poster="/aurora-poster.jpg"
+        poster={POSTER}
         aria-hidden="true"
         tabIndex={-1}
         /*
