@@ -20,6 +20,7 @@ Every other check passes.
 | `5345843` style: old components to new system | Footer, TrustBar, MyBuilderBadge, EicrPricing, TrustedBy, WhatsAppButton, both service pages; `components/ui/button.tsx` deleted |
 | `7f2eb79` perf: webp poster | `public/aurora-poster.webp` (29 KB, was 56 KB JPG, 1280×720, q80). JPG kept |
 | `8d0b1cc` perf: hero poster as a high-priority img | Poster is an `<img fetchpriority=high>` under the video |
+| `707cf5f` fix: independent audit findings | Audit round 1 defects 2, 3, 5, 6, 7 (see Audit) |
 
 ## Checks
 
@@ -27,14 +28,14 @@ Every other check passes.
 | --- | --- | --- | --- |
 | 1 | Tag on GitHub = `51e43b6` | **FAIL (blocked)** | Local tag `pre-redesign-2026-11-14` → `51e43b6`. `git push origin refs/tags/…` returns `HTTP 403` from the session proxy (3 tries). `git ls-remote` shows no tag. No GitHub tool here can create a tag. |
 | 2 | Changed paths ⊂ SCOPE; no diff in content/, app/api/, form logic | PASS | `git diff --name-only ec4ac4e HEAD`: 19 paths, all in scope. `content/`, `app/api/`, `lib/`, `app/page.tsx`, `app/layout.tsx`, `app/contact/`: 0 lines. `ContactForm.tsx`: classNames and one comment only (no handler, schema or field change). |
-| 3 | Play resumes in 7s, pointer and focus inside | PASS | Pause, then play with the pointer on the button: #work 01→02 in 6.1s, #reviews in 6.1s (`:hover` true). Same with keyboard focus on the button: 6.1s, 6.1s. |
+| 3 | Play resumes in 7s, pointer and focus inside | PASS | Pause, then play with the pointer on the button: #work 01→02 in 6.1s, #reviews in 6.1s (`:hover` true). Same with keyboard focus on the button: 6.1s, 6.1s. After that, moving the pointer out and back, or focus to Previous, pauses again (no change in 7s). |
 | 4 | Every nav link at 375 and 1440: section below nav | PASS | Nav bottom 68px. #services, #work, #clients, #contact, #reviews, #eicr-pricing land at top = 80px, by URL hash and by clicking the nav/menu link, at both widths. One token: `--spacing-anchor: calc(var(--spacing-nav) + 0.75rem)` on `[id]`; ContactForm's own `scroll-mt-[69px]` removed. |
-| 5 | Service order = site.md at 375, 800, 1024, 1440 | PASS | Cards sorted by top, then left: the site.md order at all 4 widths, EICRs last. `md:row-start-1` removed. |
+| 5 | Service order = site.md at 375, 800, 1024, 1440 | PASS | Cards sorted by top, then left: the site.md order at all 4 widths, EICRs last. One column below 1024px, so no reordering and no empty card. |
 | 6 | grep `slate-\|transition-all\|rounded-md` = 0 | PASS | 0 lines. No exceptions needed. |
 | 7 | Copy unchanged except B5 hero | PASS | `innerText` of 5 pages at 375 and 1440 vs `ec4ac4e`: only `/` differs: "Get a free quote" → "Request a free quote", and the new claim line "Free, no-obligation quote". |
 | 8 | build, type-check, lint | PASS | `npm run build` exit 0, no warnings; `tsc --noEmit` clean; `npm run lint` clean. |
 | 9 | Impeccable: 0 of the 5 named rules | PASS | `impeccable detect --cdp` at 1280×800 and 390×844, 5 pages: 0 hero-eyebrow-chip, overused-font, oversized-h1, low-contrast, cramped-padding. Other findings match the baseline exactly (line-length on /eicr-landlords and /privacy; advisories). |
-| 10 | Lighthouse a11y 100; `/` mobile perf ≥ 90 | **FAIL (perf)** | Accessibility 100 on all 10 runs. `/` mobile perf 85, 86, 86, 86, 87 (median 86); LCP element = hero poster img. Devtools throttling: 97 and 95, LCP 1.9s. Table below. |
+| 10 | Lighthouse a11y 100; `/` mobile perf ≥ 90 | **FAIL (perf)** | Accessibility 100 on all 10 page/preset runs. `/` mobile perf on the final build: 81, 85, 86, 86, 87 (median 86); LCP element = hero poster img. Baseline `ec4ac4e`: 86–87. Devtools throttling: 97 and 95, LCP 1.9s. Table below. |
 | 11 | review-animations site-wide | PASS: **APPROVE** | No `ease-in`, `scale(0)`, `transition-all` or layout-property animation. Every hover uses `hover-fine` `(hover:hover) and (pointer:fine)`. Presses 160ms down / 100ms up. UI motion ≤ 300ms; hero rise 900ms has a written reason. Reduced motion: fades kept, movement dropped. |
 | 12 | 0 console errors; no horizontal scroll | PASS | 20 page × width pairs (375/768/1024/1440): 0 console errors, `scrollWidth` = viewport each time. |
 | 13 | Independent audit | AUDIT_RESULT | AUDIT_DETAIL |
@@ -44,8 +45,8 @@ Direct checks of the fixes (rendered DOM, 375px):
 
 - Fix 5: hero links are "Call 07304 150154" (`tel:`), "Request a free quote" (`#contact`), "MyBuilder 4.9 from 82 reviews" (`#reviews`). The proof list shows the rating, NICEIC registered, Same-day callouts, and Free, no-obligation quote.
 - Fix 6: both star groups (hero, MyBuilder block) read "4.9 out of 5 stars", fills 100/100/100/100/90%. `components/RatingStars.tsx`.
-- Fix 7: menu open → `main` and `footer` `inert = true` on `/`, `/eicr-landlords`, `/contact`; closed → false.
-- Fix 4: alt is "Open distribution board with labelled circuit breakers, beside cable trays of bundled cables". The comment no longer says "verified".
+- Fix 7: menu open → `main`, `footer` and the sticky call bar `inert = true` on `/`, `/eicr-landlords`, `/contact`; closed → false. Open at 375, resize to 1280 → menu closes, nothing inert.
+- Fix 4: alt is "Open distribution board with labelled circuit breakers" (true at every crop; the cable trays are cropped out at 1440). The comment no longer says "verified".
 
 ## Lighthouse 13.6.0
 
@@ -73,8 +74,8 @@ Performance / Accessibility / Best practices / SEO.
 
 ## Decisions taken alone
 
-- **Play wins over hover and focus.** After an explicit Play, rotation ignores hover and focus. Before the visitor chooses, hover and focus still pause it (WAI-ARIA carousel pattern).
-- **Services at 768–1023px:** the photo card is a normal 1-column card in the 2-column grid, not a full-width first row, so the order matches site.md. The EICR row spans 2 columns at that width.
+- **Play wins over hover and focus, once.** Pressing Play resumes at once although pointer and focus are on the button. When the pointer leaves, or focus moves to another control, hover and focus pause it again (WAI-ARIA carousel pattern).
+- **Services at 768–1023px:** one column, like phones. A 2-column grid either broke the site.md order (old) or left a near-empty card beside the photo (audit round 1).
 - **Hero claims:** every line from site.md "Claims" is shown. "Free, no-obligation quote" uses a neutral check icon; "Same-day callouts" keeps the clock.
 - **Rating link** has a faint underline so it reads as a link.
 - **Star rendering:** new shared `components/RatingStars.tsx`, also used by the MyBuilder block (it had 5 fixed stars).
@@ -84,11 +85,15 @@ Performance / Accessibility / Best practices / SEO.
 - **Credential chips** in the MyBuilder block are pills; their amber border is kept (a tinted trust colour, not grey).
 - **Poster as `<img>`:** the video has no poster attribute now; the WebP `<img>` sits under it and shows until the first frame.
 - **Did not hide or shrink the hero media** to raise the simulated score: that is a design call for Ahmed.
+- **Menu lock** applies to every sibling of the header, so the sticky call bar is covered too.
 - `emil-design-eng` skill not used (no new animation work, per Ahmed's preference).
 
 ## Out of scope: logged, not fixed
 
-- `app/contact/page.tsx:19` and `app/privacy/page.tsx:22-57` still use `slate-*`, `hover:text-white` and a hard-coded `pt-[69px] lg:pt-[65px]`.
+- `app/contact/page.tsx:19`: `pt-[69px] lg:pt-[65px]` is older than the 68px nav. At ≥1024px the `#contact` section starts 3px under the nav (audit round 1). Use `pt-nav`. It also has `bg-slate-950`.
+- `app/privacy/page.tsx:22-57`: `slate-*` and ungated `hover:text-white`.
+- `components/WorkGallery.tsx:116-128`: on very fast prev/next clicks, a photo that is fading out can unmount mid-fade (audit note, minor).
+- Hover colour transitions use the strong ease-out curve; STANDARDS.md prefers plain `ease` for colour (cosmetic).
 - `app/globals.css` comment above `:root` still says marketing sections use slate utilities; the shadcn variables there are now unused by any component.
 - `lib/utils.ts` and the `@base-ui/react`, `class-variance-authority`, `shadcn` packages were only for the deleted button; check before removing.
 
