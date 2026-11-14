@@ -1,12 +1,13 @@
-import { ArrowRight, Clock, ShieldCheck, Star } from "lucide-react";
+import { ArrowRight, CircleCheck, Clock, ShieldCheck } from "lucide-react";
 import { HeroBackground } from "@/components/HeroBackground";
+import { RatingStars } from "@/components/RatingStars";
 
 type Props = {
   businessName: string;
   tagline: string | null;
   phone: string | null;
   telLink: string | null;
-  /** From the Claims section of site.md; the proof row shows a same-day one. */
+  /** From the Claims section of site.md; the proof list shows every one. */
   claims: string[];
   accreditations: string[];
   /** From the "## MyBuilder" section of site.md (lib/mybuilder.ts). */
@@ -42,7 +43,6 @@ export function Hero({
   reviewCount,
 }: Props) {
   const outOf = Number(ratingOutOf) || 5;
-  const sameDay = claims.find((c) => /same[- ]day/i.test(c));
 
   return (
     <section className="bg-surface pt-nav">
@@ -74,25 +74,22 @@ export function Hero({
               href="#contact"
               className={`inline-flex h-12 items-center justify-center rounded-full bg-ink px-6 text-base font-semibold text-surface hover-fine:bg-ink-soft ${PRESS} ${FOCUS}`}
             >
-              Get a free quote
+              Request a free quote
             </a>
           </div>
 
           <ul className="animate-hero-rise mt-10 flex flex-col gap-3 text-sm font-medium text-ink-soft [animation-delay:120ms]">
             {rating && reviewCount && (
-              <li className="flex items-center gap-3">
-                <span
-                  role="img"
-                  aria-label={`${rating} out of ${outOf} stars`}
-                  className="flex shrink-0 items-center gap-0.5"
+              <li>
+                <a
+                  href="#reviews"
+                  className={`inline-flex items-center gap-3 rounded-sm underline decoration-hairline-strong underline-offset-4 transition-colors duration-[160ms] ease-out hover-fine:decoration-ink-soft motion-reduce:transition-none ${FOCUS}`}
                 >
-                  {Array.from({ length: outOf }).map((_, i) => (
-                    <Star key={i} {...ICON} className="size-4 fill-trust-bright text-trust-bright" />
-                  ))}
-                </span>
-                <span>
-                  MyBuilder {rating} from {reviewCount} reviews
-                </span>
+                  <RatingStars rating={Number(rating)} outOf={outOf} />
+                  <span>
+                    MyBuilder {rating} from {reviewCount} reviews
+                  </span>
+                </a>
               </li>
             )}
             {accreditations.map((a) => (
@@ -101,12 +98,15 @@ export function Hero({
                 <span>{a}</span>
               </li>
             ))}
-            {sameDay && (
-              <li className="flex items-center gap-3">
-                <Clock {...ICON} className="size-5 shrink-0 text-ink-muted" />
-                <span>{sameDay}</span>
-              </li>
-            )}
+            {claims.map((c) => {
+              const Icon = /same[- ]day/i.test(c) ? Clock : CircleCheck;
+              return (
+                <li key={c} className="flex items-center gap-3">
+                  <Icon {...ICON} className="size-5 shrink-0 text-ink-muted" />
+                  <span>{c}</span>
+                </li>
+              );
+            })}
           </ul>
         </div>
 

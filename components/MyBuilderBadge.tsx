@@ -1,4 +1,4 @@
-import { Star } from "lucide-react";
+import { RatingStars } from "@/components/RatingStars";
 import { mybuilderField } from "@/lib/mybuilder";
 
 /**
@@ -35,19 +35,7 @@ export function MyBuilderBadge() {
             {rating}
           </p>
           <div className="pb-2">
-            <span
-              role="img"
-              aria-label={`${rating} out of ${outOf ?? "5"} stars`}
-              className="flex items-center gap-1"
-            >
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star
-                  key={i}
-                  aria-hidden="true"
-                  className="h-5 w-5 fill-trust-bright text-trust-bright"
-                />
-              ))}
-            </span>
+            <RatingStars rating={Number(rating)} outOf={Number(outOf) || 5} className="size-5" />
             <p className="mt-2 text-sm text-slate-300">from {count} reviews</p>
           </div>
         </div>

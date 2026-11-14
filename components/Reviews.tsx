@@ -24,7 +24,7 @@ type Props = { reviews: Review[]; aggregateRating: string | null };
  *
  * One review at a time on the dark canvas. Advances every 6s; stops while
  * the pointer is over it, while focus is inside it, or after the pause
- * button. Reduced motion: no autoplay, the first review holds, prev/next
+ * button; pressing play resumes at once. Reduced motion: no autoplay, the first review holds, prev/next
  * still work. A new quote fades and rises 4px into place (250ms).
  */
 export function Reviews({ reviews, aggregateRating }: Props) {
@@ -35,7 +35,9 @@ export function Reviews({ reviews, aggregateRating }: Props) {
   // null = the visitor has not chosen; fall back to their motion preference.
   const [choice, setChoice] = useState<boolean | null>(null);
   const paused = choice ?? reduced;
-  const rotating = !paused && !hovered && !focused && reviews.length > 1;
+  // An explicit Play (choice === false) wins over hover and focus: the button
+  // sits inside the region, so pressing it always leaves pointer or focus there.
+  const rotating = !paused && (choice === false || (!hovered && !focused)) && reviews.length > 1;
 
   // One timeout per slide, so a manual move restarts the full 6s.
   useEffect(() => {

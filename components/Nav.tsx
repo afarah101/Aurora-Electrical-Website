@@ -40,6 +40,15 @@ export function Nav({ businessName, phone, telLink }: Props) {
   const headerRef = useRef<HTMLElement | null>(null);
   const toggleRef = useRef<HTMLButtonElement | null>(null);
 
+  // While the menu is open the page behind it is out of reach: main and
+  // footer go inert, so pointer, Tab and screen readers stay in the header.
+  useEffect(() => {
+    if (!open) return;
+    const behind = Array.from(document.querySelectorAll<HTMLElement>("main, footer"));
+    behind.forEach((el) => (el.inert = true));
+    return () => behind.forEach((el) => (el.inert = false));
+  }, [open]);
+
   useEffect(() => {
     if (!open) return;
     const header = headerRef.current;

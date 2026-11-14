@@ -4,9 +4,10 @@ import { ArrowRight } from "lucide-react";
 type Props = { services: string[]; certificates: string[] };
 
 /**
- * The one service with a verified photo: work-01 shows a fuse board / consumer
- * unit installation. No other service gets an image, because a photo captioned
- * with the wrong service would be a misrepresentation, not a design.
+ * The one service shown with a photo: work-01, an open distribution board.
+ * Mohamed still has to confirm it may illustrate this service. No other
+ * service gets an image, because a photo captioned with the wrong service
+ * would be a misrepresentation, not a design.
  */
 const FEATURE = { match: /fuse board|consumer unit/i, src: "/work/work-01.jpg" };
 
@@ -28,8 +29,8 @@ export function Services({ services, certificates }: Props) {
           commercial installation.
         </p>
 
-        {/* 1 column below 768px; 2 at md with the photo card on its own row
-            first; 3 at lg with the photo card spanning 2x2. */}
+        {/* Visual order = site.md order at every width: 1 column below 768px;
+            2 at md; 3 at lg with the photo card spanning 2x2 in its own slot. */}
         <ul className="mt-12 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
           {services.map((service) => {
             const featured = FEATURE.match.test(service);
@@ -38,7 +39,7 @@ export function Services({ services, certificates }: Props) {
                 key={service}
                 className={`flex flex-col overflow-hidden rounded-[16px] bg-surface-raised ring-1 ring-hairline ${
                   featured
-                    ? "md:col-span-2 md:row-start-1 lg:row-span-2 lg:row-start-auto"
+                    ? "lg:col-span-2 lg:row-span-2"
                     : "min-h-36 justify-end"
                 }`}
               >
@@ -46,9 +47,9 @@ export function Services({ services, certificates }: Props) {
                   <div className="relative min-h-64 flex-1">
                     <Image
                       src={FEATURE.src}
-                      alt="Completed fuse board installation"
+                      alt="Open distribution board with labelled circuit breakers, beside cable trays of bundled cables"
                       fill
-                      sizes="(min-width: 1024px) 740px, (min-width: 768px) 100vw, 100vw"
+                      sizes="(min-width: 1024px) 740px, (min-width: 768px) 50vw, 100vw"
                       className="object-cover"
                     />
                   </div>
@@ -66,7 +67,7 @@ export function Services({ services, certificates }: Props) {
 
           {/* Authored here, not in site.md: it needs an anchor the parser's
               plain service strings can't express. */}
-          <li className="md:col-span-1 lg:col-span-3">
+          <li className="md:col-span-2 lg:col-span-3">
             <a
               href="#eicr-pricing"
               className="group flex h-full min-h-20 items-center justify-between gap-6 rounded-[16px] bg-surface-raised p-6 ring-1 ring-hairline transition-colors duration-[160ms] ease-out hover-fine:bg-surface-high focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft motion-reduce:transition-none"

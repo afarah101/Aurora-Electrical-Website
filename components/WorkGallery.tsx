@@ -30,6 +30,7 @@ const ICON = { "aria-hidden": true, strokeWidth: 1.5, className: "size-5" } as c
 /**
  * One large panel, one photo at a time. Advances every 6s; stops while the
  * pointer is over it, while focus is inside it, or after the pause button.
+ * Pressing play resumes at once, wherever the pointer and focus are.
  * Reduced motion: no autoplay, the first photo holds, prev/next still work.
  * The dots are position indicators, not buttons: 19 dots at a 44px touch
  * target each cannot fit a phone width, so prev/next carry all interaction.
@@ -47,7 +48,9 @@ export function WorkGallery({ photos = PHOTOS }: { photos?: string[] }) {
   const [choice, setChoice] = useState<boolean | null>(null);
   const paused = choice ?? reduced;
   const count = deck.length;
-  const rotating = !paused && !hovered && !focused && count > 1;
+  // An explicit Play (choice === false) wins over hover and focus: the button
+  // sits inside the region, so pressing it always leaves pointer or focus there.
+  const rotating = !paused && (choice === false || (!hovered && !focused)) && count > 1;
 
   const go = (delta: number) =>
     setPos((p) => ({ prev: p.index, index: (p.index + delta + count) % count }));

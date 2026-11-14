@@ -65,6 +65,8 @@
   /* Height the fixed nav takes from the top of the viewport (68px). The
      hero subtracts it so its CTA and proof stay above the fold. */
   --spacing-nav: 4.25rem;
+  /* Landing room for every anchor target: the nav band plus 12px. */
+  --spacing-anchor: calc(var(--spacing-nav) + 0.75rem);
 
   /*
    * Hero entrance: one slow, confident rise. 900ms is deliberate. This is
@@ -181,10 +183,10 @@
   h3 {
     @apply font-heading;
   }
-  /* The nav is fixed (~64px tall), so anchor jumps would land targets under
-     it; every id'd element gets landing room instead. */
+  /* The nav is fixed, so anchor jumps would land targets under it; every
+     id'd element gets the one --spacing-anchor token as landing room. */
   [id] {
-    @apply scroll-mt-20;
+    @apply scroll-mt-anchor;
   }
 }
 /* Reduced motion is gentler, not zero: the rise becomes a 200ms fade.
