@@ -19,7 +19,7 @@ export function WhatsAppButton({ whatsapp, className = "" }: Props) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className={`inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-full bg-whatsapp px-6 text-base font-semibold text-surface hover-fine:bg-whatsapp-hover ${PRESS} ${FOCUS} ${className}`}
+      className={`inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-sm bg-whatsapp px-6 text-base font-semibold text-[#0c0b09] hover-fine:bg-whatsapp-hover ${PRESS} ${FOCUS} ${className}`}
     >
       <MessageCircle aria-hidden="true" strokeWidth={1.5} className="size-5" />
       WhatsApp us

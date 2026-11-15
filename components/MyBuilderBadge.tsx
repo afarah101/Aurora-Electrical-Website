@@ -65,7 +65,7 @@ export function MyBuilderBadge() {
             href={profile}
             target="_blank"
             rel="noopener noreferrer"
-            className={`mt-8 inline-flex h-12 cursor-pointer items-center justify-center rounded-full bg-action px-6 text-base font-semibold text-ink hover-fine:bg-action-hover ${PRESS} ${FOCUS}`}
+            className={`mt-8 inline-flex h-12 cursor-pointer items-center justify-center rounded-sm bg-action px-6 text-base font-semibold text-on-action hover-fine:bg-action-hover ${PRESS} ${FOCUS}`}
           >
             See all {count} reviews on MyBuilder
           </a>

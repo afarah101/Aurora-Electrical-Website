@@ -1,22 +1,14 @@
 import type { Metadata } from "next";
-import { Archivo, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { accreditations, business, contact, services } from "./content";
 import { SITE_URL, myBuilderProfile } from "./site-url";
 
 /**
- * Three faces, three roles — deliberately not Inter:
- * Archivo carries the headings (the page's boldness is spent there; the
- * wdth axis lets the hero set it slightly wide), IBM Plex Sans carries body
- * copy, and IBM Plex Mono marks technical accents such as the gallery
- * counter. The wdth axis needs the variable weight range, so no weight list.
+ * Ledger type: headings use a book serif (Georgia stack, set in
+ * globals.css), IBM Plex Sans carries body copy, IBM Plex Mono marks
+ * figures such as ratings and the gallery counter.
  */
-const archivo = Archivo({
-  variable: "--font-archivo",
-  subsets: ["latin"],
-  axes: ["wdth"],
-});
-
 const plexSans = IBM_Plex_Sans({
   variable: "--font-plex-sans",
   subsets: ["latin"],
@@ -103,7 +95,7 @@ export default function RootLayout({
   return (
     <html
       lang="en-GB"
-      className={`${archivo.variable} ${plexSans.variable} ${plexMono.variable} h-full antialiased`}
+      className={`${plexSans.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <script

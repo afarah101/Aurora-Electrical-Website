@@ -86,14 +86,14 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
   };
 
   const fieldClass =
-    "mt-1 block w-full rounded-[12px] border border-ink-faint bg-surface-raised px-3 py-2 text-ink transition-colors duration-[160ms] ease-out focus:border-action-soft focus:outline-2 focus:outline-offset-0 focus:outline-action-soft";
+    "mt-1 block w-full rounded-sm border border-ink-faint bg-surface-raised px-3 py-2 text-ink transition-colors duration-[160ms] ease-out focus:border-action-soft focus:outline-2 focus:outline-offset-0 focus:outline-action-soft";
 
   return (
     <section id="contact" className="border-b border-surface-high bg-surface">
       <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
         <div className="grid gap-10 lg:grid-cols-2">
           <div>
-            <h2 className="text-3xl font-semibold tracking-tight text-white">
+            <h2 className="text-3xl font-semibold tracking-tight text-ink">
               Request a free quote
             </h2>
             <p className="mt-3 text-ink-muted">
@@ -189,7 +189,7 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
             <button
               type="submit"
               disabled={status.kind === "sending"}
-              className="inline-flex h-12 cursor-pointer items-center justify-center rounded-full bg-action px-6 text-base font-semibold text-ink hover-fine:enabled:bg-action-hover [transition:transform_100ms_var(--ease-out),background-color_160ms_var(--ease-out)] active:scale-[0.97] active:[transition:transform_160ms_var(--ease-out),background-color_160ms_var(--ease-out)] motion-reduce:active:scale-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100"
+              className="inline-flex h-12 cursor-pointer items-center justify-center rounded-sm bg-action px-6 text-base font-semibold text-on-action hover-fine:enabled:bg-action-hover [transition:transform_100ms_var(--ease-out),background-color_160ms_var(--ease-out)] active:scale-[0.97] active:[transition:transform_160ms_var(--ease-out),background-color_160ms_var(--ease-out)] motion-reduce:active:scale-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100"
             >
               {status.kind === "sending" ? "Sending…" : "Send request"}
             </button>

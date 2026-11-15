@@ -17,7 +17,6 @@ import {
   aggregateRating,
   business,
   certificates,
-  claims,
   clients,
   contact,
   positioning,
@@ -40,25 +39,33 @@ export default function Home() {
           tagline={business.tagline}
           phone={contact.phone}
           telLink={contact.telLink}
-          claims={claims}
+          whatsapp={contact.whatsapp}
           accreditations={accreditations}
           rating={mybuilderField("Rating")}
           ratingOutOf={mybuilderField("Rating out of")}
           reviewCount={mybuilderField("Reviews")}
+          verified={/^yes$/i.test(mybuilderField("Verified by MyBuilder") ?? "")}
+          mybuilderName={mybuilderField("Trading name")}
+          mybuilderUrl={mybuilderField("Profile")}
         />
         <TrustBar serviceArea={contact.serviceArea} positioning={positioning} />
-        <MyBuilderBadge />
-        <Reviews reviews={reviews} aggregateRating={aggregateRating} />
-        <TrustedBy clients={clients} />
-        <Services services={services} certificates={certificates} />
+        {/* Ledger paper: reading-heavy sections sit on the cream sheet. */}
+        <div className="theme-paper bg-surface text-ink">
+          <MyBuilderBadge />
+          <Reviews reviews={reviews} aggregateRating={aggregateRating} />
+          <TrustedBy clients={clients} />
+          <Services services={services} certificates={certificates} />
+        </div>
         <WorkGallery />
-        <ContactForm
-          email={contact.email}
-          phone={contact.phone}
-          telLink={contact.telLink}
-          whatsapp={contact.whatsapp}
-        />
-        <EicrPricing />
+        <div className="theme-paper bg-surface text-ink">
+          <ContactForm
+            email={contact.email}
+            phone={contact.phone}
+            telLink={contact.telLink}
+            whatsapp={contact.whatsapp}
+          />
+          <EicrPricing />
+        </div>
       </main>
 
       <Footer

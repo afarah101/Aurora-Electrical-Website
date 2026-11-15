@@ -1,120 +1,140 @@
-import { ArrowRight, CircleCheck, Clock, ShieldCheck } from "lucide-react";
-import { HeroBackground } from "@/components/HeroBackground";
-import { RatingStars } from "@/components/RatingStars";
+import Image from "next/image";
+import { ArrowUpRight, Phone } from "lucide-react";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 type Props = {
   businessName: string;
   tagline: string | null;
   phone: string | null;
   telLink: string | null;
-  /** From the Claims section of site.md; the proof list shows every one. */
-  claims: string[];
+  whatsapp: string | null;
   accreditations: string[];
   /** From the "## MyBuilder" section of site.md (lib/mybuilder.ts). */
   rating: string | null;
   ratingOutOf: string | null;
   reviewCount: string | null;
+  verified: boolean;
+  /** MyBuilder trading name, shown so the reviews match the profile. */
+  mybuilderName: string | null;
+  mybuilderUrl: string | null;
 };
 
 /*
- * Motion vocabulary. Press is deliberate (160ms), release snaps (100ms),
- * hover colour eases over 160ms. Hover only on a real mouse (hover-fine).
+ * Light editorial split: headline, call to action and one proof line at
+ * left, two framed job photos from /public/work at right. Every fact is
+ * read from content/site.md; a missing value renders nothing.
  */
-const PRESS =
-  "[transition:transform_100ms_var(--ease-out),background-color_160ms_var(--ease-out)] active:scale-[0.97] active:[transition:transform_160ms_var(--ease-out),background-color_160ms_var(--ease-out)] motion-reduce:active:scale-100";
-const FOCUS =
-  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft";
-const ICON = { strokeWidth: 1.5, "aria-hidden": true } as const;
 
-/**
- * Editorial split: copy on a solid surface at left, the footage framed at
- * right. Text never sits on video, so contrast is fixed. Every fact is a
- * prop read from site.md; a missing value renders nothing.
- */
+const FOCUS =
+  "focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-action-soft";
+const FRAME = "overflow-hidden border-[6px] border-white bg-white shadow-2xl shadow-ink/20";
+
 export function Hero({
   businessName,
   tagline,
   phone,
   telLink,
-  claims,
+  whatsapp,
   accreditations,
   rating,
-  ratingOutOf,
   reviewCount,
+  verified,
+  mybuilderName,
+  mybuilderUrl,
 }: Props) {
-  const outOf = Number(ratingOutOf) || 5;
+  const niceic = accreditations.find((a) => /niceic/i.test(a));
 
   return (
-    <section className="bg-surface pt-nav">
-      <div className="mx-auto grid min-h-[calc(100svh-var(--spacing-nav))] max-w-6xl items-center gap-10 px-5 py-12 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:py-16">
-        {/* Phones (below 768px): the copy fills the first screen and the
-            footage frame starts below it, so the headline is the first big
-            paint and the call to action has the screen to itself. */}
-        <div className="max-md:flex max-md:min-h-[calc(100svh-var(--spacing-nav)-3rem)] max-md:flex-col max-md:justify-center">
-          <h1 className="animate-hero-rise font-heading text-[2.5rem] font-extrabold leading-[1.05] tracking-[-0.03em] text-balance text-ink [font-stretch:108%] sm:text-6xl lg:text-5xl xl:text-6xl">
+    <section aria-labelledby="hero-headline" className="w-full bg-surface pt-nav text-left text-ink">
+      <div className="mx-auto grid min-h-[calc(78svh-var(--spacing-nav))] w-full max-w-6xl items-center gap-12 px-5 py-12 sm:px-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16 lg:py-16">
+        <div className="min-w-0">
+          <p
+            className="ledger-rise m-0 text-[12px] font-medium uppercase tracking-[0.18em] text-ink-muted"
+            style={{ animationDelay: "0.06s" }}
+          >
+            Electrician · London{niceic ? " · NICEIC registered" : ""}
+          </p>
+          <h1
+            id="hero-headline"
+            className="m-0 mt-4 max-w-[12em] text-balance text-[clamp(2.5rem,5vw,4.5rem)] leading-[1.02] text-ink"
+          >
             {tagline ?? businessName}
           </h1>
-
-          <div className="animate-hero-rise mt-8 flex flex-col gap-3 [animation-delay:60ms] sm:flex-row">
+          <p
+            className="ledger-rise m-0 mt-6 max-w-md text-pretty text-base leading-relaxed text-ink-body lg:text-[17px]"
+            style={{ animationDelay: "0.18s" }}
+          >
+            Rewiring, fuse boards, fault-finding, lighting and EICRs for homes, landlords and businesses.
+          </p>
+          <div
+            className="ledger-rise mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center"
+            style={{ animationDelay: "0.26s" }}
+          >
             {telLink && phone && (
               <a
                 href={`tel:${telLink}`}
-                className={`group inline-flex h-12 items-center justify-between gap-4 rounded-full bg-action pl-6 pr-2 text-base font-semibold text-ink hover-fine:bg-action-hover sm:justify-start ${PRESS} ${FOCUS}`}
+                className={`group inline-flex min-h-12 items-center justify-center gap-2 rounded-sm bg-action px-5 text-[15px] font-medium text-on-action transition-colors duration-200 hover-fine:bg-action-hover motion-reduce:transition-none ${FOCUS}`}
               >
+                <Phone size={16} strokeWidth={1.75} aria-hidden="true" />
                 Call {phone}
-                <span
+                <ArrowUpRight
+                  size={16}
+                  strokeWidth={1.75}
                   aria-hidden="true"
-                  className="flex size-8 items-center justify-center rounded-full bg-ink/15"
-                >
-                  <ArrowRight
-                    {...ICON}
-                    className="size-4 transition-transform duration-[160ms] ease-out [@media(pointer:fine)]:group-hover:[transform:translateX(2px)] motion-reduce:transition-none"
-                  />
-                </span>
+                  className="transition-transform duration-200 hover-fine:group-hover:-translate-y-0.5 hover-fine:group-hover:translate-x-0.5 motion-reduce:transition-none"
+                />
               </a>
             )}
-            <a
-              href="#contact"
-              className={`inline-flex h-12 items-center justify-center rounded-full bg-ink px-6 text-base font-semibold text-surface hover-fine:bg-ink-soft ${PRESS} ${FOCUS}`}
-            >
-              Request a free quote
-            </a>
+            <WhatsAppButton whatsapp={whatsapp} className="min-h-12 text-[15px]" />
           </div>
-
-          <ul className="animate-hero-rise mt-10 flex flex-col gap-3 text-sm font-medium text-ink-soft [animation-delay:120ms]">
-            {rating && reviewCount && (
-              <li>
-                <a
-                  href="#reviews"
-                  className={`inline-flex items-center gap-3 rounded-sm underline decoration-hairline-strong underline-offset-4 transition-colors duration-[160ms] ease-out hover-fine:decoration-ink-soft motion-reduce:transition-none ${FOCUS}`}
-                >
-                  <RatingStars rating={Number(rating)} outOf={outOf} />
-                  <span>
-                    MyBuilder {rating} from {reviewCount} reviews
-                  </span>
-                </a>
-              </li>
-            )}
-            {accreditations.map((a) => (
-              <li key={a} className="flex items-center gap-3">
-                <ShieldCheck {...ICON} className="size-5 shrink-0 text-trust-bright" />
-                <span>{a}</span>
-              </li>
-            ))}
-            {claims.map((c) => {
-              const Icon = /same[- ]day/i.test(c) ? Clock : CircleCheck;
-              return (
-                <li key={c} className="flex items-center gap-3">
-                  <Icon {...ICON} className="size-5 shrink-0 text-ink-muted" />
-                  <span>{c}</span>
-                </li>
-              );
-            })}
-          </ul>
+          {rating && reviewCount && (
+            <p className="m-0 mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px] text-ink">
+              <span className="tracking-[0.1em] text-trust" aria-hidden="true">★★★★★</span>
+              <span>
+                {rating} from {reviewCount} {verified ? "verified " : ""}reviews
+                {mybuilderName && mybuilderUrl ? (
+                  <>
+                    {" "}on{" "}
+                    <a
+                      href={mybuilderUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`rounded-sm underline decoration-ink-faint underline-offset-4 hover-fine:decoration-ink ${FOCUS}`}
+                    >
+                      MyBuilder
+                    </a>{" "}
+                    <span className="text-ink-muted">(as {mybuilderName})</span>
+                  </>
+                ) : (
+                  " on MyBuilder"
+                )}
+              </span>
+            </p>
+          )}
         </div>
 
-        <div className="animate-hero-rise relative aspect-[4/3] overflow-hidden rounded-[16px] bg-surface-raised ring-1 ring-hairline [animation-delay:180ms] lg:aspect-[4/5]">
-          <HeroBackground />
+        {/* Two framed photos; the second is smaller and sits lower-right. */}
+        <div className="relative mx-auto w-full max-w-md pb-16 lg:max-w-none lg:pb-20">
+          <div className={`relative aspect-[4/5] w-[78%] ${FRAME}`}>
+            <Image
+              src="/work/work-06.jpg"
+              alt="Retail fit-out with LED strip lighting under a display plinth and track spotlights across the ceiling"
+              fill
+              loading="eager"
+              fetchPriority="high"
+              sizes="(min-width: 1024px) 400px, (min-width: 448px) 350px, 78vw"
+              className="object-cover"
+            />
+          </div>
+          <div className={`absolute bottom-0 right-0 aspect-[4/5] w-[50%] ${FRAME}`}>
+            <Image
+              src="/work/work-01.jpg"
+              alt="Commercial distribution boards with neatly dressed cables running up a wire tray"
+              fill
+              sizes="(min-width: 1024px) 260px, (min-width: 448px) 224px, 50vw"
+              className="object-cover"
+            />
+          </div>
         </div>
       </div>
     </section>
