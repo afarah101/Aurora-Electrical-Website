@@ -23,7 +23,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   /* Three type roles: headings / body / technical accents. */
-  --font-heading: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+  --font-heading: var(--font-plex-sans);
   --font-sans: var(--font-plex-sans);
   --font-mono: var(--font-plex-mono);
 
@@ -127,28 +127,29 @@
 }
 
 
-/* Ledger INK floor: the default (hero, gallery, footer, nav). */
+/* Light floor site-wide: the same values as .theme-paper below. */
 :root {
-  --c-surface: #0c0b09;
-  --c-surface-raised: #12110f;
-  --c-surface-high: #1d1b17;
-  --c-ink: #f3eee6;
-  --c-ink-soft: #e8e1d6;
-  --c-ink-body: #d4ccc0;
-  --c-ink-muted: #b7aea2;
-  --c-ink-subtle: #a39888;
-  --c-ink-faint: #6f675e;
-  --c-hairline: rgb(243 238 230 / 0.1);
-  --c-hairline-strong: rgb(243 238 230 / 0.24);
-  --c-action: #f3eee6;
-  --c-action-hover: #e4b56a;
-  --c-on-action: #1b1714;
-  --c-action-soft: #e4b56a;
-  --c-trust: #e4b56a;
-  --c-trust-bright: #e4b56a;
-  --c-trust-soft: #1d1910;
-  --c-trust-deep: #f0d3a0;
-  --c-trust-line: #4a3d24;
+  --c-surface: #f7f3ec;
+  --c-surface-raised: #efe9df;
+  --c-surface-high: #e6dfd2;
+  --c-ink: #1b1714;
+  --c-ink-soft: #2a2420;
+  --c-ink-body: #3a3128;
+  --c-ink-muted: #554e46;
+  --c-ink-subtle: #655d54;
+  --c-ink-faint: #a39888;
+  --c-hairline: rgb(27 23 20 / 0.1);
+  --c-hairline-strong: rgb(27 23 20 / 0.22);
+  --c-action: #1b1714;
+  --c-action-hover: #3a3128;
+  --c-on-action: #f7f3ec;
+  --c-action-soft: #7a5520;
+  --c-trust: #7a5520;
+  --c-trust-bright: #7a5520;
+  --c-trust-soft: #f4ead4;
+  --c-trust-deep: #6a4818;
+  --c-trust-line: #e4cf9f;
+  color-scheme: light;
 }
 
 /* Ledger PAPER floor: cream sheet for reading-heavy sections. */
@@ -176,13 +177,13 @@
   color-scheme: light;
 }
 
-/* Ledger headings: book serif, regular weight, tight tracking. Unlayered
-   so it overrides the old bold utilities on every heading. */
+/* Headings: IBM Plex Sans, semibold, tight tracking. Unlayered so it
+   overrides the old bold utilities on every heading. */
 h1,
 h2,
 h3 {
-  font-weight: 400;
-  letter-spacing: -0.025em;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   font-stretch: normal;
 }
 

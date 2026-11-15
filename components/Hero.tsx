@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ArrowUpRight, Phone } from "lucide-react";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 
@@ -19,14 +20,14 @@ type Props = {
 };
 
 /*
- * Adapted from 21st.dev "Ledger Hero C" (Quillmoth Studio): serif
- * headline, warm ink floor, one call to action and one proof line.
- * Every fact is read from content/site.md; a missing value renders nothing.
+ * Light editorial split: headline, call to action and one proof line at
+ * left, two framed job photos from /public/work at right. Every fact is
+ * read from content/site.md; a missing value renders nothing.
  */
 
-const SERIF = "var(--font-heading)";
 const FOCUS =
   "focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-action-soft";
+const FRAME = "overflow-hidden border-[6px] border-white bg-white shadow-2xl shadow-ink/20";
 
 export function Hero({
   businessName,
@@ -44,102 +45,97 @@ export function Hero({
   const niceic = accreditations.find((a) => /niceic/i.test(a));
 
   return (
-    <section
-      aria-labelledby="hero-headline"
-      className="relative isolate w-full overflow-hidden bg-[#0c0b09] pt-nav text-left text-[#f3eee6]"
-    >
-      {/* Ledger paper: margin rule, ruled lines, warm glows, vignette, grain. */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute -right-24 top-0 h-[36rem] w-[36rem] rounded-full bg-[radial-gradient(circle,rgba(228,181,106,0.14),transparent_62%)]" />
-        <div className="absolute -bottom-32 -left-16 h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(circle,rgba(80,110,90,0.12),transparent_65%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_48%,rgba(0,0,0,0.32)_100%)]" />
-        <svg className="absolute inset-0 h-full w-full opacity-[0.16]">
-          <filter id="aurora-grain">
-            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves={2} stitchTiles="stitch" />
-          </filter>
-          <rect width="100%" height="100%" filter="url(#aurora-grain)" />
-        </svg>
-      </div>
-      <div className="absolute inset-x-0 top-nav z-20 h-px bg-[#e4b56a]" aria-hidden="true" />
-
-      <div className="relative z-10 mx-auto flex min-h-[calc(78svh-var(--spacing-nav))] w-full max-w-6xl flex-col justify-center px-5 py-12 sm:px-8 lg:py-16">
-        <div className="flex flex-col gap-8 sm:gap-10 lg:gap-12">
-          <div className="grid items-end gap-6 md:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] md:gap-x-12 lg:gap-x-16">
-            <div className="min-w-0">
-              <p
-                className="ledger-rise m-0 flex items-start gap-3 text-[11px] uppercase tracking-[0.22em] text-[#e4b56a]"
-                style={{ animationDelay: "0.06s" }}
+    <section aria-labelledby="hero-headline" className="w-full bg-surface pt-nav text-left text-ink">
+      <div className="mx-auto grid min-h-[calc(78svh-var(--spacing-nav))] w-full max-w-6xl items-center gap-12 px-5 py-12 sm:px-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16 lg:py-16">
+        <div className="min-w-0">
+          <p
+            className="ledger-rise m-0 text-[12px] font-medium uppercase tracking-[0.18em] text-ink-muted"
+            style={{ animationDelay: "0.06s" }}
+          >
+            Electrician · London{niceic ? " · NICEIC registered" : ""}
+          </p>
+          <h1
+            id="hero-headline"
+            className="m-0 mt-4 max-w-[12em] text-balance text-[clamp(2.5rem,5vw,4.5rem)] leading-[1.02] text-ink"
+          >
+            {tagline ?? businessName}
+          </h1>
+          <p
+            className="ledger-rise m-0 mt-6 max-w-md text-pretty text-base leading-relaxed text-ink-body lg:text-[17px]"
+            style={{ animationDelay: "0.18s" }}
+          >
+            Rewiring, fuse boards, fault-finding, lighting and EICRs for homes, landlords and businesses.
+          </p>
+          <div
+            className="ledger-rise mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center"
+            style={{ animationDelay: "0.26s" }}
+          >
+            {telLink && phone && (
+              <a
+                href={`tel:${telLink}`}
+                className={`group inline-flex min-h-12 items-center justify-center gap-2 rounded-sm bg-action px-5 text-[15px] font-medium text-on-action transition-colors duration-200 hover-fine:bg-action-hover motion-reduce:transition-none ${FOCUS}`}
               >
-                <span className="mt-[0.45em] h-px w-6 shrink-0 bg-[#e4b56a]" aria-hidden="true" />
-                <span className="min-w-0">Electrician · London{niceic ? " · NICEIC registered" : ""}</span>
-              </p>
-              <h1
-                id="hero-headline"
-                className="ledger-rise m-0 mt-4 max-w-[11em] text-balance text-[clamp(2.6rem,5.4vw,5.6rem)] leading-[0.95] text-[#f3eee6]"
-                style={{ fontFamily: SERIF, animationDelay: "0.12s" }}
-              >
-                {tagline ?? businessName}
-              </h1>
-              <div className="ledger-draw mt-6 h-px w-16 bg-[#e4b56a]" style={{ animationDelay: "0.3s" }} aria-hidden="true" />
-            </div>
-
-            <div className="min-w-0 lg:pb-1">
-              <p
-                className="ledger-rise m-0 max-w-md text-pretty text-[15px] leading-relaxed text-[#d4ccc0] sm:text-base lg:text-[17px]"
-                style={{ animationDelay: "0.18s" }}
-              >
-                Rewiring, fuse boards, fault-finding, lighting and EICRs for homes, landlords and businesses.
-              </p>
-              <div
-                className="ledger-rise mt-6 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center"
-                style={{ animationDelay: "0.26s" }}
-              >
-                {telLink && phone && (
-                  <a
-                    href={`tel:${telLink}`}
-                    className={`group inline-flex min-h-12 items-center justify-center gap-2 rounded-sm border border-[#f3eee6] bg-[#f3eee6] px-5 text-[15px] font-medium text-[#1b1714] transition-colors duration-200 hover-fine:border-[#e4b56a] hover-fine:bg-[#e4b56a] motion-reduce:transition-none ${FOCUS}`}
-                  >
-                    <Phone size={16} strokeWidth={1.75} aria-hidden="true" />
-                    Call {phone}
-                    <ArrowUpRight
-                      size={16}
-                      strokeWidth={1.75}
-                      aria-hidden="true"
-                      className="transition-transform duration-200 hover-fine:group-hover:-translate-y-0.5 hover-fine:group-hover:translate-x-0.5 motion-reduce:transition-none"
-                    />
-                  </a>
-                )}
-                <WhatsAppButton whatsapp={whatsapp} className="min-h-12 text-[15px]" />
-              </div>
-              {rating && reviewCount && (
-                <p className="m-0 mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px] text-[#f3eee6]">
-                  <span className="tracking-[0.1em] text-[#e4b56a]" aria-hidden="true">★★★★★</span>
-                  <span>
-                    {rating} from {reviewCount} {verified ? "verified " : ""}reviews
-                    {mybuilderName && mybuilderUrl ? (
-                      <>
-                        {" "}on{" "}
-                        <a
-                          href={mybuilderUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`rounded-sm underline decoration-[#6f675e] underline-offset-4 hover-fine:decoration-[#e4b56a] ${FOCUS}`}
-                        >
-                          MyBuilder
-                        </a>{" "}
-                        <span className="text-[#a39888]">(as {mybuilderName})</span>
-                      </>
-                    ) : (
-                      " on MyBuilder"
-                    )}
-                  </span>
-                </p>
-              )}
-            </div>
+                <Phone size={16} strokeWidth={1.75} aria-hidden="true" />
+                Call {phone}
+                <ArrowUpRight
+                  size={16}
+                  strokeWidth={1.75}
+                  aria-hidden="true"
+                  className="transition-transform duration-200 hover-fine:group-hover:-translate-y-0.5 hover-fine:group-hover:translate-x-0.5 motion-reduce:transition-none"
+                />
+              </a>
+            )}
+            <WhatsAppButton whatsapp={whatsapp} className="min-h-12 text-[15px]" />
           </div>
-
+          {rating && reviewCount && (
+            <p className="m-0 mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px] text-ink">
+              <span className="tracking-[0.1em] text-trust" aria-hidden="true">★★★★★</span>
+              <span>
+                {rating} from {reviewCount} {verified ? "verified " : ""}reviews
+                {mybuilderName && mybuilderUrl ? (
+                  <>
+                    {" "}on{" "}
+                    <a
+                      href={mybuilderUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`rounded-sm underline decoration-ink-faint underline-offset-4 hover-fine:decoration-ink ${FOCUS}`}
+                    >
+                      MyBuilder
+                    </a>{" "}
+                    <span className="text-ink-muted">(as {mybuilderName})</span>
+                  </>
+                ) : (
+                  " on MyBuilder"
+                )}
+              </span>
+            </p>
+          )}
         </div>
 
+        {/* Two framed photos; the second is smaller and sits lower-right. */}
+        <div className="relative mx-auto w-full max-w-md pb-16 lg:max-w-none lg:pb-20">
+          <div className={`relative aspect-[4/5] w-[78%] ${FRAME}`}>
+            <Image
+              src="/work/work-06.jpg"
+              alt="Retail fit-out with LED strip lighting under a display plinth and track spotlights across the ceiling"
+              fill
+              loading="eager"
+              fetchPriority="high"
+              sizes="(min-width: 1024px) 400px, (min-width: 448px) 350px, 78vw"
+              className="object-cover"
+            />
+          </div>
+          <div className={`absolute bottom-0 right-0 aspect-[4/5] w-[50%] ${FRAME}`}>
+            <Image
+              src="/work/work-01.jpg"
+              alt="Commercial distribution boards with neatly dressed cables running up a wire tray"
+              fill
+              sizes="(min-width: 1024px) 260px, (min-width: 448px) 224px, 50vw"
+              className="object-cover"
+            />
+          </div>
+        </div>
       </div>
     </section>
   );

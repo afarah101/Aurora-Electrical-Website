@@ -5,7 +5,7 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight, ImageIcon, Pause, Play } from "lucide-react";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 
-const AUTOPLAY_MS = 6000;
+const AUTOPLAY_MS = 3000;
 
 /**
  * The real job photos in /public/work, copied and numbered at build time.
@@ -43,23 +43,19 @@ export function WorkGallery({ photos = PHOTOS }: { photos?: string[] }) {
     prev: null,
   });
   const reduced = useReducedMotion();
-  const [hovered, setHovered] = useState(false);
-  const [focused, setFocused] = useState(false);
   // null = the visitor has not chosen; fall back to their motion preference.
   const [choice, setChoice] = useState<boolean | null>(null);
   const paused = choice ?? reduced;
   const count = deck.length;
-  // Pressing Play resumes at once, although pointer and focus are still on the
-  // button inside the region. That override lasts until the pointer leaves,
-  // focus leaves, or focus moves to another control; then hover and focus
-  // pause the slideshow again as usual.
-  const [resumed, setResumed] = useState(false);
-  const rotating = !paused && (resumed || (!hovered && !focused)) && count > 1;
+  // Only the Pause button (or a reduced-motion preference) stops the slideshow.
+  // Hover and focus no longer pause it: the photo fills most of the viewport,
+  // so pausing on hover left it looking stuck.
+  const rotating = !paused && count > 1;
 
   const go = (delta: number) =>
     setPos((p) => ({ prev: p.index, index: (p.index + delta + count) % count }));
 
-  // One timeout per slide, so a manual move restarts the full 6s.
+  // One timeout per slide, so a manual move restarts the full 3s.
   useEffect(() => {
     if (!rotating) return;
     const id = window.setTimeout(
@@ -97,24 +93,7 @@ export function WorkGallery({ photos = PHOTOS }: { photos?: string[] }) {
 
   return (
     <section id="work" className="bg-surface-raised">
-      <div
-        className="mx-auto max-w-6xl px-5 py-16 sm:py-20"
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => {
-          setHovered(false);
-          setResumed(false);
-        }}
-        onFocus={(e) => {
-          setFocused(true);
-          if (!e.target.hasAttribute("aria-pressed")) setResumed(false);
-        }}
-        onBlur={(e) => {
-          if (!e.currentTarget.contains(e.relatedTarget)) {
-            setFocused(false);
-            setResumed(false);
-          }
-        }}
-      >
+      <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
         <h2 className="text-3xl font-semibold tracking-tight text-ink">Recent work</h2>
         <p className="mt-3 max-w-2xl text-ink-muted">
           Rewires, fuse boards and installs, photographed on site.
@@ -163,10 +142,7 @@ export function WorkGallery({ photos = PHOTOS }: { photos?: string[] }) {
                 {count > 1 && (
                   <button
                     type="button"
-                    onClick={() => {
-                    setResumed(paused);
-                    setChoice(!paused);
-                  }}
+                    onClick={() => setChoice(!paused)}
                     aria-label="Pause photo slideshow"
                     aria-pressed={paused}
                     className={CONTROL}
