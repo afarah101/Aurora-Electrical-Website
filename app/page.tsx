@@ -17,7 +17,6 @@ import {
   aggregateRating,
   business,
   certificates,
-  claims,
   clients,
   contact,
   positioning,
@@ -41,9 +40,7 @@ export default function Home() {
           phone={contact.phone}
           telLink={contact.telLink}
           whatsapp={contact.whatsapp}
-          claims={claims}
           accreditations={accreditations}
-          reviews={reviews}
           rating={mybuilderField("Rating")}
           ratingOutOf={mybuilderField("Rating out of")}
           reviewCount={mybuilderField("Reviews")}
