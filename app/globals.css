@@ -3,12 +3,27 @@
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
+/* Hover styles only for a real mouse. Tailwind's own hover: checks
+   (hover: hover) alone, which some touch laptops and styluses also match. */
+@custom-variant hover-fine {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      @slot;
+    }
+  }
+}
+
+/* Motion vocabulary. Non-inline so var(--ease-out) also works in arbitrary
+   values; it also replaces Tailwind's weak default ease-out utility. */
+@theme {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   /* Three type roles: headings / body / technical accents. */
-  --font-heading: var(--font-space-grotesk);
+  --font-heading: var(--font-plex-sans);
   --font-sans: var(--font-plex-sans);
   --font-mono: var(--font-plex-mono);
 
@@ -19,30 +34,57 @@
    * else stays neutral slate so the two accents keep their meaning.
    * Swap either family here and the whole page follows.
    */
-  --color-action: #1d4ed8; /* blue-700 */
-  --color-action-hover: #2563eb; /* blue-600 */
-  --color-action-soft: #93c5fd; /* blue-300 — focus rings on dark surfaces */
-  --color-trust: #b45309; /* amber-700 — trust marks on light surfaces */
-  --color-trust-bright: #fcd34d; /* amber-300 — trust marks on dark surfaces;
-     4.74:1 even on the hero's worst-case overlay composite (#575a69) */
-  --color-trust-soft: #fffbeb; /* amber-50 — credential badge fill */
-  --color-trust-deep: #92400e; /* amber-800 — credential badge text */
-  --color-trust-line: #fde68a; /* amber-200 — credential badge border */
+  /*
+   * Ledger theme (21st.dev "Ledger Hero C", adapted for Aurora). Every
+   * colour role points at a --c-* variable so a section can switch between
+   * the dark INK floor (default) and the cream PAPER floor (.theme-paper)
+   * without touching component classes. ACTION is the main call button.
+   * TRUST (gold) marks proof only: ratings, credentials, review stamps.
+   */
+  --color-action: var(--c-action);
+  --color-action-hover: var(--c-action-hover);
+  --color-on-action: var(--c-on-action);
+  --color-action-soft: var(--c-action-soft);
+  --color-trust: var(--c-trust);
+  --color-trust-bright: var(--c-trust-bright);
+  --color-trust-soft: var(--c-trust-soft);
+  --color-trust-deep: var(--c-trust-deep);
+  --color-trust-line: var(--c-trust-line);
+  /* WhatsApp's own brand green, only on the WhatsApp button. */
+  --color-whatsapp: #25d366;
+  --color-whatsapp-hover: #1ebe5b;
+
+  --color-surface: var(--c-surface);
+  --color-surface-raised: var(--c-surface-raised);
+  --color-surface-high: var(--c-surface-high);
+  --color-ink: var(--c-ink);
+  --color-ink-soft: var(--c-ink-soft);
+  --color-ink-body: var(--c-ink-body);
+  --color-ink-muted: var(--c-ink-muted);
+  --color-ink-subtle: var(--c-ink-subtle);
+  --color-ink-faint: var(--c-ink-faint);
+  --color-hairline: var(--c-hairline);
+  --color-hairline-strong: var(--c-hairline-strong);
+
+  /* Height the fixed nav takes from the top of the viewport (68px). The
+     hero subtracts it so its CTA and proof stay above the fold. */
+  --spacing-nav: 4.25rem;
+  /* Landing room for every anchor target: the nav band plus 12px. */
+  --spacing-anchor: calc(var(--spacing-nav) + 0.75rem);
 
   /*
-   * Hero entrance: one slow, confident rise. 900ms is deliberate — this is
+   * Hero entrance: one slow, confident rise. 900ms is deliberate. This is
    * the marketing moment, not UI feedback, so it may run past the 300ms UI
-   * budget; the curve is the strong ease-out from the motion vocabulary.
-   * `both` keeps delayed elements invisible until their turn.
+   * budget. It moves only: nothing starts at opacity 0, so the h1 is painted
+   * (and counts for LCP) from the first frame. `both` holds delayed
+   * elements at their start offset until their turn.
    */
-  --animate-hero-rise: hero-rise 900ms cubic-bezier(0.23, 1, 0.32, 1) both;
+  --animate-hero-rise: hero-rise 900ms var(--ease-out) both;
   @keyframes hero-rise {
     from {
-      opacity: 0;
       transform: translateY(16px);
     }
     to {
-      opacity: 1;
       transform: none;
     }
   }
@@ -82,6 +124,67 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+
+/* Light floor site-wide: the same values as .theme-paper below. */
+:root {
+  --c-surface: #f7f3ec;
+  --c-surface-raised: #efe9df;
+  --c-surface-high: #e6dfd2;
+  --c-ink: #1b1714;
+  --c-ink-soft: #2a2420;
+  --c-ink-body: #3a3128;
+  --c-ink-muted: #554e46;
+  --c-ink-subtle: #655d54;
+  --c-ink-faint: #a39888;
+  --c-hairline: rgb(27 23 20 / 0.1);
+  --c-hairline-strong: rgb(27 23 20 / 0.22);
+  --c-action: #1b1714;
+  --c-action-hover: #3a3128;
+  --c-on-action: #f7f3ec;
+  --c-action-soft: #7a5520;
+  --c-trust: #7a5520;
+  --c-trust-bright: #7a5520;
+  --c-trust-soft: #f4ead4;
+  --c-trust-deep: #6a4818;
+  --c-trust-line: #e4cf9f;
+  color-scheme: light;
+}
+
+/* Ledger PAPER floor: cream sheet for reading-heavy sections. */
+.theme-paper {
+  --c-surface: #f7f3ec;
+  --c-surface-raised: #efe9df;
+  --c-surface-high: #e6dfd2;
+  --c-ink: #1b1714;
+  --c-ink-soft: #2a2420;
+  --c-ink-body: #3a3128;
+  --c-ink-muted: #554e46;
+  --c-ink-subtle: #655d54;
+  --c-ink-faint: #a39888;
+  --c-hairline: rgb(27 23 20 / 0.1);
+  --c-hairline-strong: rgb(27 23 20 / 0.22);
+  --c-action: #1b1714;
+  --c-action-hover: #3a3128;
+  --c-on-action: #f7f3ec;
+  --c-action-soft: #7a5520;
+  --c-trust: #7a5520;
+  --c-trust-bright: #7a5520;
+  --c-trust-soft: #f4ead4;
+  --c-trust-deep: #6a4818;
+  --c-trust-line: #e4cf9f;
+  color-scheme: light;
+}
+
+/* Headings: IBM Plex Sans, semibold, tight tracking. Unlayered so it
+   overrides the old bold utilities on every heading. */
+h1,
+h2,
+h3 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-stretch: normal;
 }
 
 /* Marketing sections style with Tailwind utilities directly (slate/blue
@@ -133,7 +236,7 @@
     @apply outline-2 outline-offset-2;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-surface text-ink;
   }
   html {
     @apply font-sans;
@@ -145,9 +248,44 @@
   h3 {
     @apply font-heading;
   }
-  /* The nav is fixed (~64px tall), so anchor jumps would land targets under
-     it; every id'd element gets landing room instead. */
+  /* The nav is fixed, so anchor jumps would land targets under it; every
+     id'd element gets the one --spacing-anchor token as landing room. */
   [id] {
-    @apply scroll-mt-20;
+    @apply scroll-mt-anchor;
   }
+}
+/* Reduced motion is gentler, not zero: the rise becomes a 200ms fade.
+   The h1 stays static so it is never at opacity 0. Unlayered, so it beats
+   the animate-* utility. */
+@keyframes hero-fade {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-hero-rise {
+    animation: hero-fade 200ms var(--ease-out) both;
+  }
+  h1.animate-hero-rise {
+    animation: none;
+  }
+}
+
+/* Ledger entrance motion, copied from the template. */
+@keyframes ledger-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes ledger-draw {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes ledger-stamp {
+  from { opacity: 0; transform: rotate(-18deg) scale(1.18); }
+  to { opacity: 1; transform: rotate(-8deg) scale(1); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ledger-rise { animation: ledger-rise 0.72s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .ledger-draw { transform-origin: left center; animation: ledger-draw 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .ledger-stamp { animation: ledger-stamp 0.42s cubic-bezier(0.22, 1, 0.36, 1) both; }
 }

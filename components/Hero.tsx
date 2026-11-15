@@ -1,161 +1,141 @@
-import { Phone, ShieldCheck, Clock, FileText, Star } from "lucide-react";
-import { claims as siteClaims, type Review } from "@/app/content";
-import { HeroBackground } from "@/components/HeroBackground";
+import Image from "next/image";
+import { ArrowUpRight, Phone } from "lucide-react";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 type Props = {
   businessName: string;
   tagline: string | null;
-  serviceArea: string | null;
   phone: string | null;
   telLink: string | null;
-  /** Defaults to the Claims section of site.md; injectable for tests. */
-  claims?: string[];
+  whatsapp: string | null;
   accreditations: string[];
-  aggregateRating: string | null;
-  reviews: Review[];
+  /** From the "## MyBuilder" section of site.md (lib/mybuilder.ts). */
+  rating: string | null;
+  ratingOutOf: string | null;
+  reviewCount: string | null;
+  verified: boolean;
+  /** MyBuilder trading name, shown so the reviews match the profile. */
+  mybuilderName: string | null;
+  mybuilderUrl: string | null;
 };
 
-/**
- * Claims are authored in site.md, not here, so removing one there removes it
- * from the page. Icon is chosen from the claim's wording; anything unrecognised
- * gets the neutral mark rather than inventing a meaning for it.
+/*
+ * Light editorial split: headline, call to action and one proof line at
+ * left, two framed job photos from /public/work at right. Every fact is
+ * read from content/site.md; a missing value renders nothing.
  */
-function claimIcon(claim: string) {
-  const c = claim.toLowerCase();
-  if (/emergency|24\/7|24-7|out of hours/.test(c)) return Clock;
-  if (/quote|estimate|pricing/.test(c)) return FileText;
-  return ShieldCheck;
-}
 
-/**
- * Trust signals in the first screen. No claim is authored here — every one is
- * read from the Claims section of site.md, so a promise the client has not made
- * cannot appear on the page. Accreditation and rating blocks likewise render
- * only when site.md confirms them, because an unearned NICEIC/NAPIT mark is a
- * regulated claim, not a styling detail.
- */
+const FOCUS =
+  "focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-action-soft";
+const FRAME = "overflow-hidden border-[6px] border-white bg-white shadow-2xl shadow-ink/20";
+
 export function Hero({
   businessName,
   tagline,
-  serviceArea,
   phone,
   telLink,
-  claims = siteClaims,
+  whatsapp,
   accreditations,
-  aggregateRating,
-  reviews,
+  rating,
+  reviewCount,
+  verified,
+  mybuilderName,
+  mybuilderUrl,
 }: Props) {
+  const niceic = accreditations.find((a) => /niceic/i.test(a));
+
   return (
-    <section className="relative overflow-hidden bg-slate-900">
-      {/* Footage sits at the back; if it fails to load, bg-slate-900 above is
-          the floor and the text treatment below still holds. */}
-      <HeroBackground />
-      {/* Contrast guarantee. The clip's peak pixels measure 253/255 — pure
-          white work lights — so the overlay is sized for a white worst case:
-          slate-900 at 70% over #fff composites to ~#575A69, giving white
-          text 6.6:1 and slate-200 5.4:1. The lightest stop is the /70 middle;
-          the bottom runs to SOLID slate-900 so the footage fades out into the
-          TrustBar's surface with no opacity jump and no border seam. */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-900/70 to-slate-900"
-      />
-
-      {/*
-        Reference layout (Electrio, reference/21.49.57): the footage IS the
-        hero — near-viewport height, text confined to the lower third, one
-        big title, nothing else competing. The entrance is a single slow
-        rise in three beats (eyebrow, title, actions), 900ms on the strong
-        ease-out — cinematic, not busy. Each animated node carries
-        motion-reduce:animate-none, so reduced-motion users get the static
-        composition (the poster frame stands in for the video too).
-      */}
-      <div className="relative z-10 mx-auto flex min-h-svh max-w-6xl flex-col justify-end px-5 pb-16 pt-28 sm:pb-20">
-        <p className="animate-hero-rise font-mono text-sm font-medium uppercase tracking-widest text-slate-300 motion-reduce:animate-none">
-          {serviceArea ? serviceArea : "Domestic & commercial electricians"}
-        </p>
-
-        <h1 className="animate-hero-rise mt-5 max-w-4xl text-4xl font-bold leading-[1.05] tracking-tight text-white [animation-delay:150ms] sm:text-6xl lg:text-7xl motion-reduce:animate-none">
-          {tagline ?? `${businessName} — electrical work for homes and businesses`}
-        </h1>
-
-        {/* Primary actions */}
-        <div className="animate-hero-rise mt-8 flex flex-col gap-3 [animation-delay:300ms] sm:flex-row motion-reduce:animate-none">
-          {telLink && (
-            <a
-              href={`tel:${telLink}`}
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-action px-6 text-base font-semibold text-white transition-colors hover:bg-action-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft"
-            >
-              <Phone aria-hidden="true" className="h-5 w-5" />
-              Call {phone}
-            </a>
-          )}
-          <a
-            href="#contact"
-            className="inline-flex h-12 items-center justify-center rounded-md bg-white px-6 text-base font-semibold text-slate-900 transition-colors hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft"
+    <section aria-labelledby="hero-headline" className="w-full bg-surface pt-nav text-left text-ink">
+      <div className="mx-auto grid min-h-[calc(78svh-var(--spacing-nav))] w-full max-w-6xl items-center gap-12 px-5 py-12 sm:px-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16 lg:py-16">
+        <div className="min-w-0">
+          <p
+            className="ledger-rise m-0 text-[12px] font-medium uppercase tracking-[0.18em] text-ink-muted"
+            style={{ animationDelay: "0.06s" }}
           >
-            Request a free quote
-          </a>
+            Electrician · London{niceic ? " · NICEIC registered" : ""}
+          </p>
+          <h1
+            id="hero-headline"
+            className="m-0 mt-4 max-w-[12em] text-balance text-[clamp(2.5rem,5vw,4.5rem)] leading-[1.02] text-ink"
+          >
+            {tagline ?? businessName}
+          </h1>
+          <p
+            className="ledger-rise m-0 mt-6 max-w-md text-pretty text-base leading-relaxed text-ink-body lg:text-[17px]"
+            style={{ animationDelay: "0.18s" }}
+          >
+            Rewiring, fuse boards, fault-finding, lighting and EICRs for homes, landlords and businesses.
+          </p>
+          <div
+            className="ledger-rise mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center"
+            style={{ animationDelay: "0.26s" }}
+          >
+            {telLink && phone && (
+              <a
+                href={`tel:${telLink}`}
+                className={`group inline-flex min-h-12 items-center justify-center gap-2 rounded-sm bg-action px-5 text-[15px] font-medium text-on-action transition-colors duration-200 hover-fine:bg-action-hover motion-reduce:transition-none ${FOCUS}`}
+              >
+                <Phone size={16} strokeWidth={1.75} aria-hidden="true" />
+                Call {phone}
+                <ArrowUpRight
+                  size={16}
+                  strokeWidth={1.75}
+                  aria-hidden="true"
+                  className="transition-transform duration-200 hover-fine:group-hover:-translate-y-0.5 hover-fine:group-hover:translate-x-0.5 motion-reduce:transition-none"
+                />
+              </a>
+            )}
+            <WhatsAppButton whatsapp={whatsapp} className="min-h-12 text-[15px]" />
+          </div>
+          {rating && reviewCount && (
+            <p className="m-0 mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px] text-ink">
+              <span className="tracking-[0.1em] text-trust" aria-hidden="true">★★★★★</span>
+              <span>
+                {rating} from {reviewCount} {verified ? "verified " : ""}reviews
+                {mybuilderName && mybuilderUrl ? (
+                  <>
+                    {" "}on{" "}
+                    <a
+                      href={mybuilderUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`rounded-sm underline decoration-ink-faint underline-offset-4 hover-fine:decoration-ink ${FOCUS}`}
+                    >
+                      MyBuilder
+                    </a>{" "}
+                    <span className="text-ink-muted">(as {mybuilderName})</span>
+                  </>
+                ) : (
+                  " on MyBuilder"
+                )}
+              </span>
+            </p>
+          )}
         </div>
 
-        {/* Claims come from site.md — none are authored in this component.
-            The review proof sits inline with them: same row, same trust
-            voice, but it links to the evidence. Stars are justified by
-            site.md's own "All are 5 stars" line. */}
-        {claims.length > 0 && (
-          <ul className="animate-hero-rise mt-10 grid grid-cols-2 gap-4 [animation-delay:300ms] lg:grid-cols-4 motion-reduce:animate-none">
-            {claims.map((claim) => {
-              const Icon = claimIcon(claim);
-              return (
-                <li key={claim} className="flex items-start gap-3">
-                  <Icon aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-trust-bright" />
-                  <span className="text-sm font-medium text-slate-100">{claim}</span>
-                </li>
-              );
-            })}
-            {(aggregateRating || reviews.length > 0) && (
-              <li>
-                <a
-                  href="#reviews"
-                  className="flex items-start gap-3 rounded-md hover:underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft"
-                >
-                  <span
-                    role="img"
-                    aria-label="5 out of 5 stars"
-                    className="mt-0.5 flex shrink-0 items-center gap-0.5"
-                  >
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star
-                        key={i}
-                        aria-hidden="true"
-                        className="h-3.5 w-3.5 fill-trust-bright text-trust-bright"
-                      />
-                    ))}
-                  </span>
-                  <span className="text-sm font-medium text-trust-bright">
-                    {aggregateRating ??
-                      `${reviews.length} customer ${reviews.length === 1 ? "review" : "reviews"}`}
-                  </span>
-                </a>
-              </li>
-            )}
-          </ul>
-        )}
-
-        {/* Rendered only when confirmed in site.md */}
-        {accreditations.length > 0 && (
-          <ul className="mt-8 flex flex-wrap gap-2">
-            {accreditations.map((a) => (
-              <li
-                key={a}
-                className="rounded-md border border-trust-line bg-trust-soft px-3 py-1.5 text-sm font-semibold text-trust-deep"
-              >
-                {a}
-              </li>
-            ))}
-          </ul>
-        )}
-
+        {/* Two framed photos; the second is smaller and sits lower-right. */}
+        <div className="relative mx-auto w-full max-w-md pb-16 lg:max-w-none lg:pb-20">
+          <div className={`relative aspect-[4/5] w-[78%] ${FRAME}`}>
+            <Image
+              src="/work/work-06.jpg"
+              alt="Retail fit-out with LED strip lighting under a display plinth and track spotlights across the ceiling"
+              fill
+              loading="eager"
+              fetchPriority="high"
+              sizes="(min-width: 1024px) 400px, (min-width: 448px) 350px, 78vw"
+              className="object-cover"
+            />
+          </div>
+          <div className={`absolute bottom-0 right-0 aspect-[4/5] w-[50%] ${FRAME}`}>
+            <Image
+              src="/work/work-01.jpg"
+              alt="Commercial distribution boards with neatly dressed cables running up a wire tray"
+              fill
+              sizes="(min-width: 1024px) 260px, (min-width: 448px) 224px, 50vw"
+              className="object-cover"
+            />
+          </div>
+        </div>
       </div>
     </section>
   );

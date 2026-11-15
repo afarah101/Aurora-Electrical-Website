@@ -2,7 +2,7 @@
 
 ## Business
 - Name: Aurora Electrical
-- Tagline: [PLACEHOLDER — one line, e.g. "Trusted domestic electricians across London"]
+- Tagline: Safe, certified electrics for London homes.
 - Logo: [PLACEHOLDER — /public/logo.png incoming]
 
 ## Contact
@@ -18,7 +18,7 @@
 - Fuse board / consumer unit upgrades & replacements
 - Domestic & building electrical installations
 - Fault-finding & repairs
-- Lighting — indoor & outdoor
+- Lighting - indoor & outdoor
 - Sockets & switches
 
 ## Services — DO NOT list
@@ -36,7 +36,7 @@
 1. Name: MyBuilder customer — Area: Clapham, London — Job: New pendant light installation — "Great job, on time, very professional and competent. Would definitely recommend!"
 2. Name: Steve — Area: Stockwell, London — Job: Electrical socket installed — "Professional electrician and done the job quickly, reliable, will definitely use him again for other jobs, recommended if you want a good efficient electrician."
 3. Name: Jake Holberry — Area: Southfields, London — Job: Lighting job in Earlsfield — "Came the same day and completed the job with no issue. Highly recommend."
-4. Name: MyBuilder customer — Area: Notting Hill, London — Job: Installing dimmers and fixing outside front door light — "Super quick to respond, diligent, timely, hard-working — had a bit of a tricky task and he did a great job tackling it. And then very quick with other routine tasks. And when I gave feedback, he was happy to adjust. Would highly recommend."
+4. Name: MyBuilder customer — Area: Notting Hill, London — Job: Installing dimmers and fixing outside front door light — "Super quick to respond, diligent, timely, hard-working - had a bit of a tricky task and he did a great job tackling it. And then very quick with other routine tasks. And when I gave feedback, he was happy to adjust. Would highly recommend."
 5. Name: Tom — Area: Pimlico, London — Job: Fit new extractor fan — "Great job. On time. Fair price. Thanks again."
 - All are 5 stars.
 - Aggregate: [PLACEHOLDER — e.g. ★★★★★ from 40+ homeowners]
@@ -72,6 +72,7 @@
 - Reviews: 82
 - Verified by MyBuilder: yes
 - Offers warranty: yes
+- Trading name: AE Electrical
 - Profile: https://www.mybuilder.com/profile/ae-electrical-1
 
 ## Trusted By / Past Clients (logo strip)

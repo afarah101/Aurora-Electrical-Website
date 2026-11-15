@@ -76,7 +76,7 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
         return;
       }
       reset();
-      setStatus({ kind: "ok", message: "Thanks — we'll be in touch shortly." });
+      setStatus({ kind: "ok", message: "Thanks - we'll be in touch shortly." });
     } catch {
       setStatus({
         kind: "error",
@@ -86,18 +86,17 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
   };
 
   const fieldClass =
-    "mt-1 block w-full rounded-md border border-slate-500 bg-slate-900 px-3 py-2 text-white focus:border-action-soft focus:outline-2 focus:outline-offset-0 focus:outline-action-soft";
+    "mt-1 block w-full rounded-sm border border-ink-faint bg-surface-raised px-3 py-2 text-ink transition-colors duration-[160ms] ease-out focus:border-action-soft focus:outline-2 focus:outline-offset-0 focus:outline-action-soft";
 
-  // scroll-mt clears the fixed Nav after a #contact jump: 69px with the menu button, 65px from lg.
   return (
-    <section id="contact" className="scroll-mt-[69px] border-b border-slate-800 bg-slate-950 lg:scroll-mt-[65px]">
+    <section id="contact" className="border-b border-surface-high bg-surface">
       <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
         <div className="grid gap-10 lg:grid-cols-2">
           <div>
-            <h2 className="text-3xl font-semibold tracking-tight text-white">
+            <h2 className="text-3xl font-semibold tracking-tight text-ink">
               Request a free quote
             </h2>
-            <p className="mt-3 text-slate-300">
+            <p className="mt-3 text-ink-muted">
               Tell us about the job and we&apos;ll come back with a
               no-obligation quote. For emergencies, calling is fastest.
             </p>
@@ -111,7 +110,7 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
               )}
               {email && (
                 <p>
-                  <a href={`mailto:${email}`} className="text-slate-300 transition-colors hover:text-white">
+                  <a href={`mailto:${email}`} className="text-ink-muted transition-colors duration-[160ms] ease-out hover-fine:text-ink motion-reduce:transition-none">
                     {email}
                   </a>
                 </p>
@@ -122,7 +121,7 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
 
           <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
             <div>
-              <label htmlFor="name" className="text-sm font-medium text-slate-200">
+              <label htmlFor="name" className="text-sm font-medium text-ink-body">
                 Name
               </label>
               <input id="name" aria-required="true" {...register("name")} className={fieldClass} />
@@ -134,7 +133,7 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
             </div>
 
             <div>
-              <label htmlFor="phone" className="text-sm font-medium text-slate-200">
+              <label htmlFor="phone" className="text-sm font-medium text-ink-body">
                 Phone
               </label>
               <input id="phone" type="tel" aria-required="true" autoComplete="tel" {...register("phone")} className={fieldClass} />
@@ -146,7 +145,7 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
             </div>
 
             <div>
-              <label htmlFor="address" className="text-sm font-medium text-slate-200">
+              <label htmlFor="address" className="text-sm font-medium text-ink-body">
                 Address
               </label>
               <input id="address" aria-required="true" autoComplete="street-address" {...register("address")} className={fieldClass} />
@@ -158,7 +157,7 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
             </div>
 
             <div>
-              <label htmlFor="fault" className="text-sm font-medium text-slate-200">
+              <label htmlFor="fault" className="text-sm font-medium text-ink-body">
                 About the fault
               </label>
               <textarea id="fault" aria-required="true" rows={4} {...register("fault")} className={fieldClass} />
@@ -170,8 +169,8 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
             </div>
 
             <div>
-              <label htmlFor="email" className="text-sm font-medium text-slate-200">
-                Email <span className="text-slate-400">(optional)</span>
+              <label htmlFor="email" className="text-sm font-medium text-ink-body">
+                Email <span className="text-ink-subtle">(optional)</span>
               </label>
               <input id="email" type="email" autoComplete="email" {...register("email")} className={fieldClass} />
               {errors.email && (
@@ -190,14 +189,14 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
             <button
               type="submit"
               disabled={status.kind === "sending"}
-              className="inline-flex h-12 cursor-pointer items-center justify-center rounded-md bg-action px-6 text-base font-semibold text-white transition-colors hover:bg-action-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex h-12 cursor-pointer items-center justify-center rounded-sm bg-action px-6 text-base font-semibold text-on-action hover-fine:enabled:bg-action-hover [transition:transform_100ms_var(--ease-out),background-color_160ms_var(--ease-out)] active:scale-[0.97] active:[transition:transform_160ms_var(--ease-out),background-color_160ms_var(--ease-out)] motion-reduce:active:scale-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100"
             >
               {status.kind === "sending" ? "Sending…" : "Send request"}
             </button>
 
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-ink-subtle">
               We may message you when your EICR is due. Reply STOP any time to opt out.{" "}
-              <Link href="/privacy" className="text-action-soft underline underline-offset-2 hover:text-white">
+              <Link href="/privacy" className="text-action-soft underline underline-offset-2 transition-colors duration-[160ms] ease-out hover-fine:text-ink motion-reduce:transition-none">
                 How we use your details
               </Link>
             </p>

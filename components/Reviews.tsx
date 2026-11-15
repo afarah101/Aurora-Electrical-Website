@@ -1,11 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight, Pause, Play, Star } from "lucide-react";
 import type { Review } from "@/app/content";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 
-const AUTOPLAY_MS = 3000;
+const AUTOPLAY_MS = 6000;
+
+const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft";
+// Press is deliberate (160ms), release snaps (100ms), hover colour eases 160ms.
+const PRESS =
+  "[transition:transform_100ms_var(--ease-out),background-color_160ms_var(--ease-out)] active:scale-[0.97] active:[transition:transform_160ms_var(--ease-out),background-color_160ms_var(--ease-out)] motion-reduce:active:scale-100";
+const CONTROL = `flex size-11 cursor-pointer items-center justify-center rounded-full text-ink-body ring-1 ring-hairline-strong hover-fine:bg-surface-high ${PRESS} ${FOCUS}`;
+const ICON = { "aria-hidden": true, strokeWidth: 1.5, className: "size-5" } as const;
 
 type Props = { reviews: Review[]; aggregateRating: string | null };
 
@@ -15,22 +22,34 @@ type Props = { reviews: Review[]; aggregateRating: string | null };
  * and it is split back out here. Every word rendered is verbatim from
  * site.md; the five stars are site.md's own "All are 5 stars" line.
  *
- * One review at a time on the dark canvas. Auto-advances; pauses on
- * hover/focus; with reduced motion it holds the first review and the
- * prev/next controls are the only way to move.
+ * One review at a time on the dark canvas. Advances every 6s; stops while
+ * the pointer is over it, while focus is inside it, or after the pause
+ * button. Pressing play resumes at once; hover and focus pause it again
+ * once the pointer leaves or focus moves to another control. Reduced
+ * motion: no autoplay, the first review holds, prev/next still work. A new
+ * quote fades and rises 4px into place (250ms).
  */
 export function Reviews({ reviews, aggregateRating }: Props) {
   const [index, setIndex] = useState(0);
   const reduced = useReducedMotion();
-  const paused = useRef(false);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  // null = the visitor has not chosen; fall back to their motion preference.
+  const [choice, setChoice] = useState<boolean | null>(null);
+  const paused = choice ?? reduced;
+  // Pressing Play resumes at once, although pointer and focus are still on the
+  // button inside the region. That override lasts until the pointer leaves,
+  // focus leaves, or focus moves to another control; then hover and focus
+  // pause the slideshow again as usual.
+  const [resumed, setResumed] = useState(false);
+  const rotating = !paused && (resumed || (!hovered && !focused)) && reviews.length > 1;
 
+  // One timeout per slide, so a manual move restarts the full 6s.
   useEffect(() => {
-    if (reduced || reviews.length < 2) return;
-    const id = window.setInterval(() => {
-      if (!paused.current) setIndex((i) => (i + 1) % reviews.length);
-    }, AUTOPLAY_MS);
-    return () => window.clearInterval(id);
-  }, [reduced, reviews.length]);
+    if (!rotating) return;
+    const id = window.setTimeout(() => setIndex((i) => (i + 1) % reviews.length), AUTOPLAY_MS);
+    return () => window.clearTimeout(id);
+  }, [rotating, index, reviews.length]);
 
   if (reviews.length === 0) return null;
 
@@ -41,15 +60,26 @@ export function Reviews({ reviews, aggregateRating }: Props) {
   const [area, job] = review.area.split(/\s*—\s*Job:\s*/);
 
   return (
-    <section id="reviews" className="border-b border-slate-800 bg-slate-950">
+    <section id="reviews" className="border-b border-hairline bg-surface">
       <div
         className="mx-auto max-w-6xl px-5 py-16 sm:py-20"
-        onMouseEnter={() => (paused.current = true)}
-        onMouseLeave={() => (paused.current = false)}
-        onFocusCapture={() => (paused.current = true)}
-        onBlurCapture={() => (paused.current = false)}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => {
+          setHovered(false);
+          setResumed(false);
+        }}
+        onFocus={(e) => {
+          setFocused(true);
+          if (!e.target.hasAttribute("aria-pressed")) setResumed(false);
+        }}
+        onBlur={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget)) {
+            setFocused(false);
+            setResumed(false);
+          }
+        }}
       >
-        <h2 className="text-3xl font-semibold tracking-tight text-white">
+        <h2 className="text-3xl font-semibold tracking-tight text-ink">
           What customers say
         </h2>
         {aggregateRating && (
@@ -61,7 +91,12 @@ export function Reviews({ reviews, aggregateRating }: Props) {
         <div className="mx-auto mt-12 max-w-3xl">
           {/* Fixed minimum height so short and long quotes don't bounce the
               controls around between slides. */}
-          <div className="flex min-h-[16rem] flex-col sm:min-h-[13rem]">
+          {/* Keyed by slide so each quote mounts fresh and enters through
+              @starting-style; reduced motion keeps the fade, drops the rise. */}
+          <div
+            key={index}
+            className="flex min-h-[16rem] flex-col [transition:opacity_250ms_var(--ease-out),transform_250ms_var(--ease-out)] starting:opacity-0 starting:[transform:translateY(4px)] motion-reduce:starting:[transform:none] sm:min-h-[13rem]"
+          >
             <div
               className="flex items-center gap-1"
               role="img"
@@ -71,31 +106,32 @@ export function Reviews({ reviews, aggregateRating }: Props) {
                 <Star
                   key={i}
                   aria-hidden="true"
-                  className="h-4 w-4 fill-trust-bright text-trust-bright"
+                  strokeWidth={1.5}
+                  className="size-4 fill-trust-bright text-trust-bright"
                 />
               ))}
             </div>
 
             {job && (
-              <p className="mt-3 font-mono text-xs font-medium uppercase tracking-widest text-slate-400">
+              <p className="mt-3 font-mono text-xs font-medium uppercase tracking-widest text-ink-subtle">
                 {job}
               </p>
             )}
 
-            <blockquote className="mt-4 text-xl leading-relaxed text-slate-100 sm:text-2xl">
+            <blockquote className="mt-4 text-xl leading-relaxed text-ink-soft sm:text-2xl">
               &ldquo;{review.quote}&rdquo;
             </blockquote>
 
-            <p className="mt-5 text-sm font-semibold text-white">
+            <p className="mt-5 text-sm font-semibold text-ink">
               {review.name}
-              <span className="font-normal text-slate-400"> — {area}</span>
+              <span className="font-normal text-ink-subtle"> - {area}</span>
             </p>
           </div>
 
           <div className="mt-8 flex items-center gap-4">
-            <p className="font-mono text-lg text-white">
+            <p className="font-mono text-lg text-ink">
               {String(index + 1).padStart(2, "0")}
-              <span className="text-sm text-slate-400">
+              <span className="text-sm text-ink-subtle">
                 {" "}
                 / {String(reviews.length).padStart(2, "0")}
               </span>
@@ -108,34 +144,39 @@ export function Reviews({ reviews, aggregateRating }: Props) {
               {reviews.map((r, i) => (
                 <span
                   key={`${r.name}-${r.area}`}
-                  className={`h-1.5 w-1.5 rounded-full transition-colors ${
-                    i === index ? "bg-trust-bright" : "bg-slate-600"
+                  className={`size-1.5 rounded-full ${
+                    i === index ? "bg-trust-bright" : "bg-ink-faint"
                   }`}
                 />
               ))}
             </div>
 
             <div className="flex shrink-0 gap-2">
-              <button
-                type="button"
-                onClick={() => go(-1)}
-                aria-label="Previous review"
-                className="flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-md border border-slate-700 text-slate-200 transition-colors hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft"
-              >
-                <ChevronLeft aria-hidden="true" className="h-5 w-5" />
+              {reviews.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setResumed(paused);
+                    setChoice(!paused);
+                  }}
+                  aria-label="Pause review slideshow"
+                  aria-pressed={paused}
+                  className={CONTROL}
+                >
+                  {paused ? <Play {...ICON} /> : <Pause {...ICON} />}
+                </button>
+              )}
+              <button type="button" onClick={() => go(-1)} aria-label="Previous review" className={CONTROL}>
+                <ChevronLeft {...ICON} />
               </button>
-              <button
-                type="button"
-                onClick={() => go(1)}
-                aria-label="Next review"
-                className="flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-md border border-slate-700 text-slate-200 transition-colors hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft"
-              >
-                <ChevronRight aria-hidden="true" className="h-5 w-5" />
+              <button type="button" onClick={() => go(1)} aria-label="Next review" className={CONTROL}>
+                <ChevronRight {...ICON} />
               </button>
             </div>
           </div>
 
-          <p aria-live="polite" className="sr-only">
+          {/* Announces only while not rotating (WAI-ARIA carousel pattern). */}
+          <p aria-live={rotating ? "off" : "polite"} className="sr-only">
             Review {index + 1} of {reviews.length}: {review.name}, {area}
           </p>
         </div>

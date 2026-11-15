@@ -14,9 +14,9 @@ const PRICES: Array<{ label: string; price: string }> = [
 
 export function EicrPricing() {
   return (
-    <section id="eicr-pricing" className="border-b border-slate-800 bg-slate-950">
+    <section id="eicr-pricing" className="border-b border-hairline bg-surface">
       <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
-        <h2 className="text-3xl font-semibold tracking-tight text-white">
+        <h2 className="text-3xl font-semibold tracking-tight text-ink">
           EICR pricing
         </h2>
 
@@ -27,14 +27,14 @@ export function EicrPricing() {
           top rule spans the whole width; each row closes with its own
           hairline — separation by rule, never boxes.
         */}
-        <dl className="mt-10 grid gap-x-16 border-t border-slate-800 sm:grid-flow-col sm:grid-rows-3">
+        <dl className="mt-10 grid gap-x-16 border-t border-hairline sm:grid-flow-col sm:grid-rows-3">
           {PRICES.map(({ label, price }) => (
             <div
               key={label}
-              className="flex items-baseline justify-between gap-4 border-b border-slate-800 py-5"
+              className="flex items-baseline justify-between gap-4 border-b border-hairline py-5"
             >
-              <dt className="text-base text-slate-200">{label}</dt>
-              <dd className="font-mono text-base tabular-nums text-white">
+              <dt className="text-base text-ink-body">{label}</dt>
+              <dd className="font-mono text-base tabular-nums text-ink">
                 {price}
               </dd>
             </div>

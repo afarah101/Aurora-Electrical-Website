@@ -14,12 +14,12 @@ export function TrustedBy({ clients }: Props) {
   if (clients.length === 0) return null;
 
   return (
-    <section id="clients" className="border-b border-slate-800 bg-slate-950">
+    <section id="clients" className="border-b border-hairline bg-surface">
       <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
-        <h2 className="text-3xl font-semibold tracking-tight text-white">
+        <h2 className="text-3xl font-semibold tracking-tight text-ink">
           Trusted by
         </h2>
-        <p className="mt-3 max-w-2xl text-slate-300">
+        <p className="mt-3 max-w-2xl text-ink-muted">
           Commercial and community premises we&apos;ve carried out work for.
         </p>
 
@@ -27,7 +27,7 @@ export function TrustedBy({ clients }: Props) {
           {clients.map((client) => (
             <li
               key={client.name}
-              className="flex flex-col items-center justify-center gap-3 rounded-xl bg-white p-8"
+              className="flex flex-col items-center justify-center gap-3 rounded-sm bg-white p-8 ring-1 ring-hairline"
             >
               {/*
                 content.ts only supplies `logo` when the file exists under
@@ -61,10 +61,10 @@ export function TrustedBy({ clients }: Props) {
                     }
                   />
                 ) : (
-                  <Building2 aria-hidden="true" className="h-8 w-8 text-slate-400" />
+                  <Building2 aria-hidden="true" strokeWidth={1.5} className="size-8 text-ink-faint" />
                 )}
               </div>
-              <span className="text-center text-sm font-semibold text-slate-900">
+              <span className="text-center text-sm font-semibold text-[#1b1714]">
                 {client.name}
               </span>
               {/* Category label in the mono face; trust gold marks this
