@@ -80,7 +80,7 @@ function JobBook({
               Recent jobs
             </p>
           </div>
-          <p className="m-0 shrink-0 text-[11px] uppercase tracking-[0.16em] text-[#655d54]">South-west London</p>
+          <p className="m-0 shrink-0 text-[11px] uppercase tracking-[0.16em] text-[#655d54]">London</p>
         </div>
 
         <ul className="m-0 mt-1 list-none divide-y divide-[#e7e0d4] p-0">
@@ -271,7 +271,7 @@ export function Hero({
                 <span className="mt-[0.45em] h-px w-6 shrink-0 bg-[#e4b56a]" aria-hidden="true" />
                 <span className="flex min-w-0 items-center gap-2">
                   <Mark />
-                  Electrician · South-west London{niceic ? " · NICEIC registered" : ""}
+                  Electrician · London{niceic ? " · NICEIC registered" : ""}
                 </span>
               </p>
               <h1
