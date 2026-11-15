@@ -122,7 +122,7 @@ export function WorkGallery({ photos = PHOTOS }: { photos?: string[] }) {
 
         {count > 0 ? (
           <>
-            <div className="relative mt-10 aspect-[4/3] w-full overflow-hidden rounded-[16px] bg-surface ring-1 ring-hairline sm:aspect-[16/10]">
+            <div className="relative mt-10 aspect-[4/3] w-full overflow-hidden rounded-sm bg-surface ring-1 ring-hairline sm:aspect-[16/10]">
               {layers.map(({ src, role }) => (
                 <Image
                   key={src}
@@ -195,7 +195,7 @@ export function WorkGallery({ photos = PHOTOS }: { photos?: string[] }) {
             {Array.from({ length: 3 }).map((_, i) => (
               <div
                 key={i}
-                className="flex h-60 flex-col items-center justify-center gap-3 rounded-[16px] border border-dashed border-hairline-strong bg-surface-high/50"
+                className="flex h-60 flex-col items-center justify-center gap-3 rounded-sm border border-dashed border-hairline-strong bg-surface-high/50"
               >
                 <ImageIcon aria-hidden="true" strokeWidth={1.5} className="size-8 text-ink-faint" />
                 <span className="text-sm font-medium text-ink-subtle">Completed work</span>

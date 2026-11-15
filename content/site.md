@@ -72,6 +72,7 @@
 - Reviews: 82
 - Verified by MyBuilder: yes
 - Offers warranty: yes
+- Trading name: AE Electrical
 - Profile: https://www.mybuilder.com/profile/ae-electrical-1
 
 ## Trusted By / Past Clients (logo strip)

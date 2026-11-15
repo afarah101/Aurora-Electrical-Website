@@ -37,7 +37,7 @@ export function Services({ services, certificates }: Props) {
             return (
               <li
                 key={service}
-                className={`flex flex-col overflow-hidden rounded-[16px] bg-surface-raised ring-1 ring-hairline ${
+                className={`flex flex-col overflow-hidden rounded-sm bg-surface-raised ring-1 ring-hairline ${
                   featured
                     ? "lg:col-span-2 lg:row-span-2"
                     : "min-h-36 justify-end"
@@ -70,7 +70,7 @@ export function Services({ services, certificates }: Props) {
           <li className="lg:col-span-3">
             <a
               href="#eicr-pricing"
-              className="group flex h-full min-h-20 items-center justify-between gap-6 rounded-[16px] bg-surface-raised p-6 ring-1 ring-hairline transition-colors duration-[160ms] ease-out hover-fine:bg-surface-high focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft motion-reduce:transition-none"
+              className="group flex h-full min-h-20 items-center justify-between gap-6 rounded-sm bg-surface-raised p-6 ring-1 ring-hairline transition-colors duration-[160ms] ease-out hover-fine:bg-surface-high focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft motion-reduce:transition-none"
             >
               <h3 className="font-heading text-xl font-semibold tracking-tight text-ink">
                 EICRs (Electrical Installation Condition Reports)

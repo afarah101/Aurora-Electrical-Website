@@ -47,7 +47,7 @@ export default function EmergencyElectricianPage() {
             {contact.telLink && (
               <a
                 href={`tel:${contact.telLink}`}
-                className={`inline-flex h-14 items-center justify-center gap-2 rounded-full bg-action px-6 text-lg font-semibold text-ink hover-fine:bg-action-hover ${PRESS} ${FOCUS}`}
+                className={`inline-flex h-14 items-center justify-center gap-2 rounded-sm bg-action px-6 text-lg font-semibold text-on-action hover-fine:bg-action-hover ${PRESS} ${FOCUS}`}
               >
                 <Phone aria-hidden="true" strokeWidth={1.5} className="size-5" />
                 Call {contact.phone}
@@ -80,7 +80,7 @@ export default function EmergencyElectricianPage() {
           )}
 
           {safety && (
-            <p className="rounded-[16px] bg-surface-raised p-4 font-medium text-ink ring-1 ring-hairline-strong">
+            <p className="rounded-sm bg-surface-raised p-4 font-medium text-ink ring-1 ring-hairline-strong">
               {safety}
             </p>
           )}

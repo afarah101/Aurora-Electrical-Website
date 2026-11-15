@@ -55,7 +55,7 @@ export default function EicrLandlordsPage() {
             {contact.telLink && (
               <a
                 href={`tel:${contact.telLink}`}
-                className={`inline-flex h-12 items-center justify-center gap-2 rounded-full bg-action px-6 text-base font-semibold text-ink hover-fine:bg-action-hover ${PRESS} ${FOCUS}`}
+                className={`inline-flex h-12 items-center justify-center gap-2 rounded-sm bg-action px-6 text-base font-semibold text-on-action hover-fine:bg-action-hover ${PRESS} ${FOCUS}`}
               >
                 <Phone aria-hidden="true" strokeWidth={1.5} className="size-5" />
                 Call {contact.phone}
@@ -64,7 +64,7 @@ export default function EicrLandlordsPage() {
             <WhatsAppButton whatsapp={contact.whatsapp} />
             <Link
               href="/contact"
-              className={`inline-flex h-12 items-center justify-center rounded-full bg-ink px-6 text-base font-semibold text-surface hover-fine:bg-ink-soft ${PRESS} ${FOCUS}`}
+              className={`inline-flex h-12 items-center justify-center rounded-sm border border-ink-faint bg-transparent px-6 text-base font-semibold text-ink hover-fine:border-trust-bright ${PRESS} ${FOCUS}`}
             >
               Request a quote
             </Link>

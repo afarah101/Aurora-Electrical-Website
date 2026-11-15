@@ -23,7 +23,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   /* Three type roles: headings / body / technical accents. */
-  --font-heading: var(--font-archivo);
+  --font-heading: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, serif;
   --font-sans: var(--font-plex-sans);
   --font-mono: var(--font-plex-mono);
 
@@ -34,36 +34,37 @@
    * else stays neutral slate so the two accents keep their meaning.
    * Swap either family here and the whole page follows.
    */
-  --color-action: #1d4ed8; /* blue-700 */
-  --color-action-hover: #2563eb; /* blue-600 */
-  --color-action-soft: #93c5fd; /* blue-300 — focus rings on dark surfaces */
-  --color-trust: #b45309; /* amber-700 — trust marks on light surfaces */
-  --color-trust-bright: #fcd34d; /* amber-300 — trust marks on dark surfaces;
-     4.74:1 even on the hero's worst-case overlay composite (#575a69) */
-  --color-trust-soft: #fffbeb; /* amber-50 — credential badge fill */
-  --color-trust-deep: #92400e; /* amber-800 — credential badge text */
-  --color-trust-line: #fde68a; /* amber-200 — credential badge border */
+  /*
+   * Ledger theme (21st.dev "Ledger Hero C", adapted for Aurora). Every
+   * colour role points at a --c-* variable so a section can switch between
+   * the dark INK floor (default) and the cream PAPER floor (.theme-paper)
+   * without touching component classes. ACTION is the main call button.
+   * TRUST (gold) marks proof only: ratings, credentials, review stamps.
+   */
+  --color-action: var(--c-action);
+  --color-action-hover: var(--c-action-hover);
+  --color-on-action: var(--c-on-action);
+  --color-action-soft: var(--c-action-soft);
+  --color-trust: var(--c-trust);
+  --color-trust-bright: var(--c-trust-bright);
+  --color-trust-soft: var(--c-trust-soft);
+  --color-trust-deep: var(--c-trust-deep);
+  --color-trust-line: var(--c-trust-line);
   /* WhatsApp's own brand green, only on the WhatsApp button. */
   --color-whatsapp: #25d366;
   --color-whatsapp-hover: #1ebe5b;
 
-  /*
-   * Neutral roles. Components use these names, never raw slate-*, so the
-   * neutral family can change here in one place. The site is dark-first:
-   * "surface" is the page floor, "ink" is text and marks on it.
-   */
-  --color-surface: #020617; /* slate-950 — page and hero floor */
-  --color-surface-raised: #0f172a; /* slate-900 — media frames, cards */
-  --color-surface-high: #1e293b; /* slate-800 — inputs, controls */
-  --color-ink: #ffffff; /* headings, primary text; also the light button fill */
-  --color-ink-soft: #f1f5f9; /* slate-100 — proof lines, light button hover */
-  --color-ink-body: #e2e8f0; /* slate-200 — body copy */
-  --color-ink-muted: #cbd5e1; /* slate-300 — secondary copy, neutral icons */
-  --color-ink-subtle: #94a3b8; /* slate-400 — captions, meta */
-  --color-ink-faint: #64748b; /* slate-500 — inactive indicators, field lines */
-  /* Tinted hairlines in place of 1px grey borders. */
-  --color-hairline: rgb(255 255 255 / 0.1);
-  --color-hairline-strong: rgb(255 255 255 / 0.24);
+  --color-surface: var(--c-surface);
+  --color-surface-raised: var(--c-surface-raised);
+  --color-surface-high: var(--c-surface-high);
+  --color-ink: var(--c-ink);
+  --color-ink-soft: var(--c-ink-soft);
+  --color-ink-body: var(--c-ink-body);
+  --color-ink-muted: var(--c-ink-muted);
+  --color-ink-subtle: var(--c-ink-subtle);
+  --color-ink-faint: var(--c-ink-faint);
+  --color-hairline: var(--c-hairline);
+  --color-hairline-strong: var(--c-hairline-strong);
 
   /* Height the fixed nav takes from the top of the viewport (68px). The
      hero subtracts it so its CTA and proof stay above the fold. */
@@ -125,6 +126,66 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+
+/* Ledger INK floor: the default (hero, gallery, footer, nav). */
+:root {
+  --c-surface: #0c0b09;
+  --c-surface-raised: #12110f;
+  --c-surface-high: #1d1b17;
+  --c-ink: #f3eee6;
+  --c-ink-soft: #e8e1d6;
+  --c-ink-body: #d4ccc0;
+  --c-ink-muted: #b7aea2;
+  --c-ink-subtle: #a39888;
+  --c-ink-faint: #6f675e;
+  --c-hairline: rgb(243 238 230 / 0.1);
+  --c-hairline-strong: rgb(243 238 230 / 0.24);
+  --c-action: #f3eee6;
+  --c-action-hover: #e4b56a;
+  --c-on-action: #1b1714;
+  --c-action-soft: #e4b56a;
+  --c-trust: #e4b56a;
+  --c-trust-bright: #e4b56a;
+  --c-trust-soft: #1d1910;
+  --c-trust-deep: #f0d3a0;
+  --c-trust-line: #4a3d24;
+}
+
+/* Ledger PAPER floor: cream sheet for reading-heavy sections. */
+.theme-paper {
+  --c-surface: #f7f3ec;
+  --c-surface-raised: #efe9df;
+  --c-surface-high: #e6dfd2;
+  --c-ink: #1b1714;
+  --c-ink-soft: #2a2420;
+  --c-ink-body: #3a3128;
+  --c-ink-muted: #554e46;
+  --c-ink-subtle: #655d54;
+  --c-ink-faint: #a39888;
+  --c-hairline: rgb(27 23 20 / 0.1);
+  --c-hairline-strong: rgb(27 23 20 / 0.22);
+  --c-action: #1b1714;
+  --c-action-hover: #3a3128;
+  --c-on-action: #f7f3ec;
+  --c-action-soft: #7a5520;
+  --c-trust: #7a5520;
+  --c-trust-bright: #7a5520;
+  --c-trust-soft: #f4ead4;
+  --c-trust-deep: #6a4818;
+  --c-trust-line: #e4cf9f;
+  color-scheme: light;
+}
+
+/* Ledger headings: book serif, regular weight, tight tracking. Unlayered
+   so it overrides the old bold utilities on every heading. */
+h1,
+h2,
+h3 {
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  font-stretch: normal;
+}
+
 /* Marketing sections style with Tailwind utilities directly (slate/blue
    families); the tokens below exist for the shadcn ui/ components only. */
 :root {
@@ -174,7 +235,7 @@
     @apply outline-2 outline-offset-2;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-surface text-ink;
   }
   html {
     @apply font-sans;
@@ -207,4 +268,23 @@
   h1.animate-hero-rise {
     animation: none;
   }
+}
+
+/* Ledger entrance motion, copied from the template. */
+@keyframes ledger-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes ledger-draw {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes ledger-stamp {
+  from { opacity: 0; transform: rotate(-18deg) scale(1.18); }
+  to { opacity: 1; transform: rotate(-8deg) scale(1); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ledger-rise { animation: ledger-rise 0.72s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .ledger-draw { transform-origin: left center; animation: ledger-draw 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .ledger-stamp { animation: ledger-stamp 0.42s cubic-bezier(0.22, 1, 0.36, 1) both; }
 }

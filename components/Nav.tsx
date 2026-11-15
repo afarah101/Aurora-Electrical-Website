@@ -135,7 +135,7 @@ export function Nav({ businessName, phone, telLink }: Props) {
             <a
               href={`tel:${telLink}`}
               aria-label={phone ? `Call ${phone}` : "Call us"}
-              className={`inline-flex size-11 items-center justify-center gap-2 rounded-full bg-action text-sm font-semibold text-ink hover-fine:bg-action-hover sm:w-auto sm:px-5 ${PRESS} ${FOCUS}`}
+              className={`inline-flex size-11 items-center justify-center gap-2 rounded-sm bg-action text-sm font-semibold text-on-action hover-fine:bg-action-hover sm:w-auto sm:px-5 ${PRESS} ${FOCUS}`}
             >
               <Phone aria-hidden="true" strokeWidth={1.5} className="size-4" />
               <span className="hidden sm:inline">{phone}</span>
@@ -162,7 +162,7 @@ export function Nav({ businessName, phone, telLink }: Props) {
       {open && (
         <ul
           id="mobile-menu"
-          className="mx-auto mt-2 max-w-6xl rounded-[16px] bg-surface-raised/95 p-3 ring-1 ring-hairline backdrop-blur-md [transition:opacity_200ms_var(--ease-out),transform_200ms_var(--ease-out)] starting:opacity-0 starting:[transform:translateY(-4px)] motion-reduce:starting:[transform:none] lg:hidden"
+          className="mx-auto mt-2 max-w-6xl rounded-sm bg-surface-raised/95 p-3 ring-1 ring-hairline backdrop-blur-md [transition:opacity_200ms_var(--ease-out),transform_200ms_var(--ease-out)] starting:opacity-0 starting:[transform:translateY(-4px)] motion-reduce:starting:[transform:none] lg:hidden"
         >
           {links.map((link) => (
             <li key={link.label}>
@@ -170,7 +170,7 @@ export function Nav({ businessName, phone, telLink }: Props) {
                 href={link.href}
                 onClick={() => setOpen(false)}
                 aria-current={link.current ? "page" : undefined}
-                className={`flex min-h-11 items-center rounded-[10px] px-3 text-base font-medium ${FOCUS} ${
+                className={`flex min-h-11 items-center rounded-sm px-3 text-base font-medium ${FOCUS} ${
                   link.current ? currentClass : "text-ink-body"
                 }`}
               >
