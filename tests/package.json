@@ -1,0 +1,4 @@
+{
+  "private": true,
+  "main": "leads-webhook.test.mjs"
+}
