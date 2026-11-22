@@ -14,7 +14,7 @@ export const CTA_BASE =
 export const CTA_CALL = `${CTA_BASE} group bg-action text-on-action hover-fine:bg-action-hover`;
 
 /** Secondary: white surface, 1px border that darkens on hover, dark text. */
-export const CTA_WHATSAPP = `${CTA_BASE} border border-ink-faint bg-white text-ink hover-fine:border-ink`;
+export const CTA_WHATSAPP = `${CTA_BASE} border border-ink-subtle bg-white text-ink hover-fine:border-ink`;
 
 export const CTA_ICON = "size-5 shrink-0";
 
