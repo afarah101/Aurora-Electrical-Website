@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Stop hook. Runs the CI "verify" checks (.github/workflows/ci.yml: npm run lint, npm run build).
+# Stop hook. Runs .claude/hooks/verify.sh, which runs the CI "verify" checks (npm run lint, npm run build).
 # Pass: exit 0 and reset the attempt count. Fail: print the check and its first 20 error lines
 # to stderr and exit 2, so Claude keeps working. After 3 blocks in one session: exit 0 and
 # record "STOPPED WITH FAILING CHECKS" in .claude/progress.md.
-# `npm ci` from CI is not run here: it deletes and reinstalls node_modules.
+# `npm ci` from CI is not run: it deletes and reinstalls node_modules.
 set -uo pipefail
 
 ROOT="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
@@ -22,15 +22,15 @@ if [ -f "$ATTEMPTS" ] && [ "$(awk '{print $1}' "$ATTEMPTS")" = "$sid" ]; then
 fi
 [[ "$count" =~ ^[0-9]+$ ]] || count=0
 
+# The check is verify.sh. Its stdin is /dev/null, so verify.sh does not pass early on stop_hook_active.
 failed="" errors=""
-for check in lint build; do
-  if ! out=$(npm run "$check" 2>&1 | sed 's/\x1b\[[0-9;]*m//g' | cut -c1-300; exit "${PIPESTATUS[0]}"); then
-    failed="npm run $check"
-    errors=$(printf '%s\n' "$out" | grep -iE 'error|failed|✖' | head -n 20)
-    [ -n "$errors" ] || errors=$(printf '%s\n' "$out" | tail -n 20)
-    break
-  fi
-done
+if ! out=$(bash "$ROOT/.claude/hooks/verify.sh" </dev/null 2>&1 | sed 's/\x1b\[[0-9;]*m//g' | cut -c1-300; exit "${PIPESTATUS[0]}"); then
+  failed=$(printf '%s\n' "$out" | sed -n "s/^verify.sh: '\(.*\)' failed:$/\1/p" | head -n 1)
+  [ -n "$failed" ] || failed="verify.sh"
+  body=$(printf '%s\n' "$out" | grep -v '^verify.sh: ')
+  errors=$(printf '%s\n' "$body" | grep -iE 'error|failed|✖' | head -n 20)
+  [ -n "$errors" ] || errors=$(printf '%s\n' "$body" | tail -n 20)
+fi
 
 if [ -z "$failed" ]; then
   rm -f "$ATTEMPTS"
