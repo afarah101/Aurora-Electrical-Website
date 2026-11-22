@@ -1,7 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { z } from "zod";
 import { Resend } from "resend";
 import { business, contact } from "@/app/content";
+import { logLead } from "@/lib/lead-log";
+
+// Traffic-source tag: a bad value becomes undefined and never blocks the enquiry.
+const tag = z.string().trim().max(500).optional().catch(undefined);
 
 /**
  * Field rules match the client schema in components/ContactForm.tsx, which
@@ -26,6 +30,11 @@ const schema = z.object({
   // Honeypot: accepted by the schema so a filled value reaches the silent-accept
   // branch below. Rejecting it here would 400 and tell the bot it was caught.
   company: z.string().optional(),
+  utm_source: tag,
+  utm_medium: tag,
+  utm_campaign: tag,
+  gclid: tag,
+  landing_page: tag,
 });
 
 /**
@@ -106,6 +115,8 @@ export async function POST(request: Request) {
       );
     }
 
+    // Runs after the response is sent, so the sheet can never change it.
+    after(() => logLead(parsed.data));
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("contact: unexpected error", err);
