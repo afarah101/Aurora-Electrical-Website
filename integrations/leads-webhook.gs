@@ -24,6 +24,7 @@ var COL = { source: 2, name: 3, phone: 4, status: 13, quotedOn: 14, followUp: 15
 var STATUSES = ['New', 'Quoted', 'Won', 'Lost'];
 var SOURCES = ['Website form', 'Phone', 'WhatsApp', 'Email', 'MyBuilder'];
 var FOLLOW_UP_DAYS = 3;
+var RETENTION_DAYS = 365;
 var TIME_ZONE = 'Europe/London';
 var BUSINESS_NAME = 'Aurora Electrical';
 
@@ -130,23 +131,34 @@ function dailyCheck() {
 function runDailyCheck_(today) {
   var props = PropertiesService.getScriptProperties();
   var to = props.getProperty('NOTIFY_EMAIL');
-  if (!to) {
-    console.warn('dailyCheck: NOTIFY_EMAIL is not set');
-    return;
-  }
+  if (!to) console.warn('dailyCheck: NOTIFY_EMAIL is not set, so no email. Old rows are still deleted.');
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Leads');
   if (!sheet || sheet.getLastRow() < 2) return;
 
   var rows = sheet.getRange(2, 1, sheet.getLastRow() - 1, HEADERS.length).getValues();
-  var plan = planDailyCheck(rows, today, props.getProperty('REVIEW_URL') || '');
-  if (!plan) return;
+  var plan = to ? planDailyCheck(rows, today, props.getProperty('REVIEW_URL') || '') : null;
+  if (plan) {
+    MailApp.sendEmail(to, plan.subject, plan.body);
 
-  MailApp.sendEmail(to, plan.subject, plan.body);
+    // Stamp only after the email has gone, so each row is listed once.
+    var stamp = Utilities.formatDate(today, TIME_ZONE, 'yyyy-MM-dd');
+    plan.followUps.forEach(function (lead) { sheet.getRange(lead.row, COL.followUp).setValue(stamp); });
+    plan.reviews.forEach(function (lead) { sheet.getRange(lead.row, COL.reviewAsked).setValue(stamp); });
+  }
 
-  // Stamp only after the email has gone, so each row is listed once.
-  var stamp = Utilities.formatDate(today, TIME_ZONE, 'yyyy-MM-dd');
-  plan.followUps.forEach(function (lead) { sheet.getRange(lead.row, COL.followUp).setValue(stamp); });
-  plan.reviews.forEach(function (lead) { sheet.getRange(lead.row, COL.reviewAsked).setValue(stamp); });
+  // The privacy notice promises enquiry rows are deleted after 1 year.
+  // Bottom-up, so earlier row numbers stay valid while deleting.
+  selectExpiredRows(rows, today).reverse().forEach(function (rowNumber) { sheet.deleteRow(rowNumber); });
+}
+
+/** Sheet row numbers whose Date (column A) is more than RETENTION_DAYS before today. Rows with no date are kept. */
+function selectExpiredRows(rows, today) {
+  var expired = [];
+  rows.forEach(function (row, i) {
+    var date = parseDate_(row[0]);
+    if (date && daysBetween_(date, today) > RETENTION_DAYS) expired.push(i + 2);
+  });
+  return expired;
 }
 
 /* ---------- Pure functions (tested in tests/leads-webhook.test.mjs) ---------- */

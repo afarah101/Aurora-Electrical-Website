@@ -20,6 +20,7 @@ function load({ rows = [], props = {} } = {}) {
         },
       };
     },
+    deleteRow: (row) => rows.splice(row - 2, 1),
   };
   const context = vm.createContext({
     console,
@@ -36,8 +37,8 @@ function load({ rows = [], props = {} } = {}) {
 }
 
 /** One 16-column Leads row. */
-function row({ name = "Jane Smith", phone = "07123 456789", status = "New", quotedOn = "", followUp = "", reviewAsked = "" } = {}) {
-  return ["2026-11-01 09:00:00", "Website form", name, phone, "", "", "Socket sparks", "", "", "", "", "/", status, quotedOn, followUp, reviewAsked];
+function row({ date = "2026-11-01 09:00:00", name = "Jane Smith", phone = "07123 456789", status = "New", quotedOn = "", followUp = "", reviewAsked = "" } = {}) {
+  return [date, "Website form", name, phone, "", "", "Socket sparks", "", "", "", "", "/", status, quotedOn, followUp, reviewAsked];
 }
 
 const TODAY = new Date(2026, 10, 22); // 22 Nov 2026
@@ -105,4 +106,17 @@ test("no NOTIFY_EMAIL or nothing to list: no email", () => {
   const empty = load({ rows: [row({ status: "Lost" })], props: { NOTIFY_EMAIL: "owner@example.com" } });
   empty.gs.runDailyCheck_(TODAY);
   assert.equal(empty.sent.length, 0);
+});
+
+test("rows older than 1 year are deleted, newer and undated rows are kept", () => {
+  const rows = [
+    row({ name: "Old", date: "2025-11-21 10:00:00" }),
+    row({ name: "Exactly One Year", date: "2025-11-22 10:00:00" }),
+    row({ name: "Recent" }),
+    row({ name: "Undated", date: "" }),
+    row({ name: "Old Sheets Date", date: new Date(2024, 0, 5) }),
+  ];
+  const { gs } = load({ rows });
+  gs.runDailyCheck_(TODAY); // No NOTIFY_EMAIL: still deletes.
+  assert.deepEqual(rows.map((r) => r[2]), ["Exactly One Year", "Recent", "Undated"]);
 });

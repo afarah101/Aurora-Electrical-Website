@@ -17,6 +17,7 @@ Do these steps in order. Steps 1 to 6 are in Google. Steps 7 to 9 are in Vercel 
    - Result: tab **Leads** with 16 columns (the last 3 are Quoted on, Follow-up sent, Review asked), a Status dropdown (New, Quoted, Won, Lost), and tab **Summary** with leads, won and close rate per source.
 5. In the same function list, select `installDailyTrigger`. Click **Run**.
    - Result: click the **clock icon** (Triggers, left bar). One trigger for `dailyCheck` shows, "Day timer, 8am to 9am", London time.
+   - Each run also deletes Leads rows whose Date is more than 1 year old, as the privacy notice promises. Rows with no Date are kept. Move any row you must keep (for example a job record) to another tab first.
 6. Click **Deploy > New deployment** (blue button, top right). Click the **gear** next to "Select type" and pick **Web app**.
    - **Execute as**: Me. **Who has access**: Anyone. Click **Deploy**.
    - Copy the **Web app URL** for step 7.
