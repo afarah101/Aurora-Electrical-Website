@@ -13,7 +13,7 @@ Marketing site for Aurora Electrical, a domestic and commercial electrician in s
 
 - Resend sends the contact-form email (`app/api/contact/route.ts`). It needs `RESEND_API_KEY`. `TO_EMAIL` and `FROM_EMAIL` are optional and fall back to the business email and `onboarding@resend.dev`.
 - Vercel Analytics is wired in through `@vercel/analytics` and needs no env var.
-- Google Fonts are fetched by `next/font/google` at build time, so the build needs network access to Google.
+- Fonts are self-hosted in `app/fonts` and loaded with `next/font/local`, so the build needs no access to Google.
 - The MyBuilder profile and reviews are linked, not fetched through an API.
 
 The build itself needs no secrets. Secret values live in the Vercel dashboard and in `.env.local`, which is never read or committed.
