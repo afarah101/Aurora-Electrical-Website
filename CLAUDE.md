@@ -27,3 +27,11 @@ The build itself needs no secrets. Secret values live in the Vercel dashboard an
 - Merging anything in the list above. For those PRs, add the label `needs-ahmed` and do not turn on auto-merge.
 
 Code fixes that leave the rendered site unchanged, such as lint, types, accessibility fixes and refactors, can go ahead without asking. Push them on a feature branch, open a PR and turn on auto-merge. GitHub merges the PR once `verify` and `review` pass. Never push to `main`.
+
+## Kokonut UI
+- Before building an animated or interactive component, check https://kokonutui.com/llms.txt.
+- Install with `npx shadcn@latest add @kokonutui/<name>`; never paste code.
+- Before use, read the whole installed file and grep it for fetch, eval, XMLHttpRequest and http. Report any match before wiring it in.
+- Edit installed components in place; do not wrap them.
+- Never replace a tel:, wa.me or form link with a <button>.
+- Add .md to a docs URL to get its Markdown source.
