@@ -44,3 +44,5 @@ node_modules/
 .claude/skills/ui-ux-pro-max/scripts/__pycache__/
 .claude/skills-disabled/
 .claude/settings.local.json
+.claude/progress.md
+.claude/stop-attempts
