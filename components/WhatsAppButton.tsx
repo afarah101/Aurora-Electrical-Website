@@ -1,9 +1,26 @@
-import { MessageCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-// Press is deliberate (160ms), release snaps (100ms), hover colour eases 160ms.
-const PRESS =
-  "[transition:transform_100ms_var(--ease-out),background-color_160ms_var(--ease-out)] active:scale-[0.97] active:[transition:transform_160ms_var(--ease-out),background-color_160ms_var(--ease-out)] motion-reduce:active:scale-100";
-const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft";
+/*
+ * Shared call-to-action styles for the Call (primary) and WhatsApp
+ * (secondary) buttons. Same height, radius token, type and icon size.
+ * Press scale and hover motion run only for a fine pointer with no
+ * reduced-motion preference; phones get colour changes only.
+ * Class strings stay literal so Tailwind can find them.
+ */
+export const CTA_BASE =
+  "inline-flex h-12 cursor-pointer select-none items-center justify-center gap-2 rounded-sm px-6 text-base font-semibold [transition:background-color_160ms_var(--ease-out),border-color_160ms_var(--ease-out),scale_160ms_var(--ease-out),translate_200ms_var(--ease-out)] motion-reduce:transition-none [@media(pointer:fine)_and_(prefers-reduced-motion:no-preference)]:active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft";
+
+/** Primary: dark ink fill. Add `group` children such as CTA_ARROW. */
+export const CTA_CALL = `${CTA_BASE} group bg-action text-on-action hover-fine:bg-action-hover`;
+
+/** Secondary: white surface, 1px border that darkens on hover, dark text. */
+export const CTA_WHATSAPP = `${CTA_BASE} border border-ink-faint bg-white text-ink hover-fine:border-ink`;
+
+export const CTA_ICON = "size-5 shrink-0";
+
+/** Arrow on the Call button: nudges 2px right on mouse hover only. */
+export const CTA_ARROW =
+  "size-5 shrink-0 [transition:translate_200ms_var(--ease-out)] [@media(pointer:fine)_and_(prefers-reduced-motion:no-preference)]:group-hover:translate-x-0.5";
 
 type Props = { whatsapp: string | null; className?: string };
 
@@ -19,9 +36,12 @@ export function WhatsAppButton({ whatsapp, className = "" }: Props) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className={`inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-sm bg-whatsapp px-6 text-base font-semibold text-[#0c0b09] hover-fine:bg-whatsapp-hover ${PRESS} ${FOCUS} ${className}`}
+      className={cn(CTA_WHATSAPP, className)}
     >
-      <MessageCircle aria-hidden="true" strokeWidth={1.5} className="size-5" />
+      {/* WhatsApp glyph, simple-icons (CC0). Green on the glyph only. */}
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" className={`${CTA_ICON} fill-whatsapp`}>
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+      </svg>
       WhatsApp us
     </a>
   );

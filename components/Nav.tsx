@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, Phone, X } from "lucide-react";
+import { CTA_CALL, CTA_ICON } from "@/components/WhatsAppButton";
+import { cn } from "@/lib/utils";
 
 type Props = { businessName: string; phone: string | null; telLink: string | null };
 
@@ -20,9 +22,6 @@ const LINKS: Array<{ href: string; label: string; page?: string; pageHref?: stri
 ];
 
 const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft";
-// Press is deliberate (160ms), release snaps (100ms), hover colour eases 160ms.
-const PRESS =
-  "[transition:transform_100ms_var(--ease-out),background-color_160ms_var(--ease-out)] active:scale-[0.97] active:[transition:transform_160ms_var(--ease-out),background-color_160ms_var(--ease-out)] motion-reduce:active:scale-100";
 
 /**
  * Floating pill, detached from the top edge. It always carries its own
@@ -135,9 +134,9 @@ export function Nav({ businessName, phone, telLink }: Props) {
             <a
               href={`tel:${telLink}`}
               aria-label={phone ? `Call ${phone}` : "Call us"}
-              className={`inline-flex size-11 items-center justify-center gap-2 rounded-sm bg-action text-sm font-semibold text-on-action hover-fine:bg-action-hover sm:w-auto sm:px-5 ${PRESS} ${FOCUS}`}
+              className={cn(CTA_CALL, "size-12 px-0 text-sm sm:w-auto sm:px-5")}
             >
-              <Phone aria-hidden="true" strokeWidth={1.5} className="size-4" />
+              <Phone aria-hidden="true" strokeWidth={1.75} className={CTA_ICON} />
               <span className="hidden sm:inline">{phone}</span>
             </a>
           )}

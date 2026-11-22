@@ -1,6 +1,7 @@
 import Image from "next/image";
-import { ArrowUpRight, Phone } from "lucide-react";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { ArrowRight, Phone } from "lucide-react";
+import { MagnetButton } from "@/components/ui/magnet-button";
+import { CTA_ARROW, CTA_CALL, CTA_ICON, WhatsAppButton } from "@/components/WhatsAppButton";
 
 type Props = {
   businessName: string;
@@ -71,21 +72,16 @@ export function Hero({
             style={{ animationDelay: "0.26s" }}
           >
             {telLink && phone && (
-              <a
+              <MagnetButton
                 href={`tel:${telLink}`}
-                className={`group inline-flex min-h-12 items-center justify-center gap-2 rounded-sm bg-action px-5 text-[15px] font-medium text-on-action transition-colors duration-200 hover-fine:bg-action-hover motion-reduce:transition-none ${FOCUS}`}
+                className={CTA_CALL}
               >
-                <Phone size={16} strokeWidth={1.75} aria-hidden="true" />
+                <Phone strokeWidth={1.75} aria-hidden="true" className={CTA_ICON} />
                 Call {phone}
-                <ArrowUpRight
-                  size={16}
-                  strokeWidth={1.75}
-                  aria-hidden="true"
-                  className="transition-transform duration-200 hover-fine:group-hover:-translate-y-0.5 hover-fine:group-hover:translate-x-0.5 motion-reduce:transition-none"
-                />
-              </a>
+                <ArrowRight strokeWidth={1.75} aria-hidden="true" className={CTA_ARROW} />
+              </MagnetButton>
             )}
-            <WhatsAppButton whatsapp={whatsapp} className="min-h-12 text-[15px]" />
+            <WhatsAppButton whatsapp={whatsapp} />
           </div>
           {rating && reviewCount && (
             <p className="m-0 mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px] text-ink">
