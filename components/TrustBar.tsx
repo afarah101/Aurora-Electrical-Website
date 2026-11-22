@@ -56,12 +56,12 @@ export function TrustBar({ serviceArea, positioning }: Props) {
   ].filter((i): i is { icon: typeof Users; label: string } => i !== null);
 
   return (
-    <section className="bg-slate-900">
+    <section className="bg-surface-raised">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-8 sm:flex-row sm:items-center sm:gap-12">
         {items.map(({ icon: Icon, label }) => (
           <div key={label} className="flex items-center gap-3">
-            <Icon aria-hidden="true" className="h-5 w-5 shrink-0 text-trust-bright" />
-            <span className="text-sm font-medium text-slate-100">{label}</span>
+            <Icon aria-hidden="true" strokeWidth={1.5} className="size-5 shrink-0 text-trust-bright" />
+            <span className="text-sm font-medium text-ink-soft">{label}</span>
           </div>
         ))}
       </div>

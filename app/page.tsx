@@ -10,6 +10,7 @@ import { MyBuilderBadge } from "@/components/MyBuilderBadge";
 import { EicrPricing } from "@/components/EicrPricing";
 import { StickyCall } from "@/components/StickyCall";
 import { Footer } from "@/components/Footer";
+import { mybuilderField } from "@/lib/mybuilder";
 
 import {
   accreditations,
@@ -36,27 +37,35 @@ export default function Home() {
         <Hero
           businessName={business.name}
           tagline={business.tagline}
-          serviceArea={contact.serviceArea}
-          phone={contact.phone}
-          telLink={contact.telLink}
-          accreditations={accreditations}
-          aggregateRating={aggregateRating}
-          reviews={reviews}
-        />
-        <TrustBar serviceArea={contact.serviceArea} positioning={positioning} />
-        <Services services={services} certificates={certificates} />
-        {/* photos omitted until /public/work/ is populated — tiles render instead */}
-        <WorkGallery />
-        <MyBuilderBadge />
-        <Reviews reviews={reviews} aggregateRating={aggregateRating} />
-        <TrustedBy clients={clients} />
-        <ContactForm
-          email={contact.email}
           phone={contact.phone}
           telLink={contact.telLink}
           whatsapp={contact.whatsapp}
+          accreditations={accreditations}
+          rating={mybuilderField("Rating")}
+          ratingOutOf={mybuilderField("Rating out of")}
+          reviewCount={mybuilderField("Reviews")}
+          verified={/^yes$/i.test(mybuilderField("Verified by MyBuilder") ?? "")}
+          mybuilderName={mybuilderField("Trading name")}
+          mybuilderUrl={mybuilderField("Profile")}
         />
-        <EicrPricing />
+        <TrustBar serviceArea={contact.serviceArea} positioning={positioning} />
+        {/* Ledger paper: reading-heavy sections sit on the cream sheet. */}
+        <div className="theme-paper bg-surface text-ink">
+          <MyBuilderBadge />
+          <Reviews reviews={reviews} aggregateRating={aggregateRating} />
+          <TrustedBy clients={clients} />
+          <Services services={services} certificates={certificates} />
+        </div>
+        <WorkGallery />
+        <div className="theme-paper bg-surface text-ink">
+          <ContactForm
+            email={contact.email}
+            phone={contact.phone}
+            telLink={contact.telLink}
+            whatsapp={contact.whatsapp}
+          />
+          <EicrPricing />
+        </div>
       </main>
 
       <Footer

@@ -19,9 +19,9 @@ export default function PrivacyPage() {
   return (
     <div id="top">
       <Nav businessName={business.name} phone={contact.phone} telLink={contact.telLink} />
-      <main className="bg-slate-950">
-        <article className="mx-auto max-w-3xl space-y-6 px-5 py-16 text-slate-300 sm:py-20 [&_h2]:mt-10 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-white">
-          <h1 className="text-3xl font-semibold tracking-tight text-white">Privacy notice</h1>
+      <main className="bg-surface">
+        <article className="mx-auto max-w-3xl space-y-6 px-5 py-16 text-ink-muted sm:py-20 [&_h2]:mt-10 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-ink">
+          <h1 className="text-3xl font-semibold tracking-tight text-ink">Privacy notice</h1>
 
           <p>
             {business.name} holds the details you give us: your name, phone number, address, email and
@@ -41,20 +41,20 @@ export default function PrivacyPage() {
           </p>
 
           <p>
-            We delete enquiries that do not become a job after 1 year. We keep job and invoice records for
-            as long as tax law requires.
+            We store website enquiries in Google Sheets and delete each enquiry row after 1 year. We keep
+            job and invoice records for as long as tax law requires.
           </p>
 
           <p>
             You can ask to see, correct or delete your details, or complain to the ICO at{" "}
-            <a href="https://ico.org.uk" className="text-action-soft underline underline-offset-2 hover:text-white">
+            <a href="https://ico.org.uk" className="text-action-soft underline underline-offset-2 hover:text-ink">
               ico.org.uk
             </a>
             .
             {email && (
               <>
                 {" "}Contact us at{" "}
-                <a href={`mailto:${email}`} className="text-action-soft underline underline-offset-2 hover:text-white">
+                <a href={`mailto:${email}`} className="text-action-soft underline underline-offset-2 hover:text-ink">
                   {email}
                 </a>
                 .

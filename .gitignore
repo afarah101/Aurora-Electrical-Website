@@ -39,12 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-.env.local
 node_modules/
 .next/
 .claude/skills/ui-ux-pro-max/scripts/__pycache__/
-.claude/skills/
-.agents/
-skills-lock.json
 .claude/skills-disabled/
 .claude/settings.local.json

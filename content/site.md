@@ -2,7 +2,7 @@
 
 ## Business
 - Name: Aurora Electrical
-- Tagline: [PLACEHOLDER — one line, e.g. "Trusted domestic electricians across London"]
+- Tagline: Safe, certified electrics for London homes.
 - Logo: [PLACEHOLDER — /public/logo.png incoming]
 
 ## Contact
@@ -10,6 +10,7 @@
 - Tel link: +447304150154
 - WhatsApp: +447304150154
 - Email: aurora.electrical@outlook.com
+- VAT: not VAT registered (sole trader, confirmed 13 Nov 2026). Do not add a VAT line to prices.
 - Service area: [PLACEHOLDER — London + which boroughs/postcodes]
 
 ## Services (CONFIRMED — build only these)
@@ -17,7 +18,7 @@
 - Fuse board / consumer unit upgrades & replacements
 - Domestic & building electrical installations
 - Fault-finding & repairs
-- Lighting — indoor & outdoor
+- Lighting - indoor & outdoor
 - Sockets & switches
 
 ## Services — DO NOT list
@@ -25,17 +26,17 @@
 
 ## Certificates / EICR
 - Status: CONFIRMED — EICRs are live, listed in "What we do" and priced in the #eicr-pricing section.
-- Prices: 1-2 Bedroom — £160; 3 Bedroom — £220; 4 Bedroom — £260; 5 Bedroom — £300; 6+ Bedroom — call for quote. All prices are subject to VAT.
+- Prices: 1-2 Bedroom — £160; 3 Bedroom — £220; 4 Bedroom — £260; 5 Bedroom — £300; 6+ Bedroom — call for quote.
 - Note: the EICRs row is authored in components/Services.tsx rather than parsed from this file (the parser has no link-aware row format). Changing the prices means editing components/EicrPricing.tsx, not this file.
 
 ## Certifications / Accreditations
-- [PLACEHOLDER — confirm body: NICEIC / NAPIT / Part P. Badges stay hidden until the client confirms one. Never invent one.]
+- NICEIC registered
 
 ## Reviews
 1. Name: MyBuilder customer — Area: Clapham, London — Job: New pendant light installation — "Great job, on time, very professional and competent. Would definitely recommend!"
 2. Name: Steve — Area: Stockwell, London — Job: Electrical socket installed — "Professional electrician and done the job quickly, reliable, will definitely use him again for other jobs, recommended if you want a good efficient electrician."
 3. Name: Jake Holberry — Area: Southfields, London — Job: Lighting job in Earlsfield — "Came the same day and completed the job with no issue. Highly recommend."
-4. Name: MyBuilder customer — Area: Notting Hill, London — Job: Installing dimmers and fixing outside front door light — "Super quick to respond, diligent, timely, hard-working — had a bit of a tricky task and he did a great job tackling it. And then very quick with other routine tasks. And when I gave feedback, he was happy to adjust. Would highly recommend."
+4. Name: MyBuilder customer — Area: Notting Hill, London — Job: Installing dimmers and fixing outside front door light — "Super quick to respond, diligent, timely, hard-working - had a bit of a tricky task and he did a great job tackling it. And then very quick with other routine tasks. And when I gave feedback, he was happy to adjust. Would highly recommend."
 5. Name: Tom — Area: Pimlico, London — Job: Fit new extractor fan — "Great job. On time. Fair price. Thanks again."
 - All are 5 stars.
 - Aggregate: [PLACEHOLDER — e.g. ★★★★★ from 40+ homeowners]
@@ -59,7 +60,7 @@
 - Normal hours: 7am–6pm
 - Emergency hours: 10pm–5am
 - Areas: Wandsworth, Battersea, Chelsea, Fulham, Putney
-- Registration: [PLACEHOLDER — NOT on the NICEIC register (niceic.com search, 9 Nov 2026: postcode SW11 4QW, "Aurora Electrical", "AE Electrical"). Do not claim NICEIC until a register entry is confirmed.]
+- Registration: NICEIC-registered
 - Common emergencies: Power loss, Tripping fuse board, Burning smell, Sparking sockets
 - Safety: If you smell burning or see sparks, switch off at the fuse board if it is safe to do so, then call.
 - EICR meaning: An EICR (Electrical Installation Condition Report) is a report on the condition of the electrics in a property, made after they have been inspected and tested.
@@ -71,6 +72,7 @@
 - Reviews: 82
 - Verified by MyBuilder: yes
 - Offers warranty: yes
+- Trading name: AE Electrical
 - Profile: https://www.mybuilder.com/profile/ae-electrical-1
 
 ## Trusted By / Past Clients (logo strip)
