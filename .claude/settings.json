@@ -15,7 +15,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PROJECT_DIR}\"/.claude/hooks/precompact-save.sh"
+            "command": "bash \"${CLAUDE_PROJECT_DIR}\"/.claude/hooks/precompact-save.sh"
           }
         ]
       }
@@ -26,7 +26,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PROJECT_DIR}\"/.claude/hooks/session-reload.sh"
+            "command": "bash \"${CLAUDE_PROJECT_DIR}\"/.claude/hooks/session-reload.sh"
           }
         ]
       }
@@ -57,7 +57,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PROJECT_DIR}\"/.claude/hooks/stop-verify.sh"
+            "command": "bash \"${CLAUDE_PROJECT_DIR}\"/.claude/hooks/stop-verify.sh"
           }
         ]
       }
