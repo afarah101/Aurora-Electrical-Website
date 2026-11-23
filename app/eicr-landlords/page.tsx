@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Phone } from "lucide-react";
+import { ArrowRight, Phone } from "lucide-react";
+import { MagnetButton } from "@/components/ui/magnet-button";
 import { Nav } from "@/components/Nav";
 import { StickyCall } from "@/components/StickyCall";
 import { Footer } from "@/components/Footer";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { CTA_ARROW, CTA_CALL, CTA_ICON, WhatsAppButton } from "@/components/WhatsAppButton";
 import { EicrPricing } from "@/components/EicrPricing";
 import { accreditations, business, contact, servicePages } from "../content";
 
@@ -53,13 +54,14 @@ export default function EicrLandlordsPage() {
 
           <div className="flex flex-col gap-3 sm:flex-row">
             {contact.telLink && (
-              <a
+              <MagnetButton
                 href={`tel:${contact.telLink}`}
-                className={`inline-flex h-12 items-center justify-center gap-2 rounded-sm bg-action px-6 text-base font-semibold text-on-action hover-fine:bg-action-hover ${PRESS} ${FOCUS}`}
+                className={CTA_CALL}
               >
-                <Phone aria-hidden="true" strokeWidth={1.5} className="size-5" />
+                <Phone aria-hidden="true" strokeWidth={1.75} className={CTA_ICON} />
                 Call {contact.phone}
-              </a>
+                <ArrowRight aria-hidden="true" strokeWidth={1.75} className={CTA_ARROW} />
+              </MagnetButton>
             )}
             <WhatsAppButton whatsapp={contact.whatsapp} />
             <Link

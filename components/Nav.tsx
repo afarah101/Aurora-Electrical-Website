@@ -4,6 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, Phone, X } from "lucide-react";
+import { CTA_CALL, CTA_ICON } from "@/components/WhatsAppButton";
+import { Wordmark } from "@/components/Wordmark";
+import { cn } from "@/lib/utils";
 
 type Props = { businessName: string; phone: string | null; telLink: string | null };
 
@@ -20,9 +23,6 @@ const LINKS: Array<{ href: string; label: string; page?: string; pageHref?: stri
 ];
 
 const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft";
-// Press is deliberate (160ms), release snaps (100ms), hover colour eases 160ms.
-const PRESS =
-  "[transition:transform_100ms_var(--ease-out),background-color_160ms_var(--ease-out)] active:scale-[0.97] active:[transition:transform_160ms_var(--ease-out),background-color_160ms_var(--ease-out)] motion-reduce:active:scale-100";
 
 /**
  * Floating pill, detached from the top edge. It always carries its own
@@ -34,7 +34,7 @@ const PRESS =
  * Mobile menu: a panel under the pill. Escape closes it and returns focus to
  * the toggle; while open, Tab and Shift+Tab cycle inside the header.
  */
-export function Nav({ businessName, phone, telLink }: Props) {
+export function Nav({ phone, telLink }: Props) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
@@ -99,23 +99,16 @@ export function Nav({ businessName, phone, telLink }: Props) {
   const currentClass = "text-ink underline decoration-action-soft decoration-2 underline-offset-8";
 
   return (
-    <header ref={headerRef} className="fixed inset-x-0 top-0 z-40 px-3 pt-2">
+    <header ref={headerRef} className="fixed inset-x-0 top-0 z-40 px-4 pt-2">
+      {/* 16px side gutter keeps the round pill and its round menu button fully on screen. */}
       <nav
         aria-label="Main"
         className="mx-auto flex h-[60px] max-w-6xl items-center justify-between rounded-full bg-surface-raised/80 pl-5 pr-2 ring-1 ring-hairline backdrop-blur-md"
       >
-        {/*
-          The wordmark crop of the client's logo (the word is IN the logo, so
-          no duplicate text beside it). Served at 2x its display height so it
-          stays sharp on retina; the accessible name keeps the brand for
-          screen readers.
-        */}
-        <a href="#top" aria-label={`${businessName}, home`} className={`rounded-sm ${FOCUS}`}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/aurora-logo-nav.png" alt={businessName} className="h-7 w-auto rounded-sm sm:h-8" />
-        </a>
+        {/* Live-text wordmark; the link target is unchanged. */}
+        <Wordmark href="#top" />
 
-        <div className="flex items-center gap-2 lg:gap-6">
+        <div className="flex shrink-0 items-center gap-2 lg:gap-6">
           <ul className="hidden items-center gap-6 lg:flex">
             {links.map((link) => (
               <li key={link.label}>
@@ -135,9 +128,9 @@ export function Nav({ businessName, phone, telLink }: Props) {
             <a
               href={`tel:${telLink}`}
               aria-label={phone ? `Call ${phone}` : "Call us"}
-              className={`inline-flex size-11 items-center justify-center gap-2 rounded-sm bg-action text-sm font-semibold text-on-action hover-fine:bg-action-hover sm:w-auto sm:px-5 ${PRESS} ${FOCUS}`}
+              className={cn(CTA_CALL, "size-12 px-0 text-sm sm:w-auto sm:px-5")}
             >
-              <Phone aria-hidden="true" strokeWidth={1.5} className="size-4" />
+              <Phone aria-hidden="true" strokeWidth={1.75} className={CTA_ICON} />
               <span className="hidden sm:inline">{phone}</span>
             </a>
           )}
