@@ -96,7 +96,7 @@ function localBusinessJsonLd() {
      * only the locality and country are given. */
     address: { "@type": "PostalAddress", addressLocality: "London", addressCountry: "GB" },
     ...(servicePages.areas.length
-      ? { areaServed: servicePages.areas.map((name) => ({ "@type": "AdministrativeArea", name })) }
+      ? { areaServed: servicePages.areas.map((name) => ({ "@type": "Place", name })) }
       : {}),
     sameAs: [googleBusinessProfile, ...(myBuilderProfile ? [myBuilderProfile] : [])],
     ...(accreditations.length
