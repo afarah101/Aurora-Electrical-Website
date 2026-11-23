@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Link from "next/link";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { readLeadSource } from "@/lib/lead-source";
+import { ATTRIBUTION_KEYS, captureAttribution } from "@/lib/attribution";
+import { trackConversion } from "@/lib/gads";
 
 /**
  * Field rules match the server schema in app/api/contact/route.ts; only the
@@ -34,6 +36,12 @@ const schema = z.object({
    * caught. The server accepts and silently discards instead.
    */
   company: z.string().optional(),
+  // Traffic source, from hidden inputs filled by lib/attribution.ts.
+  utm_source: z.string().optional(),
+  utm_medium: z.string().optional(),
+  utm_campaign: z.string().optional(),
+  gclid: z.string().optional(),
+  landing_page: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -53,10 +61,17 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
   });
+
+  const fillAttribution = useCallback(() => {
+    const attribution = captureAttribution();
+    for (const key of ATTRIBUTION_KEYS) setValue(key, attribution[key] ?? "");
+  }, [setValue]);
+  useEffect(fillAttribution, [fillAttribution]);
 
   const onSubmit = async (values: FormValues) => {
     setStatus({ kind: "sending" });
@@ -76,6 +91,8 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
         return;
       }
       reset();
+      fillAttribution();
+      trackConversion("form");
       setStatus({ kind: "ok", message: "Thanks - we'll be in touch shortly." });
     } catch {
       setStatus({
@@ -185,6 +202,10 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
               <label htmlFor="company">Company</label>
               <input id="company" tabIndex={-1} autoComplete="off" {...register("company")} />
             </div>
+
+            {ATTRIBUTION_KEYS.map((key) => (
+              <input key={key} type="hidden" {...register(key)} />
+            ))}
 
             <button
               type="submit"

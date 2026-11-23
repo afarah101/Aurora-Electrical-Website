@@ -1,6 +1,8 @@
 import Image from "next/image";
-import { ArrowUpRight, Phone } from "lucide-react";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { ArrowRight, Phone } from "lucide-react";
+import { HeroPullCord } from "@/components/HeroPullCord";
+import { MagnetButton } from "@/components/ui/magnet-button";
+import { CTA_ARROW, CTA_CALL, CTA_ICON, WhatsAppButton } from "@/components/WhatsAppButton";
 
 type Props = {
   businessName: string;
@@ -39,14 +41,14 @@ export function Hero({
   rating,
   reviewCount,
   verified,
-  mybuilderName,
   mybuilderUrl,
 }: Props) {
   const niceic = accreditations.find((a) => /niceic/i.test(a));
 
   return (
     <section aria-labelledby="hero-headline" className="w-full bg-surface pt-nav text-left text-ink">
-      <div className="mx-auto grid min-h-[calc(78svh-var(--spacing-nav))] w-full max-w-6xl items-center gap-12 px-5 py-12 sm:px-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16 lg:py-16">
+      {/* Top padding cut about 40% (48px → 28px, 64px → 40px on desktop). */}
+      <div className="mx-auto grid min-h-[calc(78svh-var(--spacing-nav))] w-full max-w-6xl items-center gap-12 px-5 pb-12 pt-7 sm:px-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16 lg:pb-16 lg:pt-10">
         <div className="min-w-0">
           <p
             className="ledger-rise m-0 text-[12px] font-medium uppercase tracking-[0.18em] text-ink-muted"
@@ -71,28 +73,28 @@ export function Hero({
             style={{ animationDelay: "0.26s" }}
           >
             {telLink && phone && (
-              <a
+              <MagnetButton
                 href={`tel:${telLink}`}
-                className={`group inline-flex min-h-12 items-center justify-center gap-2 rounded-sm bg-action px-5 text-[15px] font-medium text-on-action transition-colors duration-200 hover-fine:bg-action-hover motion-reduce:transition-none ${FOCUS}`}
+                className={CTA_CALL}
               >
-                <Phone size={16} strokeWidth={1.75} aria-hidden="true" />
+                <Phone strokeWidth={1.75} aria-hidden="true" className={CTA_ICON} />
                 Call {phone}
-                <ArrowUpRight
-                  size={16}
-                  strokeWidth={1.75}
-                  aria-hidden="true"
-                  className="transition-transform duration-200 hover-fine:group-hover:-translate-y-0.5 hover-fine:group-hover:translate-x-0.5 motion-reduce:transition-none"
-                />
-              </a>
+                <ArrowRight strokeWidth={1.75} aria-hidden="true" className={CTA_ARROW} />
+              </MagnetButton>
             )}
-            <WhatsAppButton whatsapp={whatsapp} className="min-h-12 text-[15px]" />
+            <WhatsAppButton whatsapp={whatsapp} />
           </div>
+          {/*
+            Rating line, then the pull cord: under it on phones, beside it on
+            desktop. items-start lines the lamp top up with the rating block.
+          */}
+          <div className="lg:flex lg:items-start lg:gap-8">
           {rating && reviewCount && (
             <p className="m-0 mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px] text-ink">
               <span className="tracking-[0.1em] text-trust" aria-hidden="true">★★★★★</span>
               <span>
                 {rating} from {reviewCount} {verified ? "verified " : ""}reviews
-                {mybuilderName && mybuilderUrl ? (
+                {mybuilderUrl ? (
                   <>
                     {" "}on{" "}
                     <a
@@ -102,8 +104,7 @@ export function Hero({
                       className={`rounded-sm underline decoration-ink-faint underline-offset-4 hover-fine:decoration-ink ${FOCUS}`}
                     >
                       MyBuilder
-                    </a>{" "}
-                    <span className="text-ink-muted">(as {mybuilderName})</span>
+                    </a>
                   </>
                 ) : (
                   " on MyBuilder"
@@ -111,6 +112,8 @@ export function Hero({
               </span>
             </p>
           )}
+          <HeroPullCord />
+          </div>
         </div>
 
         {/* Two framed photos; the second is smaller and sits lower-right. */}

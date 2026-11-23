@@ -1,16 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Phone } from "lucide-react";
+import { ArrowRight, Phone } from "lucide-react";
+import { MagnetButton } from "@/components/ui/magnet-button";
 import { Nav } from "@/components/Nav";
 import { StickyCall } from "@/components/StickyCall";
 import { Footer } from "@/components/Footer";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { CTA_ARROW, CTA_CALL, CTA_ICON, WhatsAppButton } from "@/components/WhatsAppButton";
 import { accreditations, business, contact, servicePages } from "../content";
-
-// Press is deliberate (160ms), release snaps (100ms), hover colour eases 160ms.
-const PRESS =
-  "[transition:transform_100ms_var(--ease-out),background-color_160ms_var(--ease-out)] active:scale-[0.97] active:[transition:transform_160ms_var(--ease-out),background-color_160ms_var(--ease-out)] motion-reduce:active:scale-100";
-const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft";
 
 const { areasText, registration } = servicePages;
 
@@ -45,15 +41,16 @@ export default function EmergencyElectricianPage() {
 
           <div className="flex flex-col gap-3 sm:flex-row">
             {contact.telLink && (
-              <a
+              <MagnetButton
                 href={`tel:${contact.telLink}`}
-                className={`inline-flex h-14 items-center justify-center gap-2 rounded-sm bg-action px-6 text-lg font-semibold text-on-action hover-fine:bg-action-hover ${PRESS} ${FOCUS}`}
+                className={CTA_CALL}
               >
-                <Phone aria-hidden="true" strokeWidth={1.5} className="size-5" />
+                <Phone aria-hidden="true" strokeWidth={1.75} className={CTA_ICON} />
                 Call {contact.phone}
-              </a>
+                <ArrowRight aria-hidden="true" strokeWidth={1.75} className={CTA_ARROW} />
+              </MagnetButton>
             )}
-            <WhatsAppButton whatsapp={contact.whatsapp} className="h-14" />
+            <WhatsAppButton whatsapp={contact.whatsapp} />
           </div>
 
           {(normalHours || emergencyHours) && (

@@ -1,9 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { z } from "zod";
 import { Resend } from "resend";
 import { business, contact } from "@/app/content";
 import { describeLeadSource } from "@/lib/lead-source";
 import { autoReplyEnabled, buildAutoReply } from "@/lib/auto-reply";
+import { logLead } from "@/lib/lead-log";
+
+// Traffic-source tag for the Leads sheet: a bad value becomes undefined and never blocks the enquiry.
+const tag = z.string().trim().max(500).optional().catch(undefined);
 
 /**
  * Field rules match the client schema in components/ContactForm.tsx, which
@@ -48,6 +52,12 @@ const schema = z.object({
       gclid: oneLine(200),
     })
     .optional(),
+  // First-touch tags for the Leads sheet (see lib/attribution.ts).
+  utm_source: tag,
+  utm_medium: tag,
+  utm_campaign: tag,
+  gclid: tag,
+  landing_page: tag,
 });
 
 /**
@@ -153,6 +163,8 @@ export async function POST(request: Request) {
       }
     }
 
+    // Runs after the response is sent, so the sheet can never change it.
+    after(() => logLead(parsed.data));
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("contact: unexpected error", err);

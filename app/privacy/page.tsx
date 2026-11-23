@@ -41,8 +41,14 @@ export default function PrivacyPage() {
           </p>
 
           <p>
-            We delete enquiries that do not become a job after 1 year. We keep job and invoice records for
-            as long as tax law requires.
+            We store website enquiries in Google Sheets and delete each enquiry row after 1 year. With each
+            website enquiry we also store the page you arrived on and any advert tags in the link (such as
+            gclid or utm_source). We keep job and invoice records for as long as tax law requires.
+          </p>
+
+          <p>
+            If you click Accept on our cookie banner, Google Ads sets a cookie so we can see which adverts
+            bring enquiries. If you click Reject, we do not load Google Ads.
           </p>
 
           <p>

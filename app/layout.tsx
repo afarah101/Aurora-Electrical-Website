@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { accreditations, business, contact, services } from "./content";
 import { SITE_URL, myBuilderProfile } from "./site-url";
+import { AttributionCapture } from "@/lib/attribution";
+import { ConsentBanner } from "@/components/consent-banner";
 
 /**
  * Ledger type: headings use a book serif (Georgia stack, set in
@@ -112,6 +114,8 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd()) }}
         />
         {children}
+        <AttributionCapture />
+        <ConsentBanner />
       </body>
     </html>
   );
