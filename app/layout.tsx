@@ -78,7 +78,7 @@ function localBusinessJsonLd() {
     description,
     url: SITE_URL,
     image: `${SITE_URL}/aurora-share.png`,
-    logo: `${SITE_URL}/aurora-mark.svg`,
+    logo: `${SITE_URL}/aurora-mark.png`,
     ...(contact.telLink ? { telephone: contact.telLink } : {}),
     ...(contact.email ? { email: contact.email } : {}),
     ...(contact.serviceArea ? { areaServed: contact.serviceArea } : {}),
