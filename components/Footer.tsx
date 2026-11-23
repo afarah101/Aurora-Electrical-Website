@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { Wordmark } from "@/components/Wordmark";
 
 // Hover colour only on a real mouse (hover-fine), eased over 160ms.
 const LINK = "transition-colors duration-[160ms] ease-out hover-fine:text-ink motion-reduce:transition-none";
@@ -30,7 +31,7 @@ export function Footer({
       <div className="mx-auto max-w-6xl px-5 py-14">
         <div className="grid gap-8 sm:grid-cols-2">
           <div>
-            <p className="text-lg font-semibold text-ink">{businessName}</p>
+            <Wordmark href="/" />
             {serviceArea && <p className="mt-2 text-sm">{serviceArea}</p>}
             {accreditations.length > 0 && (
               <p className="mt-2 text-sm">{accreditations.join(" · ")}</p>

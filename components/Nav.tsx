@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, Phone, X } from "lucide-react";
 import { CTA_CALL, CTA_ICON } from "@/components/WhatsAppButton";
+import { Wordmark } from "@/components/Wordmark";
 import { cn } from "@/lib/utils";
 
 type Props = { businessName: string; phone: string | null; telLink: string | null };
@@ -33,7 +34,7 @@ const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visi
  * Mobile menu: a panel under the pill. Escape closes it and returns focus to
  * the toggle; while open, Tab and Shift+Tab cycle inside the header.
  */
-export function Nav({ businessName, phone, telLink }: Props) {
+export function Nav({ phone, telLink }: Props) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
@@ -98,23 +99,16 @@ export function Nav({ businessName, phone, telLink }: Props) {
   const currentClass = "text-ink underline decoration-action-soft decoration-2 underline-offset-8";
 
   return (
-    <header ref={headerRef} className="fixed inset-x-0 top-0 z-40 px-3 pt-2">
+    <header ref={headerRef} className="fixed inset-x-0 top-0 z-40 px-4 pt-2">
+      {/* 16px side gutter keeps the round pill and its round menu button fully on screen. */}
       <nav
         aria-label="Main"
         className="mx-auto flex h-[60px] max-w-6xl items-center justify-between rounded-full bg-surface-raised/80 pl-5 pr-2 ring-1 ring-hairline backdrop-blur-md"
       >
-        {/*
-          The wordmark crop of the client's logo (the word is IN the logo, so
-          no duplicate text beside it). Served at 2x its display height so it
-          stays sharp on retina; the accessible name keeps the brand for
-          screen readers.
-        */}
-        <a href="#top" aria-label={`${businessName}, home`} className={`rounded-sm ${FOCUS}`}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/aurora-logo-nav.png" alt={businessName} className="h-7 w-auto rounded-sm sm:h-8" />
-        </a>
+        {/* Live-text wordmark; the link target is unchanged. */}
+        <Wordmark href="#top" />
 
-        <div className="flex items-center gap-2 lg:gap-6">
+        <div className="flex shrink-0 items-center gap-2 lg:gap-6">
           <ul className="hidden items-center gap-6 lg:flex">
             {links.map((link) => (
               <li key={link.label}>

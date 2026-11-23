@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Phone } from "lucide-react";
 import { MagnetButton } from "@/components/ui/magnet-button";
-import { cn } from "@/lib/utils";
 import { Nav } from "@/components/Nav";
 import { StickyCall } from "@/components/StickyCall";
 import { Footer } from "@/components/Footer";
@@ -44,14 +43,14 @@ export default function EmergencyElectricianPage() {
             {contact.telLink && (
               <MagnetButton
                 href={`tel:${contact.telLink}`}
-                className={cn(CTA_CALL, "h-14 text-lg")}
+                className={CTA_CALL}
               >
                 <Phone aria-hidden="true" strokeWidth={1.75} className={CTA_ICON} />
                 Call {contact.phone}
                 <ArrowRight aria-hidden="true" strokeWidth={1.75} className={CTA_ARROW} />
               </MagnetButton>
             )}
-            <WhatsAppButton whatsapp={contact.whatsapp} className="h-14 text-lg" />
+            <WhatsAppButton whatsapp={contact.whatsapp} />
           </div>
 
           {(normalHours || emergencyHours) && (

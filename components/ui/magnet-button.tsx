@@ -34,7 +34,9 @@ export function MagnetButton({ strength = 0.2, maxShift = 6, children, ...props 
     let listening = false;
 
     const shift = (x: number, y: number) => {
-      el.style.translate = x === 0 && y === 0 ? "" : `${x}px ${y}px`;
+      // `transform`, not `translate`: it composes with the 1px hover lift
+      // and the press scale, which use the separate translate/scale properties.
+      el.style.transform = x === 0 && y === 0 ? "" : `translate(${x}px, ${y}px)`;
     };
 
     const onMove = (event: PointerEvent) => {
