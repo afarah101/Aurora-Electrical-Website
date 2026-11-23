@@ -5,10 +5,22 @@ import { StickyCall } from "@/components/StickyCall";
 import { Footer } from "@/components/Footer";
 import { accreditations, business, contact } from "../content";
 
+const title = "Privacy Notice | How Aurora Electrical Uses Your Details";
+const description =
+  "How Aurora Electrical uses the details you give us: your name, phone number, address, email and job details, to quote, carry out the job and invoice you.";
+
 export const metadata: Metadata = {
-  title: "Privacy notice",
-  description: `How ${business.name} uses the details you give us.`,
+  title: { absolute: title },
+  description,
   alternates: { canonical: "/privacy" },
+  openGraph: {
+    title,
+    description,
+    type: "website",
+    locale: "en_GB",
+    url: "/privacy",
+    images: [{ url: "/aurora-share.png", width: 1200, height: 630, alt: `${business.name} logo` }],
+  },
   // TODO: remove this noindex once Mohamed approves the wording (and the Draft comment above).
   robots: { index: false, follow: true },
 };

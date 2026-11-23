@@ -36,18 +36,26 @@ const description = `${business.name} - electrical work for homes and businesses
   contact.serviceArea ? ` in ${contact.serviceArea}` : ""
 }. Rewiring, fuse boards, fault-finding, lighting and installations. Free no-obligation quotes.`;
 
+/* Home-page search snippet (title 50–60, description 140–160 chars). The
+ * JSON-LD keeps `description` above. Each sub-page sets its own title,
+ * description, canonical and openGraph, and repeats the share image because
+ * a page's openGraph replaces this one rather than merging with it. */
+const homeTitle = `${business.name} | Domestic & Commercial Electrician London`;
+const homeDescription =
+  "Domestic and commercial electricians in London. Rewiring, fuse board upgrades, fault-finding, lighting, sockets and EICRs. Free, no-obligation quotes.";
+
 export const metadata: Metadata = {
   /* Absolute base for social images — WhatsApp/Facebook require full URLs. */
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: "/" },
   title: {
-    default: `${business.name} - Domestic & Commercial Electricians`,
+    default: homeTitle,
     template: `%s | ${business.name}`,
   },
-  description,
+  description: homeDescription,
   openGraph: {
-    title: `${business.name} - Domestic & Commercial Electricians`,
-    description,
+    title: homeTitle,
+    description: homeDescription,
     type: "website",
     locale: "en_GB",
     url: SITE_URL,
@@ -60,10 +68,9 @@ export const metadata: Metadata = {
       },
     ],
   },
+  /* No twitter title or description: X falls back to each page's og: tags. */
   twitter: {
     card: "summary_large_image",
-    title: `${business.name} - Domestic & Commercial Electricians`,
-    description,
     images: ["/aurora-share.png"],
   },
   robots: { index: true, follow: true },

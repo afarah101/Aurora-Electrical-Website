@@ -16,12 +16,22 @@ const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visi
 
 const { areasText, registration } = servicePages;
 
+const title = "Landlord EICR South-West London | Aurora Electrical";
+const description =
+  "Landlord EICR in South-West London by a NICEIC-registered electrician, covering Wandsworth, Battersea, Chelsea, Fulham and Putney. Priced by bedrooms.";
+
 export const metadata: Metadata = {
-  title: `EICR for Landlords in ${areasText ?? "South-West London"}`,
-  description: `${registration ? `${registration} electrician` : "Electrician"} carrying out landlord EICRs in ${
-    areasText ?? "South-West London"
-  }. Prices by number of bedrooms.`,
+  title: { absolute: title },
+  description,
   alternates: { canonical: "/eicr-landlords" },
+  openGraph: {
+    title,
+    description,
+    type: "website",
+    locale: "en_GB",
+    url: "/eicr-landlords",
+    images: [{ url: "/aurora-share.png", width: 1200, height: 630, alt: `${business.name} logo` }],
+  },
 };
 
 export default function EicrLandlordsPage() {
