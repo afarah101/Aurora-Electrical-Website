@@ -31,7 +31,7 @@ export function Footer({
       <div className="mx-auto max-w-6xl px-5 py-14">
         <div className="grid gap-8 sm:grid-cols-2">
           <div>
-            <Wordmark href="/" />
+            <Wordmark href="/" variant="stacked" />
             {serviceArea && <p className="mt-2 text-sm">{serviceArea}</p>}
             {accreditations.length > 0 && (
               <p className="mt-2 text-sm">{accreditations.join(" · ")}</p>
