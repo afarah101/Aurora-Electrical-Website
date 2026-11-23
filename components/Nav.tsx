@@ -106,7 +106,7 @@ export function Nav({ phone, telLink }: Props) {
         className="mx-auto flex h-[60px] max-w-6xl items-center justify-between rounded-full bg-surface-raised/80 pl-5 pr-2 ring-1 ring-hairline backdrop-blur-md"
       >
         {/* Live-text wordmark; the link target is unchanged. */}
-        <Wordmark href="#top" />
+        <Wordmark href="#top" variant="inline" />
 
         <div className="flex shrink-0 items-center gap-2 lg:gap-6">
           <ul className="hidden items-center gap-6 lg:flex">
