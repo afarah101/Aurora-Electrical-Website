@@ -98,7 +98,8 @@ export function Nav({ businessName, phone, telLink }: Props) {
   const currentClass = "text-ink underline decoration-action-soft decoration-2 underline-offset-8";
 
   return (
-    <header ref={headerRef} className="fixed inset-x-0 top-0 z-40 px-3 pt-2">
+    <header ref={headerRef} className="fixed inset-x-0 top-0 z-40 px-4 pt-2">
+      {/* 16px side gutter keeps the round pill and its round menu button fully on screen. */}
       <nav
         aria-label="Main"
         className="mx-auto flex h-[60px] max-w-6xl items-center justify-between rounded-full bg-surface-raised/80 pl-5 pr-2 ring-1 ring-hairline backdrop-blur-md"
@@ -114,7 +115,7 @@ export function Nav({ businessName, phone, telLink }: Props) {
           <img src="/aurora-logo-nav.png" alt={businessName} className="h-7 w-auto rounded-sm sm:h-8" />
         </a>
 
-        <div className="flex items-center gap-2 lg:gap-6">
+        <div className="flex shrink-0 items-center gap-2 lg:gap-6">
           <ul className="hidden items-center gap-6 lg:flex">
             {links.map((link) => (
               <li key={link.label}>

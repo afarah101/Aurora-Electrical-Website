@@ -1,9 +1,6 @@
-"use client";
-
 import Image from "next/image";
-import { useEffect, useRef } from "react";
 import { ArrowRight, Phone } from "lucide-react";
-import PullCord from "@/components/kokonutui/pull-cord";
+import { HeroPullCord } from "@/components/HeroPullCord";
 import { MagnetButton } from "@/components/ui/magnet-button";
 import { CTA_ARROW, CTA_CALL, CTA_ICON, WhatsAppButton } from "@/components/WhatsAppButton";
 
@@ -44,27 +41,14 @@ export function Hero({
   rating,
   reviewCount,
   verified,
-  mybuilderName,
   mybuilderUrl,
 }: Props) {
   const niceic = accreditations.find((a) => /niceic/i.test(a));
 
-  // A pull lights the lamp; 400ms later the page moves to the reviews.
-  const scrollTimer = useRef(0);
-  useEffect(() => () => window.clearTimeout(scrollTimer.current), []);
-  const showReviews = () => {
-    window.clearTimeout(scrollTimer.current);
-    scrollTimer.current = window.setTimeout(() => {
-      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      document
-        .getElementById("reviews")
-        ?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
-    }, 400);
-  };
-
   return (
     <section aria-labelledby="hero-headline" className="w-full bg-surface pt-nav text-left text-ink">
-      <div className="mx-auto grid min-h-[calc(78svh-var(--spacing-nav))] w-full max-w-6xl items-center gap-12 px-5 py-12 sm:px-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16 lg:py-16">
+      {/* Top padding cut about 40% (48px → 28px, 64px → 40px on desktop). */}
+      <div className="mx-auto grid min-h-[calc(78svh-var(--spacing-nav))] w-full max-w-6xl items-center gap-12 px-5 pb-12 pt-7 sm:px-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16 lg:pb-16 lg:pt-10">
         <div className="min-w-0">
           <p
             className="ledger-rise m-0 text-[12px] font-medium uppercase tracking-[0.18em] text-ink-muted"
@@ -100,14 +84,17 @@ export function Hero({
             )}
             <WhatsAppButton whatsapp={whatsapp} />
           </div>
-          {/* Rating line, then the pull cord: under it on phones, beside it on desktop. */}
-          <div className="lg:flex lg:items-center lg:gap-8">
+          {/*
+            Rating line, then the pull cord: under it on phones, beside it on
+            desktop. items-start lines the lamp top up with the rating block.
+          */}
+          <div className="lg:flex lg:items-start lg:gap-8">
           {rating && reviewCount && (
             <p className="m-0 mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px] text-ink">
               <span className="tracking-[0.1em] text-trust" aria-hidden="true">★★★★★</span>
               <span>
                 {rating} from {reviewCount} {verified ? "verified " : ""}reviews
-                {mybuilderName && mybuilderUrl ? (
+                {mybuilderUrl ? (
                   <>
                     {" "}on{" "}
                     <a
@@ -117,8 +104,7 @@ export function Hero({
                       className={`rounded-sm underline decoration-ink-faint underline-offset-4 hover-fine:decoration-ink ${FOCUS}`}
                     >
                       MyBuilder
-                    </a>{" "}
-                    <span className="text-ink-muted">(as {mybuilderName})</span>
+                    </a>
                   </>
                 ) : (
                   " on MyBuilder"
@@ -126,19 +112,7 @@ export function Hero({
               </span>
             </p>
           )}
-          <div className="mt-6 flex items-center gap-4">
-            <PullCord
-              className="h-[140px] shrink-0"
-              label="Lamp switch: turn it on to see reviews"
-              onPull={showReviews}
-            />
-            <a
-              href="#reviews"
-              className={`rounded-sm text-[14px] text-ink underline decoration-ink-faint underline-offset-4 hover-fine:decoration-ink ${FOCUS}`}
-            >
-              Pull the cord to see reviews
-            </a>
-          </div>
+          <HeroPullCord />
           </div>
         </div>
 

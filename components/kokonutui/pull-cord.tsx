@@ -134,6 +134,8 @@ export interface PullCordProps {
   onPull?: () => void;
   /** Accessible name of the switch. */
   label?: string;
+  /** When true, a pull only turns the lamp on; it never turns it off. */
+  latch?: boolean;
   className?: string;
 }
 
@@ -143,6 +145,7 @@ export default function PullCord({
   onCheckedChange,
   onPull,
   label = "Desk lamp",
+  latch = false,
   className,
 }: PullCordProps) {
   const [internal, setInternal] = useState(defaultChecked);
@@ -188,13 +191,15 @@ export default function PullCord({
     toggle: () => undefined,
   });
   const toggle = useCallback(
-    (next: boolean) => {
+    (requested: boolean) => {
+      // A latched lamp stays on once lit.
+      const next = latch ? true : requested;
       if (checkedProp === undefined) {
         setInternal(next);
       }
       onCheckedChange?.(next);
     },
-    [checkedProp, onCheckedChange]
+    [checkedProp, onCheckedChange, latch]
   );
   useEffect(() => {
     latest.current = { checked, toggle, onPull };
