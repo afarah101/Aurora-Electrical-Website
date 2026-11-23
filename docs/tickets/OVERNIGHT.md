@@ -49,10 +49,31 @@ Evidence:
 
 ## T3 Pill buttons (all Call and WhatsApp buttons)
 
-- [ ] Fully rounded pills (`rounded-full`), icon left, 48px high, same padding on both.
-- [ ] Call: ink fill, cream text. WhatsApp: white fill, ink-subtle 1px border, green glyph only.
-- [ ] Hover (fine pointer only): lift 1px, soft shadow. Press: scale 0.98. No motion under reduced motion.
+- [x] Fully rounded pills (`rounded-full`), icon left, 48px high, same padding on both.
+- [x] Call: ink fill, cream text. WhatsApp: white fill, ink-subtle 1px border, green glyph only.
+- [x] Hover (fine pointer only): lift 1px, soft shadow. Press: scale 0.98. No motion under reduced motion.
 
 Checks: text-to-fill contrast ≥4.5:1 for both, normal and hover.
 
-Evidence: _pending_
+Evidence:
+- Shared `CTA_BASE` in `components/WhatsAppButton.tsx`: `h-12 rounded-full px-6`, icon first in every button. Compiled: `.h-12{height:calc(var(--spacing) * 12)}` with `--spacing:.25rem` = 48px; `.rounded-full{border-radius:3.40282e38px}`.
+- Built `index.html`, every `tel:`/`wa.me` button: `rounded-full` + `h-12` (or `size-12` for the Nav icon button) on all 6. Call and WhatsApp both use `px-6`. The Nav call button is a 48px circle on phones (`px-0`) and `px-5` from 640px, as before. The 2 other `tel:` links are plain-text links in the contact form and footer, not buttons, and are unchanged.
+- The emergency page drops its `h-14 text-lg` override, so its pair is 48px too.
+- Call: `bg-action` (#1b1714) with `text-on-action` (#f7f3ec). WhatsApp: `bg-white`, `border border-ink-subtle`, `text-ink`, glyph `fill-whatsapp` only.
+- Lift: `@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)` → `:hover{--tw-translate-y:-1px;translate:…}`.
+- Shadow: `@media (hover:hover) and (pointer:fine)` → `:hover{--tw-shadow:0 6px 16px -6px #1b171459 …}`.
+- Press: `@layer utilities > @media (pointer:fine) and (prefers-reduced-motion:no-preference)` → `:active{scale:.98}`.
+- Reduced motion: `.motion-reduce\:transition-none{transition-property:none}`; lift and press do not apply under `prefers-reduced-motion: reduce`.
+- Magnet pull (`components/ui/magnet-button.tsx`) now sets `style.transform` instead of `style.translate`, so it composes with the 1px lift and the press scale instead of overriding them.
+- Contrast (WCAG relative luminance):
+
+  | Pair | Normal | Hover |
+  |---|---|---|
+  | Call: #f7f3ec on #1b1714 / #3a3128 | 16.10:1 | 11.51:1 |
+  | WhatsApp: #1b1714 on #ffffff | 17.81:1 | 17.81:1 |
+  | WhatsApp border #655d54 vs cream #f7f3ec | 5.85:1 | 16.10:1 (#1b1714) |
+
+## All tickets
+
+- Links: every `tel:`, `wa.me` and gads line diffed against `feat/pull-cord` → identical.
+- `npm run lint` → 0 problems (baseline 0). `npm run build` → exit 0, `┌ ○ /`.
