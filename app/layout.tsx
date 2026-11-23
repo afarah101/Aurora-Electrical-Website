@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { accreditations, business, contact, services } from "./content";
+import { accreditations, business, contact, servicePages, services } from "./content";
 import { SITE_URL, myBuilderProfile } from "./site-url";
 import { AttributionCapture } from "@/lib/attribution";
 import { ConsentBanner } from "@/components/consent-banner";
@@ -76,6 +76,10 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
+/* Google Business Profile, as given by Ahmed. The share link is used as is:
+ * share.google could not be resolved from the build environment. */
+const googleBusinessProfile = "https://share.google/aTcw54QUynUReRQj2";
+
 /** schema.org LocalBusiness. Only confirmed fields are emitted. */
 function localBusinessJsonLd() {
   return {
@@ -88,8 +92,13 @@ function localBusinessJsonLd() {
     logo: `${SITE_URL}/aurora-mark.png`,
     ...(contact.telLink ? { telephone: contact.telLink } : {}),
     ...(contact.email ? { email: contact.email } : {}),
-    ...(contact.serviceArea ? { areaServed: contact.serviceArea } : {}),
-    ...(myBuilderProfile ? { sameAs: [myBuilderProfile] } : {}),
+    /* Service-area business: the Google profile hides the street address, so
+     * only the locality and country are given. */
+    address: { "@type": "PostalAddress", addressLocality: "London", addressCountry: "GB" },
+    ...(servicePages.areas.length
+      ? { areaServed: servicePages.areas.map((name) => ({ "@type": "Place", name })) }
+      : {}),
+    sameAs: [googleBusinessProfile, ...(myBuilderProfile ? [myBuilderProfile] : [])],
     ...(accreditations.length
       ? {
           hasCredential: accreditations.map((name) => ({
