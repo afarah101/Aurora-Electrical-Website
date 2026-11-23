@@ -2,13 +2,14 @@ import { cn } from "@/lib/utils";
 
 /*
  * Shared call-to-action styles for the Call (primary) and WhatsApp
- * (secondary) buttons. Same height, radius token, type and icon size.
- * Press scale and hover motion run only for a fine pointer with no
- * reduced-motion preference; phones get colour changes only.
+ * (secondary) buttons: 48px pills, icon left, same padding, type and icon
+ * size. A mouse hover lifts 1px with a soft shadow; a press scales to 0.98.
+ * Motion runs only for a fine pointer with no reduced-motion preference;
+ * phones get colour changes only.
  * Class strings stay literal so Tailwind can find them.
  */
 export const CTA_BASE =
-  "inline-flex h-12 cursor-pointer select-none items-center justify-center gap-2 rounded-sm px-6 text-base font-semibold [transition:background-color_160ms_var(--ease-out),border-color_160ms_var(--ease-out),scale_160ms_var(--ease-out),translate_200ms_var(--ease-out)] motion-reduce:transition-none [@media(pointer:fine)_and_(prefers-reduced-motion:no-preference)]:active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft";
+  "inline-flex h-12 cursor-pointer select-none items-center justify-center gap-2 rounded-full px-6 text-base font-semibold [transition:background-color_160ms_var(--ease-out),border-color_160ms_var(--ease-out),box-shadow_200ms_var(--ease-out),scale_160ms_var(--ease-out),translate_200ms_var(--ease-out),transform_200ms_var(--ease-out)] motion-reduce:transition-none hover-fine:shadow-[0_6px_16px_-6px_rgb(27_23_20/0.35)] [@media(hover:hover)_and_(pointer:fine)_and_(prefers-reduced-motion:no-preference)]:hover:-translate-y-px [@media(pointer:fine)_and_(prefers-reduced-motion:no-preference)]:active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-action-soft";
 
 /** Primary: dark ink fill. Add `group` children such as CTA_ARROW. */
 export const CTA_CALL = `${CTA_BASE} group bg-action text-on-action hover-fine:bg-action-hover`;
