@@ -10,12 +10,22 @@ import { accreditations, business, contact, servicePages } from "../content";
 
 const { areasText, registration } = servicePages;
 
+const title = "Emergency Electrician South-West London | Aurora Electrical";
+const description =
+  "Emergency electrician in South-West London, NICEIC-registered. Call for power loss, a tripping fuse board, a burning smell or sparking sockets.";
+
 export const metadata: Metadata = {
-  title: `Emergency Electrician in ${areasText ?? "South-West London"}`,
-  description: `${registration ? `${registration} emergency` : "Emergency"} electrician for ${
-    areasText ?? "South-West London"
-  }. Call for power loss, a tripping fuse board, a burning smell or sparking sockets.`,
+  title: { absolute: title },
+  description,
   alternates: { canonical: "/emergency-electrician" },
+  openGraph: {
+    title,
+    description,
+    type: "website",
+    locale: "en_GB",
+    url: "/emergency-electrician",
+    images: [{ url: "/aurora-share.png", width: 1200, height: 630, alt: `${business.name} logo` }],
+  },
 };
 
 // No response-time or round-the-clock promise: hours come from site.md only.
