@@ -13,7 +13,7 @@ Marketing site for Aurora Electrical, a domestic and commercial electrician in s
 
 - Resend sends the contact-form email (`app/api/contact/route.ts`). It needs `RESEND_API_KEY`. `TO_EMAIL` and `FROM_EMAIL` are optional and fall back to the business email and `onboarding@resend.dev`.
 - Vercel Analytics is wired in through `@vercel/analytics` and needs no env var.
-- Google Fonts are fetched by `next/font/google` at build time, so the build needs network access to Google.
+- Fonts are self-hosted in `app/fonts` and loaded with `next/font/local`, so the build needs no access to Google.
 - The MyBuilder profile and reviews are linked, not fetched through an API.
 
 The build itself needs no secrets. Secret values live in the Vercel dashboard and in `.env.local`, which is never read or committed.
@@ -27,3 +27,11 @@ The build itself needs no secrets. Secret values live in the Vercel dashboard an
 - Merging anything in the list above. For those PRs, add the label `needs-ahmed` and do not turn on auto-merge.
 
 Code fixes that leave the rendered site unchanged, such as lint, types, accessibility fixes and refactors, can go ahead without asking. Push them on a feature branch, open a PR and turn on auto-merge. GitHub merges the PR once `verify` and `review` pass. Never push to `main`.
+
+## Kokonut UI
+- Before building an animated or interactive component, check https://kokonutui.com/llms.txt.
+- Install with `npx shadcn@latest add @kokonutui/<name>`; never paste code.
+- Before use, read the whole installed file and grep it for fetch, eval, XMLHttpRequest and http. Report any match before wiring it in.
+- Edit installed components in place; do not wrap them.
+- Never replace a tel:, wa.me or form link with a <button>.
+- Add .md to a docs URL to get its Markdown source.

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { accreditations, business, contact, services } from "./content";
 import { SITE_URL, myBuilderProfile } from "./site-url";
@@ -10,17 +10,26 @@ import { ConsentBanner } from "@/components/consent-banner";
  * Ledger type: headings use a book serif (Georgia stack, set in
  * globals.css), IBM Plex Sans carries body copy, IBM Plex Mono marks
  * figures such as ratings and the gallery counter.
+ *
+ * Both faces are self-hosted from app/fonts (latin subset, from
+ * @fontsource, SIL OFL 1.1 — see app/fonts/OFL.txt), so the build
+ * never calls Google's font servers.
  */
-const plexSans = IBM_Plex_Sans({
+const plexSans = localFont({
   variable: "--font-plex-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  src: [
+    { path: "./fonts/ibm-plex-sans-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/ibm-plex-sans-latin-500-normal.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/ibm-plex-sans-latin-600-normal.woff2", weight: "600", style: "normal" },
+  ],
 });
 
-const plexMono = IBM_Plex_Mono({
+const plexMono = localFont({
   variable: "--font-plex-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
+  src: [
+    { path: "./fonts/ibm-plex-mono-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/ibm-plex-mono-latin-500-normal.woff2", weight: "500", style: "normal" },
+  ],
 });
 
 const description = `${business.name} - electrical work for homes and businesses${
