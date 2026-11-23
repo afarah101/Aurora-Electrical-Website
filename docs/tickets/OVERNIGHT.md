@@ -33,13 +33,19 @@ Evidence:
 
 ## T2 Wordmark logo
 
-- [ ] New `components/Wordmark.tsx`: live text, not an image. Lucide `Zap` in the gold trust token, then "Aurora" in the heading font (600, tracking -0.02em, ink), then "ELECTRICAL" in the mono font (uppercase, wide tracking, ink-subtle, smaller).
-- [ ] Use it in `Nav.tsx` and the footer in place of the logo image. Keep the link and add `aria-label="Aurora Electrical home"`.
-- [ ] Keep `public/aurora-logo*.png`. Delete no file.
+- [x] New `components/Wordmark.tsx`: live text, not an image. Lucide `Zap` in the gold trust token, then "Aurora" in the heading font (600, tracking -0.02em, ink), then "ELECTRICAL" in the mono font (uppercase, wide tracking, ink-subtle, smaller).
+- [x] Use it in `Nav.tsx` and the footer in place of the logo image. Keep the link and add `aria-label="Aurora Electrical home"`.
+- [x] Keep `public/aurora-logo*.png`. Delete no file.
 
 Checks: the nav and footer render no `aurora-logo` image. The Wordmark has an accessible name. The header height does not grow.
 
-Evidence: _pending_
+Evidence:
+- Wordmark classes: `Zap` → `fill-trust text-trust`; "Aurora" → `font-heading text-lg font-semibold tracking-[-0.02em] text-ink`; "Electrical" → `font-mono text-[10px] uppercase tracking-[0.18em] text-ink-subtle`.
+- Built `index.html`, inside `<nav aria-label="Main">`: 0 `<img>`, 0 `aurora-logo`, 1 wordmark link (`href="#top"`). Inside `<footer>`: 0 `<img>`, 0 `aurora-logo`, 1 wordmark link (`href="/"`).
+- Accessible name: `aria-label="Aurora Electrical home"` on the link, on every page (2 per page: nav + footer). The visible spans are `aria-hidden`.
+- Header height: the nav pill is `h-[60px]` before (`feat/pull-cord`) and after. The wordmark is 18px tall inside it.
+- Files kept: `public/aurora-logo.png` and `public/aurora-logo-nav.png` still exist. The only remaining `aurora-logo` reference is the JSON-LD `logo` URL from `app/layout.tsx`, which is not a rendered image and is unchanged.
+- Choices: the nav link stays `href="#top"`, because the brief forbids changing any href; the footer had no link, so its wordmark links to `/`. Below 360px the "ELECTRICAL" line is hidden so the nav still fits beside its buttons; the accessible name is unchanged. The footer's text business name is replaced by the wordmark; the © line still shows the name.
 
 ## T3 Pill buttons (all Call and WhatsApp buttons)
 
