@@ -30,7 +30,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_GB",
     url: "/eicr-landlords",
-    images: [{ url: "/aurora-share.png", width: 1200, height: 630, alt: `${business.name} logo` }],
+    siteName: "Aurora Electrical",
+    images: [{ url: "/opengraph-image.png", width: 1200, height: 630, alt: `${business.name} logo` }],
   },
 };
 
