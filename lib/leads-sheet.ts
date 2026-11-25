@@ -90,3 +90,68 @@ export async function appendLead(lead: Lead): Promise<void> {
   );
   if (!res.ok) throw new Error(`leads-sheet: append failed (${res.status}) ${await res.text()}`);
 }
+
+const API = "https://sheets.googleapis.com/v4/spreadsheets";
+// Sheets counts days from 1899-12-30. 25569 is 1970-01-01 on that scale.
+const toSerial = (ms: number) => ms / 86_400_000 + 25569;
+
+/** A Date cell as a Sheets day number: a date cell, or "YYYY-MM-DD..." text. Anything else is null. */
+function serialOf(cell: unknown): number | null {
+  if (typeof cell === "number") return cell;
+  const match = typeof cell === "string" ? /^(\d{4})-(\d{2})-(\d{2})/.exec(cell) : null;
+  return match ? toSerial(Date.UTC(+match[1], +match[2] - 1, +match[3])) : null;
+}
+
+/**
+ * Deletes the "Leads" rows whose Date is more than `days` days old, as the privacy
+ * notice promises. Rows with no readable Date (and the header row) are kept.
+ * Returns how many rows were deleted. Throws on failure.
+ */
+export async function deleteRowsOlderThan(days: number): Promise<number> {
+  const sheetId = process.env.GOOGLE_SHEETS_ID;
+  const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+  const key = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+  if (!sheetId || !email || !key) throw new Error("leads-sheet: GOOGLE_* env vars not set");
+
+  const signal = AbortSignal.timeout(20_000);
+  const token = await accessToken(email, key, signal);
+  const book = `${API}/${encodeURIComponent(sheetId)}`;
+  const call = async <T>(url: string, init: RequestInit = {}): Promise<T> => {
+    const res = await fetch(url, {
+      ...init,
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      signal,
+    });
+    if (!res.ok) throw new Error(`leads-sheet: ${res.status} ${await res.text()}`);
+    return (await res.json()) as T;
+  };
+
+  // The numeric tab id is needed to delete rows.
+  const meta = await call<{ sheets: { properties: { sheetId: number; title: string } }[] }>(
+    `${book}?fields=sheets.properties(sheetId,title)`,
+  );
+  const tab = meta.sheets.find((s) => s.properties.title === "Leads")?.properties.sheetId;
+  if (tab === undefined) throw new Error("leads-sheet: no Leads tab");
+
+  // SERIAL_NUMBER returns date cells as day numbers, whatever the sheet's locale.
+  const dates = await call<{ values?: unknown[][] }>(
+    `${book}/values/${encodeURIComponent("Leads!A:A")}?valueRenderOption=UNFORMATTED_VALUE&dateTimeRenderOption=SERIAL_NUMBER`,
+  );
+  const cutoff = toSerial(Date.now()) - days;
+  const old = (dates.values ?? [])
+    .map((row, index) => ({ index, serial: serialOf(row[0]) }))
+    .filter(({ index, serial }) => index > 0 && serial !== null && serial < cutoff)
+    .map(({ index }) => index);
+  if (old.length === 0) return 0;
+
+  // Bottom row first, so each delete leaves the indexes above it unchanged.
+  await call(`${book}:batchUpdate`, {
+    method: "POST",
+    body: JSON.stringify({
+      requests: old.reverse().map((index) => ({
+        deleteDimension: { range: { sheetId: tab, dimension: "ROWS", startIndex: index, endIndex: index + 1 } },
+      })),
+    }),
+  });
+  return old.length;
+}

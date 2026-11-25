@@ -12,7 +12,7 @@ Do these steps in order. Steps 1 to 5 are in Google. Steps 6 to 8 are in Vercel 
 
 Daily use in the sheet: when you send a quote, set Status to **Quoted**. When a job is won, set Status to **Won**. The site sets Source from "How did you hear about us?" (Google, MyBuilder, Facebook, TikTok, Friend, Other), or `Website form` if the visitor leaves it empty. Add phone, WhatsApp, email and MyBuilder leads by hand, with Source set to `Phone`, `WhatsApp`, `Email` or `MyBuilder`.
 
-Privacy: the privacy notice says each enquiry row is deleted after 1 year. The site does not delete rows. Once a month, delete the Leads rows with a Date more than 1 year old.
+Privacy: each day at about 03:17 UTC, a Vercel cron deletes the Leads rows whose Date is more than 1 year old, as the privacy notice promises. Rows with no Date are kept. Move any row you must keep (for example a job record) to another tab first.
 
 ## B. Vercel
 
@@ -20,6 +20,7 @@ Privacy: the privacy notice says each enquiry row is deleted after 1 year. The s
    - `GOOGLE_SHEETS_ID`: the part of the Sheet URL between `/d/` and `/edit`.
    - `GOOGLE_SERVICE_ACCOUNT_EMAIL`: `client_email` from the JSON key.
    - `GOOGLE_PRIVATE_KEY`: `private_key` from the JSON key, from `-----BEGIN` to `-----END PRIVATE KEY-----\n`. Tick **Sensitive**.
+   - `CRON_SECRET`: a random string of 32 or more letters and digits (make one in your password manager). Tick **Sensitive**. Vercel sends it to the daily delete job. Production only.
    - `NEXT_PUBLIC_GADS_ID`: the Google Ads tag ID, `AW-` followed by numbers (from step 8).
    - `NEXT_PUBLIC_GADS_LABEL_FORM`, `NEXT_PUBLIC_GADS_LABEL_CALL`, `NEXT_PUBLIC_GADS_LABEL_WHATSAPP`: the conversion labels from step 8.
    - Click **Save** after each one.
