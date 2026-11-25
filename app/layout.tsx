@@ -59,19 +59,13 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_GB",
     url: SITE_URL,
-    images: [
-      {
-        url: "/aurora-share.png",
-        width: 1200,
-        height: 630,
-        alt: `${business.name} logo`,
-      },
-    ],
+    siteName: "Aurora Electrical",
+    /* og:image and twitter:image come from app/opengraph-image.png and
+     * app/twitter-image.png; file-based metadata overrides this object. */
   },
   /* No twitter title or description: X falls back to each page's og: tags. */
   twitter: {
     card: "summary_large_image",
-    images: ["/aurora-share.png"],
   },
   robots: { index: true, follow: true },
 };
@@ -88,8 +82,8 @@ function localBusinessJsonLd() {
     name: business.name,
     description,
     url: SITE_URL,
-    image: `${SITE_URL}/aurora-share.png`,
-    logo: `${SITE_URL}/aurora-mark.png`,
+    image: `${SITE_URL}/opengraph-image.png`,
+    logo: `${SITE_URL}/brand/logo-square-720.png`,
     ...(contact.telLink ? { telephone: contact.telLink } : {}),
     ...(contact.email ? { email: contact.email } : {}),
     /* Service-area business: the Google profile hides the street address, so
