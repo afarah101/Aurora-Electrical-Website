@@ -78,7 +78,7 @@ The site no longer calls the Apps Script web app. If you set it up before:
 - Its daily follow-up email and 1-year delete still run from inside the Sheet, because the 13 columns did not change. Leave them, or remove the trigger: in the Sheet, **Extensions** > **Apps Script** > **clock icon** (Triggers, left bar) > **...** on the row > **Delete trigger**.
 - Turn off the web app: **Deploy** (blue button, top right) > **Manage deployments** > **Archive** (box icon).
 
-If you never set it up: nothing deletes old rows. The privacy notice says each enquiry row is deleted after 1 year. Once a month, delete the Leads rows with a Date more than 1 year old.
+Old rows: each day at about 03:17 UTC, a Vercel cron deletes the Leads rows whose Date is more than 1 year old, as the privacy notice promises. It needs `CRON_SECRET` in Vercel (see `docs/GO-LIVE.md`, step 6). Rows with no Date are kept.
 
 ---
 
