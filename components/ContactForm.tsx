@@ -42,7 +42,14 @@ const schema = z.object({
   utm_campaign: z.string().optional(),
   gclid: z.string().optional(),
   landing_page: z.string().optional(),
+  // Optional dropdowns. The server checks the values.
+  jobType: z.string().optional(),
+  heardAbout: z.string().optional(),
 });
+
+// Keep in sync with app/api/contact/route.ts.
+const JOB_TYPES = ["Rewiring", "Fuse board", "Fault finding", "Lighting", "Sockets", "EICR", "Other"];
+const HEARD_ABOUT = ["Google", "MyBuilder", "Facebook", "TikTok", "Friend", "Other"];
 
 type FormValues = z.infer<typeof schema>;
 type Status = { kind: "idle" | "sending" } | { kind: "ok" | "error"; message: string };
@@ -174,6 +181,18 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
             </div>
 
             <div>
+              <label htmlFor="jobType" className="text-sm font-medium text-ink-body">
+                Job type <span className="text-ink-subtle">(optional)</span>
+              </label>
+              <select id="jobType" {...register("jobType")} className={fieldClass}>
+                <option value="">Choose one</option>
+                {JOB_TYPES.map((option) => (
+                  <option key={option}>{option}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
               <label htmlFor="fault" className="text-sm font-medium text-ink-body">
                 About the fault
               </label>
@@ -195,6 +214,18 @@ export function ContactForm({ email, phone, telLink, whatsapp }: Props) {
                   {errors.email.message}
                 </p>
               )}
+            </div>
+
+            <div>
+              <label htmlFor="heardAbout" className="text-sm font-medium text-ink-body">
+                How did you hear about us? <span className="text-ink-subtle">(optional)</span>
+              </label>
+              <select id="heardAbout" {...register("heardAbout")} className={fieldClass}>
+                <option value="">Choose one</option>
+                {HEARD_ABOUT.map((option) => (
+                  <option key={option}>{option}</option>
+                ))}
+              </select>
             </div>
 
             {/* Honeypot: hidden from users, tempting to bots. */}

@@ -4,10 +4,14 @@ import { Resend } from "resend";
 import { business, contact } from "@/app/content";
 import { describeLeadSource } from "@/lib/lead-source";
 import { autoReplyEnabled, buildAutoReply } from "@/lib/auto-reply";
-import { logLead } from "@/lib/lead-log";
+import { appendLead } from "@/lib/leads-sheet";
 
 // Traffic-source tag for the Leads sheet: a bad value becomes undefined and never blocks the enquiry.
 const tag = z.string().trim().max(500).optional().catch(undefined);
+
+// Dropdown answers. Keep in sync with components/ContactForm.tsx. "" or a bad value becomes undefined.
+const JOB_TYPES = ["Rewiring", "Fuse board", "Fault finding", "Lighting", "Sockets", "EICR", "Other"] as const;
+const HEARD_ABOUT = ["Google", "MyBuilder", "Facebook", "TikTok", "Friend", "Other"] as const;
 
 /**
  * Field rules match the client schema in components/ContactForm.tsx, which
@@ -58,6 +62,8 @@ const schema = z.object({
   utm_campaign: tag,
   gclid: tag,
   landing_page: tag,
+  jobType: z.enum(JOB_TYPES).optional().catch(undefined),
+  heardAbout: z.enum(HEARD_ABOUT).optional().catch(undefined),
 });
 
 /**
@@ -110,7 +116,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { name, email, phone, address, fault, source } = parsed.data;
+  const { name, email, phone, address, fault, source, jobType, heardAbout } = parsed.data;
 
   try {
     const resend = new Resend(apiKey);
@@ -125,6 +131,8 @@ export async function POST(request: Request) {
         `Phone: ${phone}`,
         `Address: ${address}`,
         `Email: ${email || "not supplied"}`,
+        `Job type: ${jobType ?? "not given"}`,
+        `Heard about us: ${heardAbout ?? "not given"}`,
         `Source: ${describeLeadSource(source)}`,
         `Page: ${source?.page ?? "unknown"}`,
         "",
@@ -164,7 +172,11 @@ export async function POST(request: Request) {
     }
 
     // Runs after the response is sent, so the sheet can never change it.
-    after(() => logLead(parsed.data));
+    after(() =>
+      appendLead({ ...parsed.data, message: fault, source: heardAbout }).catch((err) =>
+        console.error("contact: lead sheet write failed", err),
+      ),
+    );
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("contact: unexpected error", err);
