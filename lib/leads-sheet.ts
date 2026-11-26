@@ -18,10 +18,9 @@ export type Lead = {
 const TOKEN_URL = "https://oauth2.googleapis.com/token";
 const SCOPE = "https://www.googleapis.com/auth/spreadsheets";
 
-// Visitor text must never run as a formula (=, +, -, @). The leading ' keeps it text.
+// The append uses RAW, so visitor text is stored as typed: never a formula, number or date.
 function safeCell(value?: string): string {
-  const text = (value ?? "").slice(0, 5000);
-  return /^[=+\-@]/.test(text) ? `'${text}` : text;
+  return (value ?? "").slice(0, 5000);
 }
 
 /** Service-account sign-in: a signed JWT is swapped for a 1-hour access token. */
@@ -58,7 +57,7 @@ export async function appendLead(lead: Lead): Promise<void> {
   }
 
   const row = [
-    // sv-SE gives "YYYY-MM-DD HH:mm:ss", which Sheets reads as a date in any locale.
+    // sv-SE gives "YYYY-MM-DD HH:mm:ss". RAW keeps it as text; serialOf reads it for retention.
     new Date().toLocaleString("sv-SE", { timeZone: "Europe/London" }),
     ...[
       lead.source || "Website form",
@@ -80,7 +79,7 @@ export async function appendLead(lead: Lead): Promise<void> {
   const token = await accessToken(email, key, signal);
   const range = encodeURIComponent("Leads!A:M");
   const res = await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(sheetId)}/values/${range}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`,
+    `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(sheetId)}/values/${range}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`,
     {
       method: "POST",
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },

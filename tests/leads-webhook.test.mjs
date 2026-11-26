@@ -90,7 +90,7 @@ test("appendLead sends 13 columns in the sheet's order", async () => {
 
   assert.equal(calls.length, 2);
   const append = calls[1];
-  assert.match(append.url, /^https:\/\/sheets\.googleapis\.com\/v4\/spreadsheets\/test-sheet-id\/values\/Leads!A%3AM:append\?valueInputOption=USER_ENTERED/);
+  assert.match(append.url, /^https:\/\/sheets\.googleapis\.com\/v4\/spreadsheets\/test-sheet-id\/values\/Leads!A%3AM:append\?valueInputOption=RAW/);
   assert.equal(append.init.headers.Authorization, "Bearer test-token");
 
   const [row] = JSON.parse(append.init.body).values;
@@ -99,10 +99,10 @@ test("appendLead sends 13 columns in the sheet's order", async () => {
   assert.deepEqual(row.slice(1), [
     "MyBuilder",
     "Jane Test",
-    "'+44 7700 900123", // leading ' keeps it text, not a formula
+    "+44 7700 900123", // RAW stores it as text, not a formula
     "jane@example.com",
     "Fuse board",
-    "'=HYPERLINK(\"x\") sparks from the board",
+    "=HYPERLINK(\"x\") sparks from the board",
     "google",
     "cpc",
     "eicr",
