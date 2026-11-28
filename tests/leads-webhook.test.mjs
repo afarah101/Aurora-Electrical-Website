@@ -1,122 +1,243 @@
-// Tests for integrations/leads-webhook.gs. Run with: node --test tests/
-import { test } from "node:test";
+// Tests for lib/leads-sheet.ts, the sheet step of app/api/contact/route.ts and the
+// app/api/cron/leads-retention route. Run with: node --test tests/
+// Node strips the TypeScript types. The hooks below resolve "@/" imports and swap in mocks for
+// next/server and resend. Google is mocked by stubbing global fetch.
+import { test, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import vm from "node:vm";
+import { registerHooks } from "node:module";
+import { generateKeyPairSync, createVerify } from "node:crypto";
 
-const SOURCE = readFileSync(new URL("../integrations/leads-webhook.gs", import.meta.url), "utf8");
+const ROOT = new URL("../", import.meta.url);
+const MOCKS = {
+  "next/server": `
+    export const NextResponse = { json: (body, init) => Response.json(body, init) };
+    export const after = (fn) => globalThis.__after.push(fn);`,
+  resend: `
+    export class Resend { emails = { send: async (msg) => { globalThis.__sent.push(msg); return { error: null }; } }; }`,
+};
 
-/** Loads the .gs into a fresh context with fake Apps Script services. */
-function load({ rows = [], props = {} } = {}) {
-  const sent = [];
-  const sheet = {
-    rows,
-    getLastRow: () => rows.length + 1,
-    getRange(row, col, numRows, numCols) {
-      return {
-        getValues: () => rows.slice(row - 2, row - 2 + numRows).map((r) => r.slice(col - 1, col - 1 + numCols)),
-        setValue: (value) => {
-          rows[row - 2][col - 1] = value;
-        },
-      };
-    },
-    deleteRow: (row) => rows.splice(row - 2, 1),
+registerHooks({
+  resolve(specifier, context, nextResolve) {
+    if (specifier in MOCKS) {
+      return { url: `data:text/javascript,${encodeURIComponent(MOCKS[specifier])}`, shortCircuit: true };
+    }
+    if (specifier.startsWith("@/")) specifier = new URL(`${specifier.slice(2)}.ts`, ROOT).href;
+    return nextResolve(specifier, context);
+  },
+});
+
+const { privateKey, publicKey } = generateKeyPairSync("rsa", { modulusLength: 2048 });
+const PEM = privateKey.export({ type: "pkcs8", format: "pem" });
+
+const COLUMNS = [
+  "Date", "Source", "Name", "Phone", "Email", "Job type", "Details",
+  "utm_source", "utm_medium", "utm_campaign", "gclid", "Landing page", "Status",
+];
+
+let calls;
+let sheetFails;
+let columnA; // what the mocked Sheets API returns for Leads!A:A
+const realFetch = globalThis.fetch;
+
+beforeEach(() => {
+  calls = [];
+  sheetFails = false;
+  columnA = [];
+  globalThis.__after = [];
+  globalThis.__sent = [];
+  process.env.GOOGLE_SHEETS_ID = "test-sheet-id";
+  process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL = "leads@test-project.iam.gserviceaccount.com";
+  // Stored as Vercel stores it: line breaks as the two characters \n.
+  process.env.GOOGLE_PRIVATE_KEY = PEM.replace(/\n/g, "\\n");
+  process.env.RESEND_API_KEY = "test-resend-key";
+  globalThis.fetch = async (url, init) => {
+    calls.push({ url: String(url), init });
+    if (String(url).startsWith("https://oauth2.googleapis.com/token")) {
+      return Response.json({ access_token: "test-token" });
+    }
+    if (sheetFails) throw new Error("Sheets API down");
+    const path = decodeURIComponent(new URL(url).pathname);
+    if (path.endsWith("/test-sheet-id")) {
+      return Response.json({ sheets: [{ properties: { sheetId: 0, title: "Other" } }, { properties: { sheetId: 42, title: "Leads" } }] });
+    }
+    if (path.endsWith("/values/Leads!A:A")) return Response.json({ values: columnA });
+    return Response.json({ updates: { updatedRows: 1 } });
   };
-  const context = vm.createContext({
-    console,
-    PropertiesService: { getScriptProperties: () => ({ getProperty: (key) => props[key] ?? null }) },
-    SpreadsheetApp: { getActiveSpreadsheet: () => ({ getSheetByName: (name) => (name === "Leads" ? sheet : null) }) },
-    MailApp: { sendEmail: (to, subject, body) => sent.push({ to, subject, body }) },
-    Utilities: {
-      formatDate: (date) =>
-        [date.getFullYear(), String(date.getMonth() + 1).padStart(2, "0"), String(date.getDate()).padStart(2, "0")].join("-"),
-    },
+});
+
+afterEach(() => {
+  globalThis.fetch = realFetch;
+});
+
+const { appendLead } = await import("../lib/leads-sheet.ts");
+const { POST } = await import("../app/api/contact/route.ts");
+const { GET: retention } = await import("../app/api/cron/leads-retention/route.ts");
+
+test("appendLead sends 13 columns in the sheet's order", async () => {
+  await appendLead({
+    name: "Jane Test",
+    phone: "+44 7700 900123",
+    email: "jane@example.com",
+    jobType: "Fuse board",
+    message: "=HYPERLINK(\"x\") sparks from the board",
+    source: "MyBuilder",
+    utm_source: "google",
+    utm_medium: "cpc",
+    utm_campaign: "eicr",
+    gclid: "abc123",
+    landing_page: "/eicr-landlords",
   });
-  vm.runInContext(SOURCE, context, { filename: "leads-webhook.gs" });
-  return { gs: context, sent, rows };
+
+  assert.equal(calls.length, 2);
+  const append = calls[1];
+  assert.match(append.url, /^https:\/\/sheets\.googleapis\.com\/v4\/spreadsheets\/test-sheet-id\/values\/Leads!A%3AM:append\?valueInputOption=RAW/);
+  assert.equal(append.init.headers.Authorization, "Bearer test-token");
+
+  const [row] = JSON.parse(append.init.body).values;
+  assert.equal(row.length, COLUMNS.length);
+  assert.match(row[0], /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/);
+  assert.deepEqual(row.slice(1), [
+    "MyBuilder",
+    "Jane Test",
+    "+44 7700 900123", // RAW stores it as text, not a formula
+    "jane@example.com",
+    "Fuse board",
+    "=HYPERLINK(\"x\") sparks from the board",
+    "google",
+    "cpc",
+    "eicr",
+    "abc123",
+    "/eicr-landlords",
+    "New",
+  ]);
+});
+
+test("appendLead signs the token request with the service-account key", async () => {
+  await appendLead({ name: "Jane Test", phone: "07700900123", message: "A fault" });
+  const assertion = new URLSearchParams(String(calls[0].init.body)).get("assertion");
+  const [header, claims, signature] = assertion.split(".");
+  const ok = createVerify("RSA-SHA256").update(`${header}.${claims}`).verify(publicKey, signature, "base64url");
+  assert.ok(ok, "JWT signature verifies with the public key");
+  const claim = JSON.parse(Buffer.from(claims, "base64url").toString());
+  assert.equal(claim.iss, "leads@test-project.iam.gserviceaccount.com");
+  assert.equal(claim.scope, "https://www.googleapis.com/auth/spreadsheets");
+});
+
+test("appendLead defaults Source to 'Website form' and blanks empty fields", async () => {
+  await appendLead({ name: "Jane Test", phone: "07700900123", message: "A fault" });
+  const [row] = JSON.parse(calls[1].init.body).values;
+  assert.deepEqual(row.slice(1), ["Website form", "Jane Test", "07700900123", "", "", "A fault", "", "", "", "", "", "New"]);
+});
+
+function enquiry(extra = {}) {
+  return new Request("http://localhost/api/contact", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-forwarded-for": `10.0.0.${Math.floor(Math.random() * 250)}` },
+    body: JSON.stringify({
+      name: "Jane Test",
+      phone: "07700 900123",
+      address: "1 Test Street, London",
+      fault: "Lights keep tripping the fuse box",
+      email: "",
+      jobType: "Lighting",
+      heardAbout: "Google",
+      ...extra,
+    }),
+  });
 }
 
-/** One 16-column Leads row. */
-function row({ date = "2026-11-01 09:00:00", name = "Jane Smith", phone = "07123 456789", status = "New", quotedOn = "", followUp = "", reviewAsked = "" } = {}) {
-  return [date, "Website form", name, phone, "", "", "Socket sparks", "", "", "", "", "/", status, quotedOn, followUp, reviewAsked];
-}
+test("sheet write throws: route still returns 200 and the email still sends", async (t) => {
+  sheetFails = true;
+  const errors = t.mock.method(console, "error", () => {});
 
-const TODAY = new Date(2026, 10, 22); // 22 Nov 2026
+  const res = await POST(enquiry());
+  assert.equal(res.status, 200);
+  assert.deepEqual(await res.json(), { ok: true });
+  assert.equal(globalThis.__sent.length, 1, "enquiry email sent");
+  assert.match(globalThis.__sent[0].text, /Job type: Lighting/);
+  assert.match(globalThis.__sent[0].text, /Heard about us: Google/);
 
-test("follow-up selects Quoted rows 3 or more days old only", () => {
-  const { gs } = load();
-  const rows = [
-    row({ name: "Three Days", status: "Quoted", quotedOn: "2026-11-19" }),
-    row({ name: "Two Days", status: "Quoted", quotedOn: "2026-11-20" }),
-    row({ name: "Ten Days", status: "Quoted", quotedOn: new Date(2026, 10, 12) }),
-    row({ name: "Already Chased", status: "Quoted", quotedOn: "2026-11-01", followUp: "2026-11-05" }),
-    row({ name: "No Date", status: "Quoted" }),
-    row({ name: "Still New", status: "New", quotedOn: "2026-11-01" }),
+  // The sheet step runs after the response and must not reject.
+  assert.equal(globalThis.__after.length, 1);
+  await globalThis.__after[0]();
+  assert.ok(
+    errors.mock.calls.some((c) => c.arguments[0] === "contact: lead sheet write failed"),
+    "failure is logged",
+  );
+});
+
+test("route writes the dropdown answers into Source and Job type", async () => {
+  const res = await POST(enquiry());
+  assert.equal(res.status, 200);
+  await globalThis.__after[0]();
+  const [row] = JSON.parse(calls[1].init.body).values;
+  assert.equal(row[1], "Google");
+  assert.equal(row[5], "Lighting");
+});
+
+test("a bad dropdown value never blocks the enquiry", async () => {
+  const res = await POST(enquiry({ jobType: "<script>", heardAbout: "" }));
+  assert.equal(res.status, 200);
+  await globalThis.__after[0]();
+  const [row] = JSON.parse(calls[1].init.body).values;
+  assert.equal(row[1], "Website form");
+  assert.equal(row[5], "");
+});
+
+// Sheets day number for "n days ago" (day 25569 is 1970-01-01).
+const daysAgo = (n) => Date.now() / 86_400_000 + 25569 - n;
+const cron = (auth) =>
+  new Request("http://localhost/api/cron/leads-retention", auth ? { headers: { authorization: auth } } : {});
+
+test("retention: no secret or a wrong secret gets 401 and touches nothing", async () => {
+  process.env.CRON_SECRET = "test-secret";
+  for (const auth of [undefined, "Bearer wrong", "test-secret", "Bearer undefined"]) {
+    const res = await retention(cron(auth));
+    assert.equal(res.status, 401, `auth=${auth}`);
+  }
+  delete process.env.CRON_SECRET;
+  assert.equal((await retention(cron("Bearer undefined"))).status, 401, "unset CRON_SECRET never matches");
+  assert.equal(calls.length, 0, "no Google call");
+});
+
+test("retention: deletes rows older than 365 days, keeps new and undated rows", async () => {
+  process.env.CRON_SECRET = "test-secret";
+  columnA = [
+    ["Date"], // 0 header: kept
+    [daysAgo(400)], // 1 old date cell: deleted
+    [daysAgo(10)], // 2 new: kept
+    ["2024-01-05 10:00:00"], // 3 old date text: deleted
+    [], // 4 blank Date: kept
+    ["not a date"], // 5 kept
+    [daysAgo(366)], // 6 deleted
+    [daysAgo(364)], // 7 kept
   ];
-  // Array.from: the vm context has its own Array, which deepEqual treats as a different type.
-  const picked = Array.from(gs.selectFollowUps(rows, TODAY), (lead) => lead.name);
-  assert.deepEqual(picked, ["Three Days", "Ten Days"]);
-  assert.equal(gs.selectFollowUps(rows, TODAY)[0].row, 2, "sheet row number is index + 2");
+
+  const res = await retention(cron("Bearer test-secret"));
+  assert.equal(res.status, 200);
+  assert.deepEqual(await res.json(), { ok: true, deleted: 3 });
+
+  const read = calls.find((c) => c.url.includes("/values/"));
+  assert.match(read.url, /valueRenderOption=UNFORMATTED_VALUE&dateTimeRenderOption=SERIAL_NUMBER/);
+  const batch = calls.find((c) => c.url.endsWith(":batchUpdate"));
+  const ranges = JSON.parse(batch.init.body).requests.map((r) => r.deleteDimension.range);
+  // Bottom row first, on the Leads tab (id 42), one row each.
+  assert.deepEqual(ranges, [6, 3, 1].map((i) => ({ sheetId: 42, dimension: "ROWS", startIndex: i, endIndex: i + 1 })));
 });
 
-test("each line has the name, phone and a wa.me link with a message", () => {
-  const { gs } = load();
-  const plan = gs.planDailyCheck([row({ status: "Quoted", quotedOn: "2026-11-19" })], TODAY, "");
-  assert.match(plan.body, /- Jane Smith, 07123 456789\n {2}https:\/\/wa\.me\/447123456789\?text=Hi%20Jane%2C/);
+test("retention: nothing old means no delete call", async () => {
+  process.env.CRON_SECRET = "test-secret";
+  columnA = [["Date"], [daysAgo(1)]];
+  const res = await retention(cron("Bearer test-secret"));
+  assert.deepEqual(await res.json(), { ok: true, deleted: 0 });
+  assert.ok(!calls.some((c) => c.url.endsWith(":batchUpdate")));
 });
 
-test("no repeat listing: a stamped row is not listed the next day", () => {
-  const rows = [
-    row({ name: "Quoted Lead", status: "Quoted", quotedOn: "2026-11-18" }),
-    row({ name: "Won Lead", phone: "+44 7700 900123", status: "Won" }),
-  ];
-  const { gs, sent } = load({ rows, props: { NOTIFY_EMAIL: "owner@example.com", REVIEW_URL: "https://example.com/review" } });
-
-  gs.runDailyCheck_(TODAY);
-  assert.equal(sent.length, 1);
-  assert.match(sent[0].body, /Quoted Lead/);
-  assert.match(sent[0].body, /Won Lead, \+44 7700 900123\n {2}https:\/\/wa\.me\/447700900123\?text=/);
-  assert.match(sent[0].body, /https%3A%2F%2Fexample\.com%2Freview/);
-  assert.equal(rows[0][14], "2026-11-22", "Follow-up sent stamped");
-  assert.equal(rows[1][15], "2026-11-22", "Review asked stamped");
-
-  gs.runDailyCheck_(new Date(2026, 10, 23));
-  assert.equal(sent.length, 1, "nothing left to list, so no second email");
-});
-
-test("REVIEW_URL unset: review section left out, said in the email, Won rows not stamped", () => {
-  const rows = [row({ name: "Won Lead", status: "Won" }), row({ name: "Quoted Lead", status: "Quoted", quotedOn: "2026-11-01" })];
-  const { gs, sent } = load({ rows, props: { NOTIFY_EMAIL: "owner@example.com" } });
-
-  gs.runDailyCheck_(TODAY);
-  assert.equal(sent.length, 1);
-  assert.doesNotMatch(sent[0].body, /Won Lead/);
-  assert.match(sent[0].body, /REVIEW_URL is not set/);
-  assert.match(sent[0].body, /Quoted Lead/);
-  assert.equal(rows[0][15], "", "Won row not stamped");
-  assert.equal(rows[1][14], "2026-11-22");
-});
-
-test("no NOTIFY_EMAIL or nothing to list: no email", () => {
-  const quoted = [row({ status: "Quoted", quotedOn: "2026-11-01" })];
-  const noTo = load({ rows: quoted });
-  noTo.gs.runDailyCheck_(TODAY);
-  assert.equal(noTo.sent.length, 0);
-
-  const empty = load({ rows: [row({ status: "Lost" })], props: { NOTIFY_EMAIL: "owner@example.com" } });
-  empty.gs.runDailyCheck_(TODAY);
-  assert.equal(empty.sent.length, 0);
-});
-
-test("rows older than 1 year are deleted, newer and undated rows are kept", () => {
-  const rows = [
-    row({ name: "Old", date: "2025-11-21 10:00:00" }),
-    row({ name: "Exactly One Year", date: "2025-11-22 10:00:00" }),
-    row({ name: "Recent" }),
-    row({ name: "Undated", date: "" }),
-    row({ name: "Old Sheets Date", date: new Date(2024, 0, 5) }),
-  ];
-  const { gs } = load({ rows });
-  gs.runDailyCheck_(TODAY); // No NOTIFY_EMAIL: still deletes.
-  assert.deepEqual(rows.map((r) => r[2]), ["Exactly One Year", "Recent", "Undated"]);
+test("retention: a Sheets failure returns 500 and is logged", async (t) => {
+  process.env.CRON_SECRET = "test-secret";
+  sheetFails = true;
+  const errors = t.mock.method(console, "error", () => {});
+  const res = await retention(cron("Bearer test-secret"));
+  assert.equal(res.status, 500);
+  assert.equal(errors.mock.calls[0].arguments[0], "leads-retention: failed");
 });

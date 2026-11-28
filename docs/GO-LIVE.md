@@ -1,45 +1,36 @@
 # Lead system go-live
 
-Do these steps in order. Steps 1 to 6 are in Google. Steps 7 to 9 are in Vercel and Google Ads.
+Do these steps in order. Steps 1 to 5 are in Google. Steps 6 to 8 are in Vercel and Google Ads. Each click for steps 1 to 5 is in `docs/LEAD-SHEET-SETUP.md`.
 
-## A. Apps Script (the Leads sheet)
+## A. Leads sheet (Google service account)
 
-1. Open the client register Google Sheet. In the top menu, click **Extensions > Apps Script**.
-2. In the editor, open `Code.gs`. Delete its text. Paste all of `integrations/leads-webhook.gs`. Click the **Save** icon (disk, top bar).
-3. Click the **gear icon** (Project Settings, left bar).
-   - Under **General settings**, set **Time zone** to `(GMT+00:00) London`.
-   - Scroll to **Script properties**. Click **Add script property** for each one:
-     - `LEADS_WEBHOOK_TOKEN`: a long random string. Keep a copy for step 7.
-     - `NOTIFY_EMAIL`: the address that gets the daily list.
-     - `REVIEW_URL`: the review link (for example the MyBuilder review page). Optional. If it is empty, the daily email leaves out review requests and says so.
-   - Click **Save script properties**.
-4. Click the **< >** icon (Editor, left bar). In the function list next to **Run** (top bar), select `setup`. Click **Run**. Allow the permissions Google asks for.
-   - Result: tab **Leads** with 16 columns (the last 3 are Quoted on, Follow-up sent, Review asked), a Status dropdown (New, Quoted, Won, Lost), and tab **Summary** with leads, won and close rate per source.
-5. In the same function list, select `installDailyTrigger`. Click **Run**.
-   - Result: click the **clock icon** (Triggers, left bar). One trigger for `dailyCheck` shows, "Day timer, 8am to 9am", London time.
-   - Each run also deletes Leads rows whose Date is more than 1 year old, as the privacy notice promises. Rows with no Date are kept. Move any row you must keep (for example a job record) to another tab first.
-6. Click **Deploy > New deployment** (blue button, top right). Click the **gear** next to "Select type" and pick **Web app**.
-   - **Execute as**: Me. **Who has access**: Anyone. Click **Deploy**.
-   - Copy the **Web app URL** for step 7.
-   - If you change the script later, use **Deploy > Manage deployments > Edit (pencil) > Version: New version**, so the URL stays the same.
+1. Open the client register Google Sheet. Make sure it has a tab named **Leads** with these 13 headers in row 1, in this order: Date, Source, Name, Phone, Email, Job type, Details, utm_source, utm_medium, utm_campaign, gclid, Landing page, Status. Columns N onward are free for your own notes (for example Quoted on).
+2. In Google Cloud Console, make a project and turn on the **Google Sheets API**.
+3. In that project, make a service account. Download one **JSON key** for it.
+4. In the Sheet, click **Share** (top right). Add the service account email (`client_email` in the JSON key) as **Editor**.
+5. Delete the JSON key file from your computer after step 6. Empty the Bin.
 
-Daily use in the sheet: when you send a quote, set Status to **Quoted** and type the date in **Quoted on** (`YYYY-MM-DD`). When a job is won, set Status to **Won**. The daily email stamps **Follow-up sent** and **Review asked**, so each person is listed once. Add phone, WhatsApp, email and MyBuilder leads by hand, with Source set to `Phone`, `WhatsApp`, `Email` or `MyBuilder`.
+Daily use in the sheet: when you send a quote, set Status to **Quoted**. When a job is won, set Status to **Won**. The site sets Source from "How did you hear about us?" (Google, MyBuilder, Facebook, TikTok, Friend, Other), or `Website form` if the visitor leaves it empty. Add phone, WhatsApp, email and MyBuilder leads by hand, with Source set to `Phone`, `WhatsApp`, `Email` or `MyBuilder`.
+
+Privacy: each day at about 03:17 UTC, a Vercel cron deletes the Leads rows whose Date is more than 1 year old, as the privacy notice promises. Rows with no Date are kept. Move any row you must keep (for example a job record) to another tab first.
 
 ## B. Vercel
 
-7. In the Vercel dashboard, open the project. Click **Settings** (top tabs) > **Environment Variables** (left menu). Add each key for **Production** and **Preview**:
-   - `LEADS_WEBHOOK_URL`: the Web app URL from step 6.
-   - `LEADS_WEBHOOK_TOKEN`: the same token as in step 3.
-   - `NEXT_PUBLIC_GADS_ID`: the Google Ads tag ID, `AW-` followed by numbers (from step 9).
-   - `NEXT_PUBLIC_GADS_LABEL_FORM`, `NEXT_PUBLIC_GADS_LABEL_CALL`, `NEXT_PUBLIC_GADS_LABEL_WHATSAPP`: the conversion labels from step 9.
+6. In the Vercel dashboard, open the project. Click **Settings** (top tabs) > **Environment Variables** (left menu). Add each key for **Production** and **Preview**:
+   - `GOOGLE_SHEETS_ID`: the part of the Sheet URL between `/d/` and `/edit`.
+   - `GOOGLE_SERVICE_ACCOUNT_EMAIL`: `client_email` from the JSON key.
+   - `GOOGLE_PRIVATE_KEY`: `private_key` from the JSON key, from `-----BEGIN` to `-----END PRIVATE KEY-----\n`. Tick **Sensitive**.
+   - `CRON_SECRET`: a random string of 32 or more letters and digits (make one in your password manager). Tick **Sensitive**. Vercel sends it to the daily delete job. Production only.
+   - `NEXT_PUBLIC_GADS_ID`: the Google Ads tag ID, `AW-` followed by numbers (from step 8).
+   - `NEXT_PUBLIC_GADS_LABEL_FORM`, `NEXT_PUBLIC_GADS_LABEL_CALL`, `NEXT_PUBLIC_GADS_LABEL_WHATSAPP`: the conversion labels from step 8.
    - Click **Save** after each one.
-8. Redeploy so the new values are built in: **Deployments** (top tabs) > the latest deployment > **...** menu (right) > **Redeploy**. `NEXT_PUBLIC_` values are fixed at build time, so a redeploy is needed after each change.
+7. Redeploy so the new values are built in: **Deployments** (top tabs) > the latest deployment > **...** menu (right) > **Redeploy**. `NEXT_PUBLIC_` values are fixed at build time, so a redeploy is needed after each change.
 
 Without `NEXT_PUBLIC_GADS_ID`, the site shows no cookie banner and loads no Google Ads code. Each conversion with no label does nothing.
 
 ## C. Google Ads conversion actions
 
-9. In Google Ads, click **Goals** (left menu) > **Conversions** > **Summary** > **+ Create conversion action** (blue button). Choose **Website**, then **Add a conversion action manually**. Create these 3:
+8. In Google Ads, click **Goals** (left menu) > **Conversions** > **Summary** > **+ Create conversion action** (blue button). Choose **Website**, then **Add a conversion action manually**. Create these 3:
 
    | Name | Goal category | Vercel key for its label |
    | --- | --- | --- |
@@ -54,6 +45,7 @@ Without `NEXT_PUBLIC_GADS_ID`, the site shows no cookie banner and loads no Goog
 
 ## D. Check
 
-10. Open the live site in a private window. The cookie banner shows at the bottom. Click **Accept**, then send a test enquiry.
-    - A new row shows in **Leads** with Source `Website form`.
+9. Open the live site in a private window. The cookie banner shows at the bottom. Click **Accept**, then send a test enquiry.
+    - A new row shows in **Leads** with the Source you picked (or `Website form`).
+    - No row? In Vercel, open **Logs** (top tabs) and search for `lead sheet`.
     - In Google Ads, the conversion status changes from "Unverified" within about 24 hours.
